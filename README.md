@@ -2,7 +2,7 @@
 
 
 
-## Sobre O Projeto
+## Sobre o projeto
 
 O objetivo do projeto e demonstrar a refatoração rumo a padrões de projeto com o cenários propostos. Iremos trabalhar com quatro padrões de projeto, sendo eles:
 
@@ -11,5 +11,5 @@ O objetivo do projeto e demonstrar a refatoração rumo a padrões de projeto co
 * Strategy
 * Template Method
 
-## Authors 
+## Autor (es) 
 Jock Rodrigues
