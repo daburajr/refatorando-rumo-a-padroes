@@ -8,6 +8,8 @@ import br.com.ifma.refatorandorumoapadroes.strategy.exception.PdvValidationExcep
 import br.com.ifma.refatorandorumoapadroes.strategy.mapper.BoletoImpressaoMapper;
 import br.com.ifma.refatorandorumoapadroes.strategy.model.BoletoItMarket;
 import br.com.ifma.refatorandorumoapadroes.strategy.model.CupomCapaDTO;
+import br.com.ifma.refatorandorumoapadroes.strategy.service.documento.Documento;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -16,8 +18,9 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
-@Service
 @Slf4j
+@Service
+@RequiredArgsConstructor
 public class ImpressaoBoletoService {
 
     private final BoletoImpressaoMapper boletoImpressaoMapper;
@@ -26,14 +29,8 @@ public class ImpressaoBoletoService {
 
     private static final Integer INCIDENCIA = 15;
 
-    @Autowired
-    public ImpressaoBoletoService(BoletoImpressaoMapper boletoImpressaoMapper,
-                                  IBoletoReports boletoReports,
-                                  IBancoCupomClient cupomCapaService) {
-        this.boletoImpressaoMapper = boletoImpressaoMapper;
-        this.boletoReports = boletoReports;
-        this.cupomCapaService = cupomCapaService;
-    }
+
+    private final Documento boletoLojaDocumento;
 
 
     public void imprimirBoletos() {
@@ -48,7 +45,8 @@ public class ImpressaoBoletoService {
         List<BoletoItMarket> carnes = this.pegaBoletosDe(TipoBoleto.CARNE, boletos);
 
         if (!boletosLoja.isEmpty()) {
-            this.imprimirBoletosLoja(boletosLoja);
+//            this.imprimirBoletosLoja(boletosLoja);
+            this.boletoLojaDocumento.imprime(boletosLoja);
         }
 
         if (!boletosBalcao.isEmpty()) {
@@ -80,8 +78,8 @@ public class ImpressaoBoletoService {
     private void imprimirBoletosBalcao(List<BoletoItMarket> boletosBalcao) {
         boletosBalcao.forEach(boletoItMarket -> {
             try {
-                this.buscarInformacoesAdicionais(boletoItMarket);
-                boletoReports.imprimirBoletoBalcao(boletoItMarket);
+                this.buscarInformacoesAdicionais(boletoItMarket);    // realiza processamento
+                boletoReports.imprimirBoletoBalcao(boletoItMarket);  // realiza
                 this.atualizarBoletoItMarket(boletoItMarket, TipoStatusImpressao.IMPRESSAO_CONCLUIDA);
             } catch (Exception e) {
                 this.registrarIncidenciaEError(boletoItMarket, e.getMessage());

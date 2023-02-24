@@ -8,6 +8,7 @@ import br.com.ifma.refatorandorumoapadroes.strategy.mapper.BoletoImpressaoMapper
 import br.com.ifma.refatorandorumoapadroes.strategy.model.BoletoItMarket;
 import br.com.ifma.refatorandorumoapadroes.strategy.service.builder.BoletoBuilder;
 import br.com.ifma.refatorandorumoapadroes.strategy.service.builder.CupomCapaBuilder;
+import br.com.ifma.refatorandorumoapadroes.strategy.service.documento.Documento;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InjectMocks;
@@ -32,6 +33,9 @@ public class ImpressaoBoletoServiceTest {
     @Mock
     private IBancoCupomClient cupomCapaService;
 
+    @Mock
+    private Documento boletoLojaDocumento;
+
     @InjectMocks
     private ImpressaoBoletoService impressaoBoletoService;
 
@@ -42,7 +46,7 @@ public class ImpressaoBoletoServiceTest {
     }
 
     @Test
-    public void deveimprimirBoletos() {
+    public void deveImprimirBoletos() {
 
         when(boletoImpressaoMapper.buscarBoletosPedentesDeImpressao())
                 .thenReturn(BoletoBuilder.pegaBoletos());
@@ -52,13 +56,14 @@ public class ImpressaoBoletoServiceTest {
 
         impressaoBoletoService.imprimirBoletos();
 
-        verify(boletoReports, times(1)).imprimirBoletoLoja(BoletoBuilder.boletoLojaPendente());
+
+//        verify(boletoReports, times(1)).imprimirBoletoLoja(BoletoBuilder.boletoLojaPendente());
         verify(boletoReports, times(1)).imprimirBoletoBalcao(BoletoBuilder.boletoBalcaoPendente());
         verify(boletoReports, times(1)).imprimirCarne(BoletoBuilder.carnePendente());
         verify(boletoReports, times(1)).imprimirPromissoria(BoletoBuilder.promissoriaPendente());
 
-        verify(boletoImpressaoMapper, times(4)).atualizarBoletoItMarket(Mockito.any());
-
+        verify(boletoImpressaoMapper, times(3)).atualizarBoletoItMarket(Mockito.any());
+        verify(boletoLojaDocumento, times(1)).imprime(any());
     }
 
     @Test
@@ -86,7 +91,7 @@ public class ImpressaoBoletoServiceTest {
     @Test
     public void deveRegistrarIncidenciaParaFalhaNaComunicaaoDoGmreports() throws IllegalAccessException {
 
-        List<BoletoItMarket> boletos = BoletoBuilder.pegaBoletos();
+        List<BoletoItMarket> boletos = BoletoBuilder.pegaBoletosSemBoletoLoja();
 
         when(boletoImpressaoMapper.buscarBoletosPedentesDeImpressao())
                 .thenReturn(boletos);
@@ -95,7 +100,7 @@ public class ImpressaoBoletoServiceTest {
                 .thenReturn(CupomCapaBuilder.cupomCapaDTO());
 
         willThrow(PdvValidationException.class).given(boletoReports).imprimirBoletoBalcao(BoletoBuilder.boletoLojaPendente());
-        willThrow(PdvValidationException.class).given(boletoReports).imprimirBoletoLoja(BoletoBuilder.boletoBalcaoPendente());
+//        willThrow(PdvValidationException.class).given(boletoReports).imprimirBoletoLoja(BoletoBuilder.boletoLojaPendente());
         willThrow(PdvValidationException.class).given(boletoReports).imprimirCarne(BoletoBuilder.carnePendente());
         willThrow(PdvValidationException.class).given(boletoReports).imprimirPromissoria(BoletoBuilder.promissoriaPendente());
 
