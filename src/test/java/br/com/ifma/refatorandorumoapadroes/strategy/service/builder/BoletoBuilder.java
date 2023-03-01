@@ -1,22 +1,21 @@
 package br.com.ifma.refatorandorumoapadroes.strategy.service.builder;
 
-import br.com.ifma.refatorandorumoapadroes.strategy.enumeration.TipoBoleto;
+import br.com.ifma.refatorandorumoapadroes.strategy.enumeration.TipoDocumento;
 import br.com.ifma.refatorandorumoapadroes.strategy.enumeration.TipoStatusImpressao;
-import br.com.ifma.refatorandorumoapadroes.strategy.model.BoletoItMarket;
+import br.com.ifma.refatorandorumoapadroes.strategy.model.DocumentoItMarket;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 
 public class BoletoBuilder {
 
     private BoletoBuilder() {}
 
-    public static BoletoItMarket boletoLojaPendente() {
-        return BoletoItMarket.builder()
+    public static DocumentoItMarket boletoLojaPendente() {
+        return DocumentoItMarket.builder()
                 .id(1L)
                 .filialId(1L)
                 .pdv(700)
@@ -30,7 +29,7 @@ public class BoletoBuilder {
                 .idCliente(1L)
                 .idImpressora(210L)
                 .tipoStatusImpressao(TipoStatusImpressao.IMPRESSAO_PEDENTE.getCodigo())
-                .tipoBoleto(TipoBoleto.BOLETO_LOJA.getCodigo())
+                .tipoBoleto(TipoDocumento.BOLETO_LOJA.getCodigo())
                 .idPedido(789040090L)
                 .incidencia(0)
                 .dataMovimento(LocalDate.now())
@@ -38,8 +37,8 @@ public class BoletoBuilder {
                 .build();
     }
 
-    public static BoletoItMarket boletoBalcaoPendente() {
-        return BoletoItMarket.builder()
+    public static DocumentoItMarket boletoBalcaoPendente() {
+        return DocumentoItMarket.builder()
                 .id(2L)
                 .filialId(1L)
                 .pdv(700)
@@ -53,15 +52,15 @@ public class BoletoBuilder {
                 .idCliente(1L)
                 .idImpressora(210L)
                 .tipoStatusImpressao(TipoStatusImpressao.IMPRESSAO_PEDENTE.getCodigo())
-                .tipoBoleto(TipoBoleto.BOLETO_BALCAO.getCodigo())
+                .tipoBoleto(TipoDocumento.BOLETO_BALCAO.getCodigo())
                 .incidencia(0)
                 .dataMovimento(LocalDate.now())
                 .cpfProcurador(687877078909L)
                 .build();
     }
 
-    public static BoletoItMarket carnePendente() {
-        return BoletoItMarket.builder()
+    public static DocumentoItMarket carnePendente() {
+        return DocumentoItMarket.builder()
                 .id(3L)
                 .filialId(1L)
                 .pdv(700)
@@ -75,7 +74,7 @@ public class BoletoBuilder {
                 .idCliente(1L)
                 .idImpressora(210L)
                 .tipoStatusImpressao(TipoStatusImpressao.IMPRESSAO_PEDENTE.getCodigo())
-                .tipoBoleto(TipoBoleto.CARNE.getCodigo())
+                .tipoBoleto(TipoDocumento.CARNE.getCodigo())
                 .idPedido(789040090L)
                 .incidencia(0)
                 .dataMovimento(LocalDate.now())
@@ -83,8 +82,8 @@ public class BoletoBuilder {
                 .build();
     }
 
-    public static BoletoItMarket promissoriaPendente() {
-        return BoletoItMarket.builder()
+    public static DocumentoItMarket promissoriaPendente() {
+        return DocumentoItMarket.builder()
                 .id(4L)
                 .filialId(1L)
                 .pdv(700)
@@ -98,7 +97,7 @@ public class BoletoBuilder {
                 .idCliente(1L)
                 .idImpressora(210L)
                 .tipoStatusImpressao(TipoStatusImpressao.IMPRESSAO_PEDENTE.getCodigo())
-                .tipoBoleto(TipoBoleto.PROMISSORIA.getCodigo())
+                .tipoBoleto(TipoDocumento.PROMISSORIA.getCodigo())
                 .idPedido(789040090L)
                 .incidencia(0)
                 .dataMovimento(LocalDate.now())
@@ -106,12 +105,10 @@ public class BoletoBuilder {
                 .build();
     }
 
-    public static List<BoletoItMarket> pegaBoletos() {
+    public static List<DocumentoItMarket> pegaBoletos() {
         return Arrays.asList(promissoriaPendente(), carnePendente(), boletoBalcaoPendente(), boletoLojaPendente());
     }
 
-    public static List<BoletoItMarket> pegaBoletosBalcao() {
-        return Arrays.asList(boletoBalcaoPendente());
-    }
+
 
 }

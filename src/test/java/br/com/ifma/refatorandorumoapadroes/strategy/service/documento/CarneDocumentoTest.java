@@ -1,11 +1,11 @@
 package br.com.ifma.refatorandorumoapadroes.strategy.service.documento;
 
 import br.com.ifma.refatorandorumoapadroes.strategy.client.IBoletoReports;
-import br.com.ifma.refatorandorumoapadroes.strategy.enumeration.TipoBoleto;
+import br.com.ifma.refatorandorumoapadroes.strategy.enumeration.TipoDocumento;
 import br.com.ifma.refatorandorumoapadroes.strategy.enumeration.TipoStatusImpressao;
 import br.com.ifma.refatorandorumoapadroes.strategy.exception.PdvValidationException;
 import br.com.ifma.refatorandorumoapadroes.strategy.mapper.BoletoImpressaoMapper;
-import br.com.ifma.refatorandorumoapadroes.strategy.model.BoletoItMarket;
+import br.com.ifma.refatorandorumoapadroes.strategy.model.DocumentoItMarket;
 import br.com.ifma.refatorandorumoapadroes.strategy.service.builder.BoletoBuilder;
 import org.junit.Assert;
 import org.junit.Before;
@@ -38,14 +38,14 @@ public class CarneDocumentoTest {
 
     @Test
     public void deveExecutaProcessamento()  {
-        boolean result = carneDocumento.executaProcessamento(TipoBoleto.CARNE);
+        boolean result = carneDocumento.executaProcessamento(TipoDocumento.CARNE);
         Assert.assertTrue(result);
     }
 
     @Test
     public void deveExecutarAImpressao() {
 
-        List<BoletoItMarket> boletos = Collections.singletonList(BoletoBuilder.carnePendente());
+        List<DocumentoItMarket> boletos = Collections.singletonList(BoletoBuilder.carnePendente());
 
         when(boletoImpressaoMapper.buscarBoletosPedentesDeImpressao())
                 .thenReturn(boletos);
@@ -59,7 +59,7 @@ public class CarneDocumentoTest {
     @Test
     public void deveRegistrarIncidenciaParaFalhaNaComunicaaoDoGmreports() throws IllegalAccessException {
 
-        List<BoletoItMarket> boletos = Collections.singletonList(BoletoBuilder.carnePendente());
+        List<DocumentoItMarket> boletos = Collections.singletonList(BoletoBuilder.carnePendente());
 
         when(boletoImpressaoMapper.buscarBoletosPedentesDeImpressao())
                 .thenReturn(boletos);
@@ -70,7 +70,7 @@ public class CarneDocumentoTest {
             carneDocumento.imprime(boletos);
         }
 
-        for (BoletoItMarket boletoItMarket : boletos) {
+        for (DocumentoItMarket boletoItMarket : boletos) {
             assertEquals(15, boletoItMarket.getIncidencia());
             assertEquals(TipoStatusImpressao.IMPRESSAO_COM_ERRO, TipoStatusImpressao.toEnum(boletoItMarket.getTipoStatusImpressao()));
         }
