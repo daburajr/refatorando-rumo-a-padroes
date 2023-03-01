@@ -22,14 +22,14 @@ import static org.junit.Assert.assertEquals;
 import static org.mockito.BDDMockito.willThrow;
 import static org.mockito.Mockito.*;
 
-public class BoletoLojaDocumentoTest {
+public class CarneDocumentoTest {
 
     @Mock
     private BoletoImpressaoMapper boletoImpressaoMapper;
     @Mock
     private IBoletoReports boletoReports;
     @InjectMocks
-    private BoletoLojaDocumento boletoLojaDocumento;
+    private CarneDocumento carneDocumento;
 
     @Before
     public void setUp() {
@@ -37,38 +37,37 @@ public class BoletoLojaDocumentoTest {
     }
 
     @Test
-    public void deveExecutaProcessamento() {
-        boolean result = boletoLojaDocumento.executaProcessamento(TipoBoleto.BOLETO_LOJA);
-        Assert.assertTrue(result);
+    public void deveExecutaProcessamento()  {
+        boolean result = carneDocumento.executaProcessamento(TipoBoleto.CARNE);
+        Assert.assertEquals(true, result);
     }
 
     @Test
     public void deveExecutarAImpressao() {
 
-        List<BoletoItMarket> boletos = Collections.singletonList(BoletoBuilder.boletoLojaPendente());
+        List<BoletoItMarket> boletos = Collections.singletonList(BoletoBuilder.carnePendente());
 
         when(boletoImpressaoMapper.buscarBoletosPedentesDeImpressao())
                 .thenReturn(boletos);
 
-        boletoLojaDocumento.imprime(boletos);
+        carneDocumento.imprime(boletos);
 
-        verify(boletoReports, times(1)).imprimirBoletoLoja(BoletoBuilder.boletoLojaPendente());
+        verify(boletoReports, times(1)).imprimirBoletoLoja(BoletoBuilder.carnePendente());
         verify(boletoImpressaoMapper, times(1)).atualizarBoletoItMarket(Mockito.any());
-
     }
 
     @Test
     public void deveRegistrarIncidenciaParaFalhaNaComunicaaoDoGmreports() throws IllegalAccessException {
 
-        List<BoletoItMarket> boletos = Collections.singletonList(BoletoBuilder.boletoLojaPendente());
+        List<BoletoItMarket> boletos = Collections.singletonList(BoletoBuilder.carnePendente());
 
         when(boletoImpressaoMapper.buscarBoletosPedentesDeImpressao())
                 .thenReturn(boletos);
 
-        willThrow(PdvValidationException.class).given(boletoReports).imprimirBoletoLoja(BoletoBuilder.boletoLojaPendente());
+        willThrow(PdvValidationException.class).given(boletoReports).imprimirBoletoLoja(BoletoBuilder.carnePendente());
 
         for (int count = 0; count < 15; count++) {
-            boletoLojaDocumento.imprime(boletos);
+            carneDocumento.imprime(boletos);
         }
 
         for (BoletoItMarket boletoItMarket : boletos) {

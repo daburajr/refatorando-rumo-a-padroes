@@ -8,6 +8,8 @@ import br.com.ifma.refatorandorumoapadroes.strategy.mapper.BoletoImpressaoMapper
 import br.com.ifma.refatorandorumoapadroes.strategy.model.BoletoItMarket;
 import br.com.ifma.refatorandorumoapadroes.strategy.service.builder.BoletoBuilder;
 import br.com.ifma.refatorandorumoapadroes.strategy.service.builder.CupomCapaBuilder;
+import br.com.ifma.refatorandorumoapadroes.strategy.service.documento.BoletoLojaDocumento;
+import br.com.ifma.refatorandorumoapadroes.strategy.service.documento.CarneDocumento;
 import br.com.ifma.refatorandorumoapadroes.strategy.service.documento.Documento;
 import org.junit.Before;
 import org.junit.Test;
@@ -34,7 +36,10 @@ public class ImpressaoBoletoServiceTest {
     private IBancoCupomClient cupomCapaService;
 
     @Mock
-    private Documento boletoLojaDocumento;
+    private BoletoLojaDocumento boletoLojaDocumento;
+
+    @Mock
+    private CarneDocumento carneDocumento;
 
     @InjectMocks
     private ImpressaoBoletoService impressaoBoletoService;
@@ -57,13 +62,14 @@ public class ImpressaoBoletoServiceTest {
         impressaoBoletoService.imprimirBoletos();
 
 
-//        verify(boletoReports, times(1)).imprimirBoletoLoja(BoletoBuilder.boletoLojaPendente());
+////        verify(boletoReports, times(1)).imprimirBoletoLoja(BoletoBuilder.boletoLojaPendente());
         verify(boletoReports, times(1)).imprimirBoletoBalcao(BoletoBuilder.boletoBalcaoPendente());
-        verify(boletoReports, times(1)).imprimirCarne(BoletoBuilder.carnePendente());
+////        verify(boletoReports, times(1)).imprimirCarne(BoletoBuilder.carnePendente());
         verify(boletoReports, times(1)).imprimirPromissoria(BoletoBuilder.promissoriaPendente());
 
-        verify(boletoImpressaoMapper, times(3)).atualizarBoletoItMarket(Mockito.any());
+        verify(boletoImpressaoMapper, times(2)).atualizarBoletoItMarket(Mockito.any());
         verify(boletoLojaDocumento, times(1)).imprime(any());
+        verify(carneDocumento, times(1)).imprime(any());
     }
 
     @Test
@@ -91,7 +97,7 @@ public class ImpressaoBoletoServiceTest {
     @Test
     public void deveRegistrarIncidenciaParaFalhaNaComunicaaoDoGmreports() throws IllegalAccessException {
 
-        List<BoletoItMarket> boletos = BoletoBuilder.pegaBoletosSemBoletoLoja();
+        List<BoletoItMarket> boletos = BoletoBuilder.pegaBoletosSemBoletoLojaECarne();
 
         when(boletoImpressaoMapper.buscarBoletosPedentesDeImpressao())
                 .thenReturn(boletos);

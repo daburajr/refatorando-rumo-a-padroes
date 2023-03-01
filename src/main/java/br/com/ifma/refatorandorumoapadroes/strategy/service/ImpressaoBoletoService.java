@@ -8,10 +8,10 @@ import br.com.ifma.refatorandorumoapadroes.strategy.exception.PdvValidationExcep
 import br.com.ifma.refatorandorumoapadroes.strategy.mapper.BoletoImpressaoMapper;
 import br.com.ifma.refatorandorumoapadroes.strategy.model.BoletoItMarket;
 import br.com.ifma.refatorandorumoapadroes.strategy.model.CupomCapaDTO;
-import br.com.ifma.refatorandorumoapadroes.strategy.service.documento.Documento;
+import br.com.ifma.refatorandorumoapadroes.strategy.service.documento.BoletoLojaDocumento;
+import br.com.ifma.refatorandorumoapadroes.strategy.service.documento.CarneDocumento;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -30,7 +30,9 @@ public class ImpressaoBoletoService {
     private static final Integer INCIDENCIA = 15;
 
 
-    private final Documento boletoLojaDocumento;
+    private final BoletoLojaDocumento boletoLojaDocumento;
+
+    private final CarneDocumento carneDocumento;
 
 
     public void imprimirBoletos() {
@@ -58,7 +60,8 @@ public class ImpressaoBoletoService {
         }
 
         if (!carnes.isEmpty()) {
-            this.imprimirCarnes(carnes);
+//            this.imprimirCarnes(carnes);
+            carneDocumento.imprime(carnes);
         }
 
     }

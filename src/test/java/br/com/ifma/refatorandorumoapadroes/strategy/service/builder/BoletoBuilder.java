@@ -110,8 +110,8 @@ public class BoletoBuilder {
         return Arrays.asList(promissoriaPendente(), carnePendente(), boletoBalcaoPendente(), boletoLojaPendente());
     }
 
-    public static List<BoletoItMarket> pegaBoletosSemBoletoLoja() {
-        return Arrays.asList(promissoriaPendente(), carnePendente(), boletoBalcaoPendente());
+    public static List<BoletoItMarket> pegaBoletosSemBoletoLojaECarne() {
+        return Arrays.asList(promissoriaPendente(), boletoBalcaoPendente());
     }
 
 }
