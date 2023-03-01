@@ -52,7 +52,7 @@ public class CarneDocumentoTest {
 
         carneDocumento.imprime(boletos);
 
-        verify(boletoReports, times(1)).imprimirBoletoLoja(BoletoBuilder.carnePendente());
+        verify(boletoReports, times(1)).imprimirCarne(BoletoBuilder.carnePendente());
         verify(boletoImpressaoMapper, times(1)).atualizarBoletoItMarket(Mockito.any());
     }
 
@@ -64,7 +64,7 @@ public class CarneDocumentoTest {
         when(boletoImpressaoMapper.buscarBoletosPedentesDeImpressao())
                 .thenReturn(boletos);
 
-        willThrow(PdvValidationException.class).given(boletoReports).imprimirBoletoLoja(BoletoBuilder.carnePendente());
+        willThrow(PdvValidationException.class).given(boletoReports).imprimirCarne(BoletoBuilder.carnePendente());
 
         for (int count = 0; count < 15; count++) {
             carneDocumento.imprime(boletos);

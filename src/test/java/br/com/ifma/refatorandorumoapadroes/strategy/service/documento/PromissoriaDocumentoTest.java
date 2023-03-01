@@ -52,7 +52,7 @@ public class PromissoriaDocumentoTest {
 
         promissoriaDocumento.imprime(boletos);
 
-        verify(boletoReports, times(1)).imprimirBoletoLoja(BoletoBuilder.promissoriaPendente());
+        verify(boletoReports, times(1)).imprimirPromissoria(BoletoBuilder.promissoriaPendente());
         verify(boletoImpressaoMapper, times(1)).atualizarBoletoItMarket(Mockito.any());
     }
 
@@ -64,7 +64,7 @@ public class PromissoriaDocumentoTest {
         when(boletoImpressaoMapper.buscarBoletosPedentesDeImpressao())
                 .thenReturn(boletos);
 
-        willThrow(PdvValidationException.class).given(boletoReports).imprimirBoletoLoja(BoletoBuilder.promissoriaPendente());
+        willThrow(PdvValidationException.class).given(boletoReports).imprimirPromissoria(BoletoBuilder.promissoriaPendente());
 
         for (int count = 0; count < 15; count++) {
             promissoriaDocumento.imprime(boletos);

@@ -30,7 +30,7 @@ public class CarneDocumento implements Documento {
     public void imprime(List<BoletoItMarket> documentos) {
         documentos.forEach( boletoItMarket -> {
             try {
-                boletoReports.imprimirBoletoLoja(boletoItMarket);
+                boletoReports.imprimirCarne(boletoItMarket);
                 this.atualizarBoletoItMarket(boletoItMarket, TipoStatusImpressao.IMPRESSAO_CONCLUIDA);
             } catch (Exception e) {
                 this.registrarIncidenciaEError(boletoItMarket, e.getMessage());
