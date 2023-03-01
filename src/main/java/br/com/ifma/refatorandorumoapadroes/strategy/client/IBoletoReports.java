@@ -1,13 +1,13 @@
 package br.com.ifma.refatorandorumoapadroes.strategy.client;
 
-import br.com.ifma.refatorandorumoapadroes.strategy.model.BoletoItMarket;
+import br.com.ifma.refatorandorumoapadroes.strategy.model.DocumentoItMarket;
 
 public interface IBoletoReports {
-    void imprimirBoletoLoja(BoletoItMarket boletoItMarket);
+    void imprimirBoletoLoja(DocumentoItMarket boletoItMarket);
 
-    void imprimirBoletoBalcao(BoletoItMarket boletoItMarket);
+    void imprimirBoletoBalcao(DocumentoItMarket boletoItMarket);
 
-    void imprimirCarne(BoletoItMarket carne);
+    void imprimirCarne(DocumentoItMarket carne);
 
-    void imprimirPromissoria(BoletoItMarket promissoria);
+    void imprimirPromissoria(DocumentoItMarket promissoria);
 }

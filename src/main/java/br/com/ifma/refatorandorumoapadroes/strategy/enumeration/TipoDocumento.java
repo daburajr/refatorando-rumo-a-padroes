@@ -1,7 +1,7 @@
 package br.com.ifma.refatorandorumoapadroes.strategy.enumeration;
 
 
-public enum TipoBoleto {
+public enum TipoDocumento {
 
     BOLETO_LOJA(0, "Boleto Loja"),
     BOLETO_BALCAO(1, "Boleto Balcão"),
@@ -11,7 +11,7 @@ public enum TipoBoleto {
     private Integer codigo;
     private String descricao;
 
-    private TipoBoleto(Integer codigo, String descricao) {
+    private TipoDocumento(Integer codigo, String descricao) {
         this.codigo = codigo;
         this.descricao = descricao;
     }
@@ -24,12 +24,12 @@ public enum TipoBoleto {
         return descricao;
     }
 
-    public static TipoBoleto toEnum(Integer codigo) throws IllegalAccessException {
+    public static TipoDocumento toEnum(Integer codigo) throws IllegalAccessException {
         if (codigo == null) {
             return null;
         }
 
-        for (TipoBoleto tipoBoleto : TipoBoleto.values()) {
+        for (TipoDocumento tipoBoleto : TipoDocumento.values()) {
             if (codigo.equals(tipoBoleto.getCodigo())) {
                 return tipoBoleto;
             }
