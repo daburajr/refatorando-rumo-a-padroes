@@ -11,6 +11,7 @@ import br.com.ifma.refatorandorumoapadroes.strategy.service.builder.CupomCapaBui
 import br.com.ifma.refatorandorumoapadroes.strategy.service.documento.BoletoLojaDocumento;
 import br.com.ifma.refatorandorumoapadroes.strategy.service.documento.CarneDocumento;
 import br.com.ifma.refatorandorumoapadroes.strategy.service.documento.Documento;
+import br.com.ifma.refatorandorumoapadroes.strategy.service.documento.PromissoriaDocumento;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InjectMocks;
@@ -41,6 +42,9 @@ public class ImpressaoBoletoServiceTest {
     @Mock
     private CarneDocumento carneDocumento;
 
+    @Mock
+    private PromissoriaDocumento promissoriaDocumento;
+
     @InjectMocks
     private ImpressaoBoletoService impressaoBoletoService;
 
@@ -65,11 +69,12 @@ public class ImpressaoBoletoServiceTest {
 ////        verify(boletoReports, times(1)).imprimirBoletoLoja(BoletoBuilder.boletoLojaPendente());
         verify(boletoReports, times(1)).imprimirBoletoBalcao(BoletoBuilder.boletoBalcaoPendente());
 ////        verify(boletoReports, times(1)).imprimirCarne(BoletoBuilder.carnePendente());
-        verify(boletoReports, times(1)).imprimirPromissoria(BoletoBuilder.promissoriaPendente());
+//        verify(boletoReports, times(1)).imprimirPromissoria(BoletoBuilder.promissoriaPendente());
 
-        verify(boletoImpressaoMapper, times(2)).atualizarBoletoItMarket(Mockito.any());
+        verify(boletoImpressaoMapper, times(1)).atualizarBoletoItMarket(Mockito.any());
         verify(boletoLojaDocumento, times(1)).imprime(any());
         verify(carneDocumento, times(1)).imprime(any());
+        verify(promissoriaDocumento, times(1)).imprime(any());
     }
 
     @Test
@@ -97,7 +102,7 @@ public class ImpressaoBoletoServiceTest {
     @Test
     public void deveRegistrarIncidenciaParaFalhaNaComunicaaoDoGmreports() throws IllegalAccessException {
 
-        List<BoletoItMarket> boletos = BoletoBuilder.pegaBoletosSemBoletoLojaECarne();
+        List<BoletoItMarket> boletos = BoletoBuilder.pegaBoletosBalcao();
 
         when(boletoImpressaoMapper.buscarBoletosPedentesDeImpressao())
                 .thenReturn(boletos);
@@ -107,8 +112,8 @@ public class ImpressaoBoletoServiceTest {
 
         willThrow(PdvValidationException.class).given(boletoReports).imprimirBoletoBalcao(BoletoBuilder.boletoLojaPendente());
 //        willThrow(PdvValidationException.class).given(boletoReports).imprimirBoletoLoja(BoletoBuilder.boletoLojaPendente());
-        willThrow(PdvValidationException.class).given(boletoReports).imprimirCarne(BoletoBuilder.carnePendente());
-        willThrow(PdvValidationException.class).given(boletoReports).imprimirPromissoria(BoletoBuilder.promissoriaPendente());
+//        willThrow(PdvValidationException.class).given(boletoReports).imprimirCarne(BoletoBuilder.carnePendente());
+//        willThrow(PdvValidationException.class).given(boletoReports).imprimirPromissoria(BoletoBuilder.promissoriaPendente());
 
 
         for (int count = 0; count < 15; count++) {

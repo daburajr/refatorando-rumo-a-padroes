@@ -10,6 +10,7 @@ import br.com.ifma.refatorandorumoapadroes.strategy.model.BoletoItMarket;
 import br.com.ifma.refatorandorumoapadroes.strategy.model.CupomCapaDTO;
 import br.com.ifma.refatorandorumoapadroes.strategy.service.documento.BoletoLojaDocumento;
 import br.com.ifma.refatorandorumoapadroes.strategy.service.documento.CarneDocumento;
+import br.com.ifma.refatorandorumoapadroes.strategy.service.documento.PromissoriaDocumento;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -34,6 +35,8 @@ public class ImpressaoBoletoService {
 
     private final CarneDocumento carneDocumento;
 
+    private final PromissoriaDocumento promissoriaDocumento;
+
 
     public void imprimirBoletos() {
         List<BoletoItMarket> boletos = boletoImpressaoMapper.buscarBoletosPedentesDeImpressao();
@@ -56,7 +59,8 @@ public class ImpressaoBoletoService {
         }
 
         if (!promissorias.isEmpty()) {
-            this.imprimirPromissorias(promissorias);
+//            this.imprimirPromissorias(promissorias);
+            promissoriaDocumento.imprime(promissorias);
         }
 
         if (!carnes.isEmpty()) {

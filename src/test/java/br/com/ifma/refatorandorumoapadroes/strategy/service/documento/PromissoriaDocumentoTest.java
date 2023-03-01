@@ -22,14 +22,14 @@ import static org.junit.Assert.assertEquals;
 import static org.mockito.BDDMockito.willThrow;
 import static org.mockito.Mockito.*;
 
-public class CarneDocumentoTest {
+public class PromissoriaDocumentoTest {
 
     @Mock
     private BoletoImpressaoMapper boletoImpressaoMapper;
     @Mock
     private IBoletoReports boletoReports;
     @InjectMocks
-    private CarneDocumento carneDocumento;
+    private PromissoriaDocumento promissoriaDocumento;
 
     @Before
     public void setUp() {
@@ -38,36 +38,36 @@ public class CarneDocumentoTest {
 
     @Test
     public void deveExecutaProcessamento()  {
-        boolean result = carneDocumento.executaProcessamento(TipoBoleto.CARNE);
+        boolean result = promissoriaDocumento.executaProcessamento(TipoBoleto.PROMISSORIA);
         Assert.assertTrue(result);
     }
 
     @Test
     public void deveExecutarAImpressao() {
 
-        List<BoletoItMarket> boletos = Collections.singletonList(BoletoBuilder.carnePendente());
+        List<BoletoItMarket> boletos = Collections.singletonList(BoletoBuilder.promissoriaPendente());
 
         when(boletoImpressaoMapper.buscarBoletosPedentesDeImpressao())
                 .thenReturn(boletos);
 
-        carneDocumento.imprime(boletos);
+        promissoriaDocumento.imprime(boletos);
 
-        verify(boletoReports, times(1)).imprimirBoletoLoja(BoletoBuilder.carnePendente());
+        verify(boletoReports, times(1)).imprimirBoletoLoja(BoletoBuilder.promissoriaPendente());
         verify(boletoImpressaoMapper, times(1)).atualizarBoletoItMarket(Mockito.any());
     }
 
     @Test
     public void deveRegistrarIncidenciaParaFalhaNaComunicaaoDoGmreports() throws IllegalAccessException {
 
-        List<BoletoItMarket> boletos = Collections.singletonList(BoletoBuilder.carnePendente());
+        List<BoletoItMarket> boletos = Collections.singletonList(BoletoBuilder.promissoriaPendente());
 
         when(boletoImpressaoMapper.buscarBoletosPedentesDeImpressao())
                 .thenReturn(boletos);
 
-        willThrow(PdvValidationException.class).given(boletoReports).imprimirBoletoLoja(BoletoBuilder.carnePendente());
+        willThrow(PdvValidationException.class).given(boletoReports).imprimirBoletoLoja(BoletoBuilder.promissoriaPendente());
 
         for (int count = 0; count < 15; count++) {
-            carneDocumento.imprime(boletos);
+            promissoriaDocumento.imprime(boletos);
         }
 
         for (BoletoItMarket boletoItMarket : boletos) {
