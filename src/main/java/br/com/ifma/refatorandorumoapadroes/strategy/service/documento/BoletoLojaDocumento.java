@@ -13,48 +13,10 @@ import java.util.List;
 
 @Slf4j
 @Service
-@RequiredArgsConstructor
-public class BoletoLojaDocumento implements Documento {
+public class BoletoLojaDocumento extends TemplateDocumento {
 
-    private static final TipoDocumento TIPO_DOCUMENTO = TipoDocumento.BOLETO_LOJA;
-
-    private static final Integer INCIDENCIA = 15;
-
-    private final BoletoImpressaoMapper boletoImpressaoMapper;
-    private final IBoletoReports boletoReports;
-
-    @Override
-    public boolean executaProcessamento(TipoDocumento tipo) {
-        return TIPO_DOCUMENTO.equals(tipo);
+    public BoletoLojaDocumento(BoletoImpressaoMapper boletoImpressaoMapper,
+                               IBoletoReports boletoReports) {
+        super(boletoImpressaoMapper, boletoReports);
     }
-
-    @Override
-    public void imprime(List<DocumentoItMarket> documentos) {
-        documentos.forEach( boletoItMarket -> {
-            try {
-                boletoReports.imprimirBoletoLoja(boletoItMarket);
-                this.atualizarBoletoItMarket(boletoItMarket, TipoStatusImpressao.IMPRESSAO_CONCLUIDA);
-            } catch (Exception e) {
-                this.registrarIncidenciaEError(boletoItMarket, e.getMessage());
-            }
-        });
-    }
-
-    private void atualizarBoletoItMarket(DocumentoItMarket boletoItMarket, TipoStatusImpressao statusImpressao) {
-        boletoItMarket.setTipoStatusImpressao(statusImpressao.getCodigo());
-        boletoImpressaoMapper.atualizarBoletoItMarket(boletoItMarket);
-    }
-
-    private void registrarIncidenciaEError(DocumentoItMarket boletoItMarket, String mensagemDeErro) {
-
-        boletoItMarket.adicionaIncidencia();
-
-        if (boletoItMarket.getIncidencia() >= INCIDENCIA) {
-            this.atualizarBoletoItMarket(boletoItMarket, TipoStatusImpressao.IMPRESSAO_COM_ERRO);
-            boletoImpressaoMapper.registrarError(boletoItMarket, mensagemDeErro);
-        }
-
-        boletoImpressaoMapper.atualizarBoletoItMarket(boletoItMarket);
-    }
-
 }
