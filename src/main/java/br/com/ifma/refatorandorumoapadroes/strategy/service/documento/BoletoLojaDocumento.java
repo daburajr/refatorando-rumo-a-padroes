@@ -14,9 +14,13 @@ import java.util.List;
 @Slf4j
 @Service
 public class BoletoLojaDocumento extends TemplateDocumento {
-
+    private static final TipoDocumento TIPO_DOCUMENTO = TipoDocumento.BOLETO_LOJA;
     public BoletoLojaDocumento(BoletoImpressaoMapper boletoImpressaoMapper,
                                IBoletoReports boletoReports) {
         super(boletoImpressaoMapper, boletoReports);
+    }
+    @Override
+    protected TipoDocumento pegaTipoDocumento() {
+        return TIPO_DOCUMENTO;
     }
 }

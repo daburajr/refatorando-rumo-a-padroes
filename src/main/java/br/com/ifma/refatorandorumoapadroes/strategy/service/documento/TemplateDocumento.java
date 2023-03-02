@@ -12,14 +12,13 @@ import java.util.List;
 @RequiredArgsConstructor
 public abstract class TemplateDocumento implements Documento {
 
-    private static final TipoDocumento TIPO_DOCUMENTO = TipoDocumento.BOLETO_LOJA;
     private static final Integer INCIDENCIA = 15;
     private final BoletoImpressaoMapper boletoImpressaoMapper;
     private final IBoletoReports boletoReports;
 
     @Override
     public boolean executaProcessamento(TipoDocumento tipo) {
-        return TIPO_DOCUMENTO.equals(tipo);
+        return tipo.equals(this.pegaTipoDocumento());
     }
 
     @Override
@@ -33,6 +32,8 @@ public abstract class TemplateDocumento implements Documento {
             }
         });
     }
+
+    protected abstract TipoDocumento pegaTipoDocumento();
 
     private void atualizarBoletoItMarket(DocumentoItMarket boletoItMarket, TipoStatusImpressao statusImpressao) {
         boletoItMarket.setTipoStatusImpressao(statusImpressao.getCodigo());
