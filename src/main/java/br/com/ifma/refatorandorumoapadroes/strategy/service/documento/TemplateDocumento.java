@@ -13,8 +13,9 @@ import java.util.List;
 public abstract class TemplateDocumento implements Documento {
 
     private static final Integer INCIDENCIA = 15;
-    private final BoletoImpressaoMapper boletoImpressaoMapper;
-    private final IBoletoReports boletoReports;
+
+    protected final BoletoImpressaoMapper boletoImpressaoMapper;
+
 
     @Override
     public boolean executaProcessamento(TipoDocumento tipo) {
@@ -25,7 +26,7 @@ public abstract class TemplateDocumento implements Documento {
     public void imprime(List<DocumentoItMarket> documentos) {
         documentos.forEach( boletoItMarket -> {
             try {
-                boletoReports.imprimirBoletoLoja(boletoItMarket);
+                this.executaOperacaoDeImpressao(boletoItMarket);
                 this.atualizarBoletoItMarket(boletoItMarket, TipoStatusImpressao.IMPRESSAO_CONCLUIDA);
             } catch (Exception e) {
                 this.registrarIncidenciaEError(boletoItMarket, e.getMessage());
@@ -33,7 +34,10 @@ public abstract class TemplateDocumento implements Documento {
         });
     }
 
+
     protected abstract TipoDocumento pegaTipoDocumento();
+
+    protected abstract void executaOperacaoDeImpressao(DocumentoItMarket boletoItMarket);
 
     private void atualizarBoletoItMarket(DocumentoItMarket boletoItMarket, TipoStatusImpressao statusImpressao) {
         boletoItMarket.setTipoStatusImpressao(statusImpressao.getCodigo());

@@ -15,12 +15,20 @@ import java.util.List;
 @Service
 public class BoletoLojaDocumento extends TemplateDocumento {
     private static final TipoDocumento TIPO_DOCUMENTO = TipoDocumento.BOLETO_LOJA;
+
+    private final IBoletoReports boletoReports;
     public BoletoLojaDocumento(BoletoImpressaoMapper boletoImpressaoMapper,
                                IBoletoReports boletoReports) {
-        super(boletoImpressaoMapper, boletoReports);
+        super(boletoImpressaoMapper);
+        this.boletoReports = boletoReports;
     }
     @Override
     protected TipoDocumento pegaTipoDocumento() {
         return TIPO_DOCUMENTO;
+    }
+
+    @Override
+    public void executaOperacaoDeImpressao(DocumentoItMarket boletoItMarket) {
+        boletoReports.imprimirBoletoLoja(boletoItMarket);
     }
 }
