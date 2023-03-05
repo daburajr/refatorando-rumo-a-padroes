@@ -3,66 +3,41 @@ package br.com.ifma.refatorandorumoapadroes.strategy.service.documento;
 import br.com.ifma.refatorandorumoapadroes.strategy.client.IBancoCupomClient;
 import br.com.ifma.refatorandorumoapadroes.strategy.client.IBoletoReports;
 import br.com.ifma.refatorandorumoapadroes.strategy.enumeration.TipoDocumento;
-import br.com.ifma.refatorandorumoapadroes.strategy.enumeration.TipoStatusImpressao;
 import br.com.ifma.refatorandorumoapadroes.strategy.exception.PdvValidationException;
 import br.com.ifma.refatorandorumoapadroes.strategy.mapper.BoletoImpressaoMapper;
-import br.com.ifma.refatorandorumoapadroes.strategy.model.DocumentoItMarket;
 import br.com.ifma.refatorandorumoapadroes.strategy.model.CupomCapaDTO;
-import lombok.RequiredArgsConstructor;
+import br.com.ifma.refatorandorumoapadroes.strategy.model.DocumentoItMarket;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
 import java.util.Objects;
 
 @Slf4j
 @Service
-@RequiredArgsConstructor
-public class BoletoBalcaoDocumento implements Documento {
+public class BoletoBalcaoDocumento extends TemplateDocumento {
 
     private static final TipoDocumento TIPO_DOCUMENTO = TipoDocumento.BOLETO_BALCAO;
-
-    private static final Integer INCIDENCIA = 15;
-
-    private final BoletoImpressaoMapper boletoImpressaoMapper;
-
     private final IBoletoReports boletoReports;
 
     private final IBancoCupomClient cupomCapaService;
 
-    @Override
-    public boolean executaProcessamento(TipoDocumento tipo) {
-        return TIPO_DOCUMENTO.equals(tipo);
+    public BoletoBalcaoDocumento(BoletoImpressaoMapper boletoImpressaoMapper,
+                                 IBoletoReports boletoReports,
+                                 IBancoCupomClient cupomCapaService) {
+        super(boletoImpressaoMapper);
+        this.boletoReports = boletoReports;
+        this.cupomCapaService = cupomCapaService;
     }
 
     @Override
-    public void imprime(List<DocumentoItMarket> documentos) {
-        documentos.forEach( boletoItMarket -> {
-            try {
-                this.buscarInformacoesAdicionais(boletoItMarket);
-                boletoReports.imprimirBoletoBalcao(boletoItMarket);
-                this.atualizarBoletoItMarket(boletoItMarket, TipoStatusImpressao.IMPRESSAO_CONCLUIDA);
-            } catch (Exception e) {
-                this.registrarIncidenciaEError(boletoItMarket, e.getMessage());
-            }
-        });
+    protected TipoDocumento pegaTipoDocumento() {
+        return TIPO_DOCUMENTO;
     }
 
-    private void atualizarBoletoItMarket(DocumentoItMarket boletoItMarket, TipoStatusImpressao statusImpressao) {
-        boletoItMarket.setTipoStatusImpressao(statusImpressao.getCodigo());
-        boletoImpressaoMapper.atualizarBoletoItMarket(boletoItMarket);
-    }
-
-    private void registrarIncidenciaEError(DocumentoItMarket boletoItMarket, String mensagemDeErro) {
-
-        boletoItMarket.adicionaIncidencia();
-
-        if (boletoItMarket.getIncidencia() >= INCIDENCIA) {
-            this.atualizarBoletoItMarket(boletoItMarket, TipoStatusImpressao.IMPRESSAO_COM_ERRO);
-            boletoImpressaoMapper.registrarError(boletoItMarket, mensagemDeErro);
-        }
-
-        boletoImpressaoMapper.atualizarBoletoItMarket(boletoItMarket);
+    @Override
+    protected void executaOperacaoDeImpressao(DocumentoItMarket boletoItMarket) {
+        this.buscarInformacoesAdicionais(boletoItMarket);
+        boletoReports.imprimirBoletoBalcao(boletoItMarket);
     }
 
     private void buscarInformacoesAdicionais(DocumentoItMarket boletoItMarket) {
