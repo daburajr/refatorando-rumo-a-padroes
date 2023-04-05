@@ -32,9 +32,7 @@ public class NossoNumeroService {
     private static final long ID_BANCO_BRADESCO = 237;
     private static final long ID_BANCO_SAFRA = 422;
 
-
     public List<InformacoesNossoNumero> criarNossoNumeroLoja(Long filialId, Integer pdv, Long cupom, Integer qtdeNossoNumero) {
-
 
         if (qtdeNossoNumero == null)
             throw new PdvValidationException("qtdeNosso número inválido!");
@@ -42,70 +40,73 @@ public class NossoNumeroService {
         List<InformacoesNossoNumero> informacoesNossoNumeros = new ArrayList<>();
 
         for (int quantidade = 0; quantidade < qtdeNossoNumero; quantidade++) {
-
-            Long idConta = nossoNumeroMapper.recuperarIdContaFilial(filialId);
-
-            if (idConta == null || idConta <= 0) {
-                throw new PdvValidationException("Conta inválida.");
-            }
-
-            Conta conta = contaMapper.recuperarContaPorId(idConta);
-
-            if (conta == null) {
-                throw new PdvValidationException("Conta inválida.");
-            }
-
-            Long idBanco = contaMapper.recuperarIdBancoPeloIdConta(idConta);
-
-            if (idBanco == null || idBanco <= 0) {
-                throw new PdvValidationException("Banco inválido..");
-            }
-
-            Calendar data = Calendar.getInstance();
-            String carteiraConta = null;
-            carteiraConta = conta.getCarteira();
-            carteiraConta = carteiraConta == null ? "" : carteiraConta.trim();
-
-            Long nossoNumero = nossoNumeroMapper.gerarNossoNumeroProcedure(idConta, SolicitanteNossoNumero.FRENTE_DE_LOJA.getCodigo(),
-                    filialId, pdv, data.getTime(), cupom);
-
-            if (idBanco == ID_BANCO_DO_BRASIL) {
-
-                String codigoBeneficiario = contaMapper.recuperarCodigoBeneficiarioPelaConta(idConta);
-
-                if (codigoBeneficiario == null || codigoBeneficiario.trim().isEmpty()) {
-                    throw new PdvValidationException("Código de beneficiário não cadastrado para o conta: " + idConta);
-                }
-
-                nossoNumero = Long.parseLong("181817" + StringUtils.leftPad(nossoNumero.toString(), 5, '0'));
-            }
-
-            String digitoVerificadorNossoNumero = null;
-
-            if (idBanco == ID_BANCO_BRADESCO) {
-                digitoVerificadorNossoNumero = calcularDigitoModulo11CnabComBase(
-                        carteiraConta + StringUtils.leftPad(Long.toString(nossoNumero), 11, '0'), 7);
-            } else if (idBanco == ID_BANCO_SANTANDER) {
-                digitoVerificadorNossoNumero = gerarDigitoMod11Pesos2a9NossoNumeroSantander(StringUtils.leftPad(
-                        nossoNumero.toString(), 12, '0'));
-            } else if (idBanco == ID_BANCO_DO_BRASIL) {
-                digitoVerificadorNossoNumero = gerarDigitoMod11Pesos2a9NossoNumeroSantander(StringUtils.leftPad(nossoNumero
-                        .toString().toString(), 11, '0'));
-            } else if (idBanco == ID_BANCO_SAFRA) {
-                digitoVerificadorNossoNumero = calcularDigitoModulo11CnabComBase(
-                        carteiraConta + StringUtils.leftPad(Long.toString(nossoNumero), 11, '0'), 7);
-            }
-
-            InformacoesNossoNumero informacaoNossoNumero = new InformacoesNossoNumero();
-            informacaoNossoNumero.setNossoNumero(nossoNumero);
-            informacaoNossoNumero.setDigitoVerificadorNossoNumero(digitoVerificadorNossoNumero);
-            informacaoNossoNumero.setCarteira(carteiraConta);
-            informacaoNossoNumero.setIdConta(idConta);
-
+            InformacoesNossoNumero informacaoNossoNumero = criarInformacoesNossoNumero(filialId, pdv, cupom);
             informacoesNossoNumeros.add(informacaoNossoNumero);
         }
 
         return informacoesNossoNumeros;
+    }
+
+    private InformacoesNossoNumero criarInformacoesNossoNumero(Long filialId, Integer pdv, Long cupom) {
+        Long idConta = nossoNumeroMapper.recuperarIdContaFilial(filialId);
+
+        if (idConta == null || idConta <= 0) {
+            throw new PdvValidationException("Conta inválida.");
+        }
+
+        Conta conta = contaMapper.recuperarContaPorId(idConta);
+
+        if (conta == null) {
+            throw new PdvValidationException("Conta inválida.");
+        }
+
+        Long idBanco = contaMapper.recuperarIdBancoPeloIdConta(idConta);
+
+        if (idBanco == null || idBanco <= 0) {
+            throw new PdvValidationException("Banco inválido..");
+        }
+
+        Calendar data = Calendar.getInstance();
+        String carteiraConta = null;
+        carteiraConta = conta.getCarteira();
+        carteiraConta = carteiraConta == null ? "" : carteiraConta.trim();
+
+        Long nossoNumero = nossoNumeroMapper.gerarNossoNumeroProcedure(idConta, SolicitanteNossoNumero.FRENTE_DE_LOJA.getCodigo(),
+                filialId, pdv, data.getTime(), cupom);
+
+        if (idBanco == ID_BANCO_DO_BRASIL) {
+
+            String codigoBeneficiario = contaMapper.recuperarCodigoBeneficiarioPelaConta(idConta);
+
+            if (codigoBeneficiario == null || codigoBeneficiario.trim().isEmpty()) {
+                throw new PdvValidationException("Código de beneficiário não cadastrado para o conta: " + idConta);
+            }
+
+            nossoNumero = Long.parseLong("181817" + StringUtils.leftPad(nossoNumero.toString(), 5, '0'));
+        }
+
+        String digitoVerificadorNossoNumero = null;
+
+        if (idBanco == ID_BANCO_BRADESCO) {
+            digitoVerificadorNossoNumero = calcularDigitoModulo11CnabComBase(
+                    carteiraConta + StringUtils.leftPad(Long.toString(nossoNumero), 11, '0'), 7);
+        } else if (idBanco == ID_BANCO_SANTANDER) {
+            digitoVerificadorNossoNumero = gerarDigitoMod11Pesos2a9NossoNumeroSantander(StringUtils.leftPad(
+                    nossoNumero.toString(), 12, '0'));
+        } else if (idBanco == ID_BANCO_DO_BRASIL) {
+            digitoVerificadorNossoNumero = gerarDigitoMod11Pesos2a9NossoNumeroSantander(StringUtils.leftPad(nossoNumero
+                    .toString().toString(), 11, '0'));
+        } else if (idBanco == ID_BANCO_SAFRA) {
+            digitoVerificadorNossoNumero = calcularDigitoModulo11CnabComBase(
+                    carteiraConta + StringUtils.leftPad(Long.toString(nossoNumero), 11, '0'), 7);
+        }
+
+        InformacoesNossoNumero informacaoNossoNumero = new InformacoesNossoNumero();
+        informacaoNossoNumero.setNossoNumero(nossoNumero);
+        informacaoNossoNumero.setDigitoVerificadorNossoNumero(digitoVerificadorNossoNumero);
+        informacaoNossoNumero.setCarteira(carteiraConta);
+        informacaoNossoNumero.setIdConta(idConta);
+        return informacaoNossoNumero;
     }
 
     private static String calcularDigitoModulo11CnabComBase(String numero, int base) {
