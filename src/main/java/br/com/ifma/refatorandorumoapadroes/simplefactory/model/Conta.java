@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
+import java.util.Optional;
 
 @Data
 @NoArgsConstructor
@@ -19,5 +20,11 @@ public class Conta {
     String carteira;
     String digitoVerificadorConta;
     private BigDecimal saldo;
+
+    public String getCarteira() {
+        return Optional.of(this.carteira)
+                .orElse("")
+                .trim();
+    }
 
 }

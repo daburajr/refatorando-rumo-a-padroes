@@ -25,6 +25,10 @@ public class NossoNumeroServiceTest {
     private NossoNumeroMapper nossoNumeroMapper;
     @Mock
     private ContaMapper contaMapper;
+
+    @Mock
+    private FabricaDeInformacaoNossoNumeroService fabrica;
+
     @InjectMocks
     private NossoNumeroService nossoNumeroService;
 
@@ -45,6 +49,9 @@ public class NossoNumeroServiceTest {
         when(contaMapper.recuperarContaPorId(conta.getId())).thenReturn(conta);
         when(contaMapper.recuperarIdBancoPeloIdConta(conta.getId())).thenReturn(1L);
         when(contaMapper.recuperarCodigoBeneficiarioPelaConta(conta.getId())).thenReturn("181817");
+
+        when(fabrica.criaInformacaoNossoNumeroParaBrasil(anyLong(), any(), anyLong()))
+                .thenReturn(InformacaoNossoNumeroBuilder.criaInformacaoNossoNumeroBB());
 
         when(nossoNumeroMapper.gerarNossoNumeroProcedure(anyLong(), anyInt(),
                 anyLong(), anyInt(), any(), anyLong())).thenReturn(15L);
@@ -71,6 +78,9 @@ public class NossoNumeroServiceTest {
         when(nossoNumeroMapper.gerarNossoNumeroProcedure(anyLong(), anyInt(),
                 anyLong(), anyInt(), any(), anyLong())).thenReturn(15L);
 
+        when(fabrica.criaInformacaoNossoNumeroParaSantander(anyLong(), any(), anyLong()))
+                .thenReturn(InformacaoNossoNumeroBuilder.criaInformacoesNossoNumeroSantander());
+
         List<InformacoesNossoNumero> nossoNumeros = nossoNumeroService
                 .criarNossoNumeroLoja(1L, 700, 3570L, 1);
 
@@ -95,6 +105,9 @@ public class NossoNumeroServiceTest {
         when(nossoNumeroMapper.gerarNossoNumeroProcedure(anyLong(), anyInt(),
                 anyLong(), anyInt(), any(), anyLong())).thenReturn(15L);
 
+        when(fabrica.criaInformacaoNossoNumeroParaBradesco(anyLong(), any(), anyLong()))
+                .thenReturn(InformacaoNossoNumeroBuilder.criaInformacoesNossoNumeroBradesco());
+
         List<InformacoesNossoNumero> nossoNumeros = nossoNumeroService
                 .criarNossoNumeroLoja(1L, 700, 3570L, 1);
 
@@ -118,6 +131,9 @@ public class NossoNumeroServiceTest {
 
         when(nossoNumeroMapper.gerarNossoNumeroProcedure(anyLong(), anyInt(),
                 anyLong(), anyInt(), any(), anyLong())).thenReturn(15L);
+
+        when(fabrica.criaInformacaoNossoNumeroParaSafra(anyLong(), any(), anyLong()))
+                .thenReturn(InformacaoNossoNumeroBuilder.criaInformacoesNossoNumeroSafra());
 
         List<InformacoesNossoNumero> nossoNumeros = nossoNumeroService
                 .criarNossoNumeroLoja(1L, 700, 3570L, 1);
