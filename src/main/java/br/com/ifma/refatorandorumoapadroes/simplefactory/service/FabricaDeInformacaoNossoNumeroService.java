@@ -55,14 +55,16 @@ public class FabricaDeInformacaoNossoNumeroService {
                                                                       String carteira,
                                                                       Long contaId) {
 
+
+        String  novoNossoNumero = "181817" + StringUtils.leftPad(nossoNumero.toString(), 5, '0');
+
         CalculaDigito calculaDigito = CalculaDigito.builder()
-                .nossoNumero(nossoNumero)
+                .nossoNumero(Long.parseLong(novoNossoNumero))
                 .carteira(carteira)
                 .size(11)
                 .build();
 
         String digitoVerificador = calculaDigitoVerificador(calculaDigito);
-        String  novoNossoNumero = "181817" + StringUtils.leftPad(nossoNumero.toString(), 5, '0');
 
         return InformacoesNossoNumero.builder()
                 .idConta(contaId)
