@@ -34,18 +34,18 @@ public class NossoNumeroService {
                                                              long cupom,
                                                              int quantidade) {
 
-        return Stream.iterate(1, i -> i++)
+        return Stream.iterate(1, i -> i + 1)
                 .limit(quantidade)
                 .map(f -> criarInformacoesNossoNumero(filialId, pdv, cupom))
                 .collect(Collectors.toList());
 
     }
 
-    private InformacoesNossoNumero criarInformacoesNossoNumero(Long filialId, Integer pdv, Long cupom) {
+    private InformacoesNossoNumero criarInformacoesNossoNumero(long filialId, int pdv, long cupom) {
 
         Long contaId = this.buscaContaReferenteAFilial(filialId);
         Conta conta = contaService.recuperarContaPorId(contaId);
-        Long idBanco = contaService.recuperarIdBancoPeloIdConta(contaId);
+        long idBanco = contaService.recuperarIdBancoPeloIdConta(contaId);
 
         String carteiraConta = conta.getCarteira();
         Long nossoNumero = pagaNossoNumero(filialId, pdv, cupom, contaId);
