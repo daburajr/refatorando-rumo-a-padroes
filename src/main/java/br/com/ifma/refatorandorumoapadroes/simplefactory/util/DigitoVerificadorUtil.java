@@ -9,14 +9,12 @@ public class DigitoVerificadorUtil {
     private DigitoVerificadorUtil() {}
 
     public static String calcularDigitoModulo11CnabComBase(String numero, int base) {
-
-        String padrao = retornarPadrao(numero.length(), 2, base, 2);
+        String padrao = retornarPadrao(numero.length(), 2, base, 2, Ordem.DireitaEsquerda);
 
         int soma = 0;
         for (int i = 0; i < numero.length(); i++) {
-            int valor = Integer.parseInt(String.valueOf(numero.charAt(i)))
-                    * Integer.parseInt(String.valueOf(padrao.charAt(i)));
-
+            int valor = Integer.parseInt(new Character(numero.charAt(i)).toString())
+                    * Integer.parseInt(new Character(padrao.charAt(i)).toString());
             soma += valor;
         }
 
@@ -35,14 +33,24 @@ public class DigitoVerificadorUtil {
         return retorno;
     }
 
-    private static String retornarPadrao(int qtd, int menorDigito, int maiorDigito, int primeiroNumero) {
-        StringBuilder padrao = new StringBuilder();
+    private static String retornarPadrao(int qtd, int menorDigito, int maiorDigito, int primeiroNumero, Ordem ordem) {
+        String padrao = "";
 
-        for (int i = 0; i < qtd; i++) {
-            padrao.append(padrao);
-            padrao.append(retornarValorIndice(i + primeiroNumero - menorDigito, menorDigito, maiorDigito));
+        if (ordem == Ordem.DireitaEsquerda) {
+            for (int i = 0; i < qtd; i++) {
+                padrao = String
+                        .valueOf(retornarValorIndice(i + primeiroNumero - menorDigito, menorDigito, maiorDigito))
+                        + padrao;
+            }
+        } else {
+            for (int i = 0; i < qtd; i++) {
+                padrao = String
+                        .valueOf(retornarValorIndice(i + primeiroNumero - menorDigito, menorDigito, maiorDigito))
+                        + padrao;
+            }
         }
-        return padrao.toString();
+
+        return padrao;
     }
 
     private static int retornarValorIndice(int indice, int menorDigito, int maiorDigito) {
@@ -74,6 +82,11 @@ public class DigitoVerificadorUtil {
         }
 
         return Integer.toString(11 - resto);
+    }
+
+    private static enum Ordem {
+        DireitaEsquerda,
+        EsquerdaDireita;
     }
 
 
