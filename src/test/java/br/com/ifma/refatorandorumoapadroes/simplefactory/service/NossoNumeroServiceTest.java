@@ -23,8 +23,9 @@ public class NossoNumeroServiceTest {
 
     @Mock
     private NossoNumeroMapper nossoNumeroMapper;
+
     @Mock
-    private ContaMapper contaMapper;
+    private ContaService contaService;
 
     @Mock
     private FabricaDeInformacaoNossoNumeroService fabrica;
@@ -46,9 +47,10 @@ public class NossoNumeroServiceTest {
                 .singletonList(InformacaoNossoNumeroBuilder.criaInformacaoNossoNumeroBB());
 
         when(nossoNumeroMapper.recuperarIdContaFilial(1L)).thenReturn(conta.getId());
-        when(contaMapper.recuperarContaPorId(conta.getId())).thenReturn(conta);
-        when(contaMapper.recuperarIdBancoPeloIdConta(conta.getId())).thenReturn(1L);
-        when(contaMapper.recuperarCodigoBeneficiarioPelaConta(conta.getId())).thenReturn("181817");
+        when(contaService.recuperarContaPorId(conta.getId())).thenReturn(conta);
+        when(contaService.recuperarIdBancoPeloIdConta(conta.getId())).thenReturn(1L);
+
+        doNothing().when(contaService).validaCodigoDoBeneficiario(anyLong());
 
         when(fabrica.criaInformacaoNossoNumeroParaBrasil(anyLong(), any(), anyLong()))
                 .thenReturn(InformacaoNossoNumeroBuilder.criaInformacaoNossoNumeroBB());
@@ -72,8 +74,9 @@ public class NossoNumeroServiceTest {
                 .singletonList(InformacaoNossoNumeroBuilder.criaInformacoesNossoNumeroSantander());
 
         when(nossoNumeroMapper.recuperarIdContaFilial(1L)).thenReturn(conta.getId());
-        when(contaMapper.recuperarContaPorId(conta.getId())).thenReturn(conta);
-        when(contaMapper.recuperarIdBancoPeloIdConta(conta.getId())).thenReturn(33L);
+        when(contaService.recuperarContaPorId(conta.getId())).thenReturn(conta);
+        when(contaService.recuperarIdBancoPeloIdConta(conta.getId())).thenReturn(33L);
+        doNothing().when(contaService).validaCodigoDoBeneficiario(anyLong());
 
         when(nossoNumeroMapper.gerarNossoNumeroProcedure(anyLong(), anyInt(),
                 anyLong(), anyInt(), any(), anyLong())).thenReturn(15L);
@@ -86,7 +89,7 @@ public class NossoNumeroServiceTest {
 
         assertEquals(expected, nossoNumeros);
 
-        verify(contaMapper, times(0)).recuperarCodigoBeneficiarioPelaConta(any());
+        verify(contaService, times(0)).validaCodigoDoBeneficiario(anyLong());
 
     }
 
@@ -99,8 +102,8 @@ public class NossoNumeroServiceTest {
                 .singletonList(InformacaoNossoNumeroBuilder.criaInformacoesNossoNumeroBradesco());
 
         when(nossoNumeroMapper.recuperarIdContaFilial(1L)).thenReturn(conta.getId());
-        when(contaMapper.recuperarContaPorId(conta.getId())).thenReturn(conta);
-        when(contaMapper.recuperarIdBancoPeloIdConta(conta.getId())).thenReturn(237L);
+        when(contaService.recuperarContaPorId(conta.getId())).thenReturn(conta);
+        when(contaService.recuperarIdBancoPeloIdConta(conta.getId())).thenReturn(237L);
 
         when(nossoNumeroMapper.gerarNossoNumeroProcedure(anyLong(), anyInt(),
                 anyLong(), anyInt(), any(), anyLong())).thenReturn(15L);
@@ -113,7 +116,7 @@ public class NossoNumeroServiceTest {
 
         assertEquals(expected, nossoNumeros);
 
-        verify(contaMapper, times(0)).recuperarCodigoBeneficiarioPelaConta(any());
+        verify(contaService, times(0)).validaCodigoDoBeneficiario(anyLong());
 
     }
 
@@ -126,8 +129,8 @@ public class NossoNumeroServiceTest {
                 .singletonList(InformacaoNossoNumeroBuilder.criaInformacoesNossoNumeroSafra());
 
         when(nossoNumeroMapper.recuperarIdContaFilial(1L)).thenReturn(conta.getId());
-        when(contaMapper.recuperarContaPorId(conta.getId())).thenReturn(conta);
-        when(contaMapper.recuperarIdBancoPeloIdConta(conta.getId())).thenReturn(422L);
+        when(contaService.recuperarContaPorId(conta.getId())).thenReturn(conta);
+        when(contaService.recuperarIdBancoPeloIdConta(conta.getId())).thenReturn(422L);
 
         when(nossoNumeroMapper.gerarNossoNumeroProcedure(anyLong(), anyInt(),
                 anyLong(), anyInt(), any(), anyLong())).thenReturn(15L);
@@ -140,7 +143,7 @@ public class NossoNumeroServiceTest {
 
         assertEquals(expected, nossoNumeros);
 
-        verify(contaMapper, times(0)).recuperarCodigoBeneficiarioPelaConta(any());
+        verify(contaService, times(0)).validaCodigoDoBeneficiario(anyLong());
 
     }
 
@@ -156,7 +159,7 @@ public class NossoNumeroServiceTest {
         Conta conta = ContaBuilder.criaContaBB();
 
         when(nossoNumeroMapper.recuperarIdContaFilial(1L)).thenReturn(conta.getId());
-        when(contaMapper.recuperarContaPorId(any())).thenReturn(null);
+        when(contaService.recuperarContaPorId(anyLong())).thenThrow(PdvValidationException.class);
 
         nossoNumeroService.criarNossoNumeroLoja(1L, 700, 3570L, 1);
 
@@ -168,8 +171,8 @@ public class NossoNumeroServiceTest {
         Conta conta = ContaBuilder.criaContaSafra();
 
         when(nossoNumeroMapper.recuperarIdContaFilial(1L)).thenReturn(conta.getId());
-        when(contaMapper.recuperarContaPorId(conta.getId())).thenReturn(conta);
-        when(contaMapper.recuperarIdBancoPeloIdConta(conta.getId())).thenReturn(null);
+        when(contaService.recuperarContaPorId(conta.getId())).thenReturn(conta);
+        when(contaService.recuperarIdBancoPeloIdConta(conta.getId())).thenThrow(PdvValidationException.class);
 
         when(nossoNumeroMapper.gerarNossoNumeroProcedure(anyLong(), anyInt(),
                 anyLong(), anyInt(), any(), anyLong())).thenReturn(15L);
@@ -184,20 +187,15 @@ public class NossoNumeroServiceTest {
         Conta conta = ContaBuilder.criaContaBB();
 
         when(nossoNumeroMapper.recuperarIdContaFilial(1L)).thenReturn(conta.getId());
-        when(contaMapper.recuperarContaPorId(conta.getId())).thenReturn(conta);
-        when(contaMapper.recuperarIdBancoPeloIdConta(conta.getId())).thenReturn(1L);
-        when(contaMapper.recuperarCodigoBeneficiarioPelaConta(conta.getId())).thenReturn(null);
+        when(contaService.recuperarContaPorId(conta.getId())).thenReturn(conta);
+        when(contaService.recuperarIdBancoPeloIdConta(conta.getId())).thenReturn(1L);
+        doThrow(PdvValidationException.class).when(contaService).validaCodigoDoBeneficiario(anyLong());
 
         when(nossoNumeroMapper.gerarNossoNumeroProcedure(anyLong(), anyInt(),
                 anyLong(), anyInt(), any(), anyLong())).thenReturn(15L);
 
         nossoNumeroService.criarNossoNumeroLoja(1L, 700, 3570L, 1);
 
-    }
-
-    @Test(expected = PdvValidationException.class)
-    public void naoDeveCriarNossoNumeroParaQtdNossoNumeroNulo() {
-        nossoNumeroService.criarNossoNumeroLoja(1L, 700, 3570L, null);
     }
 
 
