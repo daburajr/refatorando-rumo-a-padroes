@@ -13,46 +13,20 @@ import java.util.List;
 
 @Slf4j
 @Service
-@RequiredArgsConstructor
-public class CarneDocumento implements Documento {
+public class CarneDocumento extends TemplateDocumento {
 
-    private static final TipoDocumento TIPO_DOCUMENTO = TipoDocumento.CARNE;
-    private static final Integer INCIDENCIA = 15;
-    private final BoletoImpressaoMapper boletoImpressaoMapper;
-    private final IBoletoReports boletoReports;
 
-    @Override
-    public boolean executaProcessamento(TipoDocumento tipo) {
-        return TIPO_DOCUMENTO.equals(tipo);
+    protected CarneDocumento(BoletoImpressaoMapper boletoImpressaoMapper, IBoletoReports boletoReports) {
+        super(boletoImpressaoMapper, boletoReports);
     }
 
     @Override
-    public void imprime(List<DocumentoItMarket> documentos) {
-        documentos.forEach( boletoItMarket -> {
-            try {
-                boletoReports.imprimirCarne(boletoItMarket);
-                this.atualizarBoletoItMarket(boletoItMarket, TipoStatusImpressao.IMPRESSAO_CONCLUIDA);
-            } catch (Exception e) {
-                this.registrarIncidenciaEError(boletoItMarket, e.getMessage());
-            }
-        });
+    protected TipoDocumento pegaTipoDocumento() {
+        return TipoDocumento.CARNE;
     }
 
-    private void atualizarBoletoItMarket(DocumentoItMarket boletoItMarket, TipoStatusImpressao statusImpressao) {
-        boletoItMarket.setTipoStatusImpressao(statusImpressao.getCodigo());
-        boletoImpressaoMapper.atualizarBoletoItMarket(boletoItMarket);
+    @Override
+    protected void executaOperacaoDeImpressao(DocumentoItMarket boletoItMarket) {
+        boletoReports.imprimirCarne(boletoItMarket);
     }
-
-    private void registrarIncidenciaEError(DocumentoItMarket boletoItMarket, String mensagemDeErro) {
-
-        boletoItMarket.adicionaIncidencia();
-
-        if (boletoItMarket.getIncidencia() >= INCIDENCIA) {
-            this.atualizarBoletoItMarket(boletoItMarket, TipoStatusImpressao.IMPRESSAO_COM_ERRO);
-            boletoImpressaoMapper.registrarError(boletoItMarket, mensagemDeErro);
-        }
-
-        boletoImpressaoMapper.atualizarBoletoItMarket(boletoItMarket);
-    }
-
 }
