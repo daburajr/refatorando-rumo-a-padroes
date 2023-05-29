@@ -54,6 +54,7 @@ public class NossoNumeroService {
     }
 
     private InformacoesNossoNumero criarInformacoesNossoNumero(Long filialId, Integer pdv, Long cupom) {
+
         Long idConta = nossoNumeroMapper.recuperarIdContaFilial(filialId);
 
         if (idConta == null || idConta <= 0) {
@@ -80,15 +81,9 @@ public class NossoNumeroService {
         Long nossoNumero = nossoNumeroMapper.gerarNossoNumeroProcedure(idConta, SolicitanteNossoNumero.FRENTE_DE_LOJA.getCodigo(),
                 filialId, pdv, data.getTime(), cupom);
 
-        String digitoVerificadorNossoNumero = null;
-
         if (idBanco == ID_BANCO_BRADESCO) {
-//            digitoVerificadorNossoNumero = fabrica.calcularDigitoModulo11CnabComBase(
-//                    carteiraConta + StringUtils.leftPad(Long.toString(nossoNumero), 11, '0'), 7);
             return fabrica.criaInformacaoNossoNumeroParaBradesco(nossoNumero, carteiraConta, idConta);
         } else if (idBanco == ID_BANCO_SANTANDER) {
-//            digitoVerificadorNossoNumero = fabrica.gerarDigitoMod11Pesos2a9NossoNumeroSantander(StringUtils.leftPad(
-//                    nossoNumero.toString(), 12, '0'));
             return fabrica.criaInformacaoNossoNumeroParaSantander(nossoNumero, carteiraConta, idConta);
         } else if (idBanco == ID_BANCO_DO_BRASIL) {
 
@@ -100,28 +95,12 @@ public class NossoNumeroService {
 
             return fabrica.criaInformacaoNossoNumeroParaBrasil(nossoNumero, carteiraConta, idConta);
 
-//            nossoNumero = Long.parseLong("181817" + StringUtils.leftPad(nossoNumero.toString(), 5, '0'));
-
-//            digitoVerificadorNossoNumero = fabrica.gerarDigitoMod11Pesos2a9NossoNumeroSantander(StringUtils.leftPad(nossoNumero
-//                    .toString().toString(), 11, '0'));
-
         } else if (idBanco == ID_BANCO_SAFRA) {
-
             return fabrica.criaInformacaoNossoNumeroParaSafra(nossoNumero, carteiraConta, idConta);
-
-//            digitoVerificadorNossoNumero = fabrica.calcularDigitoModulo11CnabComBase(
-//                    carteiraConta + StringUtils.leftPad(Long.toString(nossoNumero), 11, '0'), 7);
         } else {
             throw new PdvValidationException("Banco nao encontrado.");
         }
 
-//        InformacoesNossoNumero informacaoNossoNumero = new InformacoesNossoNumero();
-//        informacaoNossoNumero.setNossoNumero(nossoNumero);
-//        informacaoNossoNumero.setDigitoVerificadorNossoNumero(digitoVerificadorNossoNumero);
-//        informacaoNossoNumero.setCarteira(carteiraConta);
-//        informacaoNossoNumero.setIdConta(idConta);
-
-//        return informacaoNossoNumero;
     }
 
 
