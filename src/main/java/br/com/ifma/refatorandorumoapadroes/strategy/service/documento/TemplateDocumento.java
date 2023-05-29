@@ -10,12 +10,9 @@ import java.util.List;
 
 public abstract class TemplateDocumento implements Documento {
 
-    private static final TipoDocumento TIPO_DOCUMENTO = TipoDocumento.BOLETO_LOJA;
-
     private static final Integer INCIDENCIA = 15;
-
     private final BoletoImpressaoMapper boletoImpressaoMapper;
-    private final IBoletoReports boletoReports;
+    protected final IBoletoReports boletoReports;
 
     public TemplateDocumento(BoletoImpressaoMapper boletoImpressaoMapper,
                              IBoletoReports boletoReports) {
@@ -25,20 +22,24 @@ public abstract class TemplateDocumento implements Documento {
 
     @Override
     public boolean executaProcessamento(TipoDocumento tipo) {
-        return TIPO_DOCUMENTO.equals(tipo);
+        return this.pegaTipoDocumento().equals(tipo);
     }
 
     @Override
     public void imprime(List<DocumentoItMarket> documentos) {
-        documentos.forEach( boletoItMarket -> {
+        documentos.forEach(boletoItMarket -> {
             try {
-                boletoReports.imprimirBoletoLoja(boletoItMarket);
+                this.executaOperacaoDeImpressao(boletoItMarket);
                 this.atualizarBoletoItMarket(boletoItMarket, TipoStatusImpressao.IMPRESSAO_CONCLUIDA);
             } catch (Exception e) {
                 this.registrarIncidenciaEError(boletoItMarket, e.getMessage());
             }
         });
     }
+
+    protected abstract TipoDocumento pegaTipoDocumento();
+
+    protected abstract void executaOperacaoDeImpressao(DocumentoItMarket boletoItMarket);
 
     private void atualizarBoletoItMarket(DocumentoItMarket boletoItMarket, TipoStatusImpressao statusImpressao) {
         boletoItMarket.setTipoStatusImpressao(statusImpressao.getCodigo());

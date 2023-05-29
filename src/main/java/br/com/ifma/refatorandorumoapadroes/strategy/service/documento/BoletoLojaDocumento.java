@@ -15,9 +15,18 @@ import java.util.List;
 @Service
 public class BoletoLojaDocumento extends TemplateDocumento {
 
-
     public BoletoLojaDocumento(BoletoImpressaoMapper boletoImpressaoMapper,
                                IBoletoReports boletoReports) {
         super(boletoImpressaoMapper, boletoReports);
+    }
+
+    @Override
+    protected TipoDocumento pegaTipoDocumento() {
+        return TipoDocumento.BOLETO_LOJA;
+    }
+
+    @Override
+    protected void executaOperacaoDeImpressao(DocumentoItMarket boletoItMarket) {
+        boletoReports.imprimirBoletoLoja(boletoItMarket);
     }
 }
