@@ -83,11 +83,13 @@ public class NossoNumeroService {
         String digitoVerificadorNossoNumero = null;
 
         if (idBanco == ID_BANCO_BRADESCO) {
-            digitoVerificadorNossoNumero = fabrica.calcularDigitoModulo11CnabComBase(
-                    carteiraConta + StringUtils.leftPad(Long.toString(nossoNumero), 11, '0'), 7);
+//            digitoVerificadorNossoNumero = fabrica.calcularDigitoModulo11CnabComBase(
+//                    carteiraConta + StringUtils.leftPad(Long.toString(nossoNumero), 11, '0'), 7);
+            return fabrica.criaInformacaoNossoNumeroParaBradesco(nossoNumero, carteiraConta, idConta);
         } else if (idBanco == ID_BANCO_SANTANDER) {
-            digitoVerificadorNossoNumero = fabrica.gerarDigitoMod11Pesos2a9NossoNumeroSantander(StringUtils.leftPad(
-                    nossoNumero.toString(), 12, '0'));
+//            digitoVerificadorNossoNumero = fabrica.gerarDigitoMod11Pesos2a9NossoNumeroSantander(StringUtils.leftPad(
+//                    nossoNumero.toString(), 12, '0'));
+            return fabrica.criaInformacaoNossoNumeroParaSantander(nossoNumero, carteiraConta, idConta);
         } else if (idBanco == ID_BANCO_DO_BRASIL) {
 
             String codigoBeneficiario = contaMapper.recuperarCodigoBeneficiarioPelaConta(idConta);
@@ -96,23 +98,30 @@ public class NossoNumeroService {
                 throw new PdvValidationException("Código de beneficiário não cadastrado para o conta: " + idConta);
             }
 
-            nossoNumero = Long.parseLong("181817" + StringUtils.leftPad(nossoNumero.toString(), 5, '0'));
+            return fabrica.criaInformacaoNossoNumeroParaBrasil(nossoNumero, carteiraConta, idConta);
 
-            digitoVerificadorNossoNumero = fabrica.gerarDigitoMod11Pesos2a9NossoNumeroSantander(StringUtils.leftPad(nossoNumero
-                    .toString().toString(), 11, '0'));
+//            nossoNumero = Long.parseLong("181817" + StringUtils.leftPad(nossoNumero.toString(), 5, '0'));
+
+//            digitoVerificadorNossoNumero = fabrica.gerarDigitoMod11Pesos2a9NossoNumeroSantander(StringUtils.leftPad(nossoNumero
+//                    .toString().toString(), 11, '0'));
 
         } else if (idBanco == ID_BANCO_SAFRA) {
-            digitoVerificadorNossoNumero = fabrica.calcularDigitoModulo11CnabComBase(
-                    carteiraConta + StringUtils.leftPad(Long.toString(nossoNumero), 11, '0'), 7);
+
+            return fabrica.criaInformacaoNossoNumeroParaSafra(nossoNumero, carteiraConta, idConta);
+
+//            digitoVerificadorNossoNumero = fabrica.calcularDigitoModulo11CnabComBase(
+//                    carteiraConta + StringUtils.leftPad(Long.toString(nossoNumero), 11, '0'), 7);
+        } else {
+            throw new PdvValidationException("Banco nao encontrado.");
         }
 
-        InformacoesNossoNumero informacaoNossoNumero = new InformacoesNossoNumero();
-        informacaoNossoNumero.setNossoNumero(nossoNumero);
-        informacaoNossoNumero.setDigitoVerificadorNossoNumero(digitoVerificadorNossoNumero);
-        informacaoNossoNumero.setCarteira(carteiraConta);
-        informacaoNossoNumero.setIdConta(idConta);
+//        InformacoesNossoNumero informacaoNossoNumero = new InformacoesNossoNumero();
+//        informacaoNossoNumero.setNossoNumero(nossoNumero);
+//        informacaoNossoNumero.setDigitoVerificadorNossoNumero(digitoVerificadorNossoNumero);
+//        informacaoNossoNumero.setCarteira(carteiraConta);
+//        informacaoNossoNumero.setIdConta(idConta);
 
-        return informacaoNossoNumero;
+//        return informacaoNossoNumero;
     }
 
 
