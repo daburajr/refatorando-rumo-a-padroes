@@ -16,6 +16,15 @@ import java.util.List;
 @Service
 public class FabricaDeInformacaoNossoNumeroService {
 
+    @Data
+    @Builder
+    @AllArgsConstructor
+    @NoArgsConstructor
+    private static class CalculaDigito {
+        private String carteira;
+        private long nossoNumero;
+        private int size;
+    }
 
     public static String calcularDigitoModulo11CnabComBase(String numero, int base) {
         String padrao = retornarPadrao(numero.length(), 2, base, 2, Ordem.DireitaEsquerda);
@@ -42,28 +51,10 @@ public class FabricaDeInformacaoNossoNumeroService {
         return retorno;
     }
 
-    private static String retornarPadrao(int qtd, int menorDigito, int maiorDigito, int primeiroNumero, Ordem ordem) {
-        String padrao = "";
-
-        if (ordem == Ordem.DireitaEsquerda) {
-            for (int i = 0; i < qtd; i++) {
-                padrao = String
-                        .valueOf(retornarValorIndice(i + primeiroNumero - menorDigito, menorDigito, maiorDigito))
-                        + padrao;
-            }
-        } else {
-            for (int i = 0; i < qtd; i++) {
-                padrao = String
-                        .valueOf(retornarValorIndice(i + primeiroNumero - menorDigito, menorDigito, maiorDigito))
-                        + padrao;
-            }
-        }
-
-        return padrao;
-    }
 
 
     public static String gerarDigitoMod11Pesos2a9NossoNumeroSantander(String sequenciaNumerica) {
+
         int[] pesos = {
                 2, 3, 4, 5, 6, 7, 8, 9
         };
@@ -89,15 +80,38 @@ public class FabricaDeInformacaoNossoNumeroService {
         return Integer.toString(11 - resto);
     }
 
-    private static int retornarValorIndice(int indice, int menorDigito, int maiorDigito) {
-        int resto = indice % (maiorDigito - menorDigito + 1);
-        return resto + menorDigito;
+    private static String retornarPadrao(int qtd, int menorDigito, int maiorDigito, int primeiroNumero, Ordem ordem) {
+        String padrao = "";
+
+        if (ordem == Ordem.DireitaEsquerda) {
+            for (int i = 0; i < qtd; i++) {
+                padrao = String
+                        .valueOf(retornarValorIndice(i + primeiroNumero - menorDigito, menorDigito, maiorDigito))
+                        + padrao;
+            }
+        } else {
+            for (int i = 0; i < qtd; i++) {
+                padrao = String
+                        .valueOf(retornarValorIndice(i + primeiroNumero - menorDigito, menorDigito, maiorDigito))
+                        + padrao;
+            }
+        }
+
+        return padrao;
     }
 
     private static enum Ordem {
         DireitaEsquerda,
         EsquerdaDireita;
     }
+
+
+    private static int retornarValorIndice(int indice, int menorDigito, int maiorDigito) {
+        int resto = indice % (maiorDigito - menorDigito + 1);
+        return resto + menorDigito;
+    }
+
+
 
 
 }
