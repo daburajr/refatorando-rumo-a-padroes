@@ -14,8 +14,8 @@ public abstract class TemplateDocumento implements Documento {
     private final BoletoImpressaoMapper boletoImpressaoMapper;
     protected final IBoletoReports boletoReports;
 
-    public TemplateDocumento(BoletoImpressaoMapper boletoImpressaoMapper,
-                             IBoletoReports boletoReports) {
+    protected TemplateDocumento(BoletoImpressaoMapper boletoImpressaoMapper,
+                                IBoletoReports boletoReports) {
         this.boletoImpressaoMapper = boletoImpressaoMapper;
         this.boletoReports = boletoReports;
     }
