@@ -2,7 +2,7 @@ package br.com.ifma.refatorandorumoapadroes.simplefactory.service;
 
 
 import br.com.ifma.refatorandorumoapadroes.simplefactory.model.InformacoesNossoNumero;
-import br.com.ifma.refatorandorumoapadroes.simplefactory.util.DigitoVerificadorUtil;
+import br.com.ifma.refatorandorumoapadroes.simplefactory.util.CalculoDigitoUtil;
 import lombok.*;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -106,7 +106,7 @@ public class FabricaDeInformacaoNossoNumeroService {
                         calculaDigito.size,
                         '0');
 
-        return DigitoVerificadorUtil.gerarDigitoMod11Pesos2a9NossoNumero(composicaoNossoNumero);
+        return CalculoDigitoUtil.gerarDigitoMod11Pesos2a9NossoNumero(composicaoNossoNumero);
     }
 
     private String calculaDigitoVerificador(CalculaDigito calculaDigito, int base) {
@@ -115,7 +115,7 @@ public class FabricaDeInformacaoNossoNumeroService {
                 calculaDigito.size,
                 '0');
 
-        return DigitoVerificadorUtil.calcularDigitoModulo11CnabComBase(composicaoNossoNumero, base);
+        return CalculoDigitoUtil.calcularDigitoModulo11CnabComBase(composicaoNossoNumero, base);
     }
 
 
