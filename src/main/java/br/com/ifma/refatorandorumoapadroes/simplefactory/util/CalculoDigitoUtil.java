@@ -4,9 +4,9 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class DigitoVerificadorUtil {
+public class CalculoDigitoUtil {
 
-    private DigitoVerificadorUtil() {}
+    private CalculoDigitoUtil() {}
 
     public static String calcularDigitoModulo11CnabComBase(String numero, int base) {
 
@@ -74,7 +74,5 @@ public class DigitoVerificadorUtil {
         int resto = indice % (maiorDigito - menorDigito + 1);
         return resto + menorDigito;
     }
-
-
 
 }
