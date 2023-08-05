@@ -23,40 +23,11 @@ import static org.springframework.http.MediaType.APPLICATION_JSON;
 @RequiredArgsConstructor
 public class UsuarioService {
 
-    private static final String URL
-            = "https://www.redesocialdecidades.org.br/users";
 
-    private final RestTemplate restTemplate;
 
     public List<UsuarioDTO> buscaTodosUsuariosMaiorDeIdade() {
         UsuarioDTO[] usuarioDTOS = buscaTodosUsuarios();
         return this.verificaUsuariosMaioresDeIdade(usuarioDTOS);
-    }
-
-    private UsuarioDTO[] buscaTodosUsuarios() {
-        try {
-
-            HttpHeaders httpHeaders = new HttpHeaders();
-            httpHeaders.setContentType(APPLICATION_JSON);
-
-            HttpEntity<String> entity = new HttpEntity<>(httpHeaders);
-
-            log.debug("Chamando API de Usuários -->");
-            UsuarioDTO[] usuariosApi = restTemplate
-                    .exchange(URL, HttpMethod.GET, entity, UsuarioDTO[].class)
-                    .getBody();
-
-            return usuariosApi;
-
-        } catch (HttpClientErrorException | HttpServerErrorException e) {
-            log.error("Erro ao chamar API de Usuários. Mensagem: {}. Detalhe: {}.",
-                    e.getMessage(), e.getResponseBodyAsString());
-            throw e;
-        } catch (Exception e) {
-            log.error("Erro ao chamar API de Usuários. Mensagem: {}",
-                    e.getMessage());
-            throw new RestClientException(e.getMessage());
-        }
     }
 
     private List<UsuarioDTO> verificaUsuariosMaioresDeIdade(UsuarioDTO[] usuariosApi) {
