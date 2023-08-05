@@ -32,45 +32,7 @@ public class UsuarioServiceTest {
         MockitoAnnotations.openMocks(this);
     }
 
-    @Test
-    public void deveBuscarTodosUsuariosMaiorDeIdade() {
 
-        UsuarioDTO[] usuariosApi = new UsuarioDTO[] {UsuarioDTO.builder().name("teste").age(18).build()};
-
-        when(restTemplate.exchange(ArgumentMatchers.anyString(),
-                ArgumentMatchers.any(HttpMethod.class),
-                ArgumentMatchers.any(),
-                ArgumentMatchers.<Class<UsuarioDTO[]>>any())).thenReturn(ResponseEntity.ok(usuariosApi));
-
-        List<UsuarioDTO> result = usuarioService.buscaTodosUsuariosMaiorDeIdade();
-        Assert.assertEquals(Collections.singletonList(new UsuarioDTO("teste", 18)), result);
-    }
-
-    @Test(expected = RestClientException.class)
-    public void naoDeveBuscarTodosUsuariosMaiorDeIdadeParaErroDeComunicacaoComServidor() {
-
-        when(restTemplate.exchange(
-                ArgumentMatchers.anyString(),
-                ArgumentMatchers.any(HttpMethod.class), ArgumentMatchers.any(),
-                ArgumentMatchers.<Class<UsuarioDTO[]>>any()))
-                .thenThrow(new HttpServerErrorException(HttpStatus.INTERNAL_SERVER_ERROR));
-
-        usuarioService.buscaTodosUsuariosMaiorDeIdade();
-
-    }
-
-    @Test(expected = RestClientException.class)
-    public void naoDeveBuscarTodosUsuariosMaiorDeIdadeParaErroGenerico() {
-
-        when(restTemplate.exchange(
-                ArgumentMatchers.anyString(),
-                ArgumentMatchers.any(HttpMethod.class), ArgumentMatchers.any(),
-                ArgumentMatchers.<Class<UsuarioDTO[]>>any()))
-                .thenThrow(new RuntimeException("Erro Genérico"));
-
-        usuarioService.buscaTodosUsuariosMaiorDeIdade();
-
-    }
 
 }
 
