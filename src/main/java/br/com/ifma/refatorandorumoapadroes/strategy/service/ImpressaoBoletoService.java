@@ -37,15 +37,28 @@ public class ImpressaoBoletoService {
 
 
     public void imprimirBoletos() {
-        List<BoletoItMarket> boletos = boletoImpressaoMapper.buscarBoletosPedentesDeImpressao();
+
+        List<BoletoItMarket> boletos
+                = boletoImpressaoMapper.buscarBoletosPedentesDeImpressao();
 
         if (boletos.isEmpty()) return;
 
-        log.info("Inicio da impessão de boletos - Qtde: " + boletos.size() + " Ids: " + boletos.stream().map(BoletoItMarket::getId).collect(Collectors.toList()));
-        List<BoletoItMarket> boletosLoja  = this.pegaBoletosDe(TipoBoleto.BOLETO_LOJA, boletos);
-        List<BoletoItMarket> boletosBalcao = this.pegaBoletosDe(TipoBoleto.BOLETO_BALCAO, boletos);
-        List<BoletoItMarket> promissorias = this.pegaBoletosDe(TipoBoleto.PROMISSORIA, boletos);
-        List<BoletoItMarket> carnes = this.pegaBoletosDe(TipoBoleto.CARNE, boletos);
+        log.info("Inicio da impessão de boletos - Qtde: " + boletos.size() + " Ids: "
+                + boletos.stream()
+                .map(BoletoItMarket::getId)
+                .collect(Collectors.toList()));
+
+        List<BoletoItMarket> boletosLoja
+                = pegaBoletosDe(TipoBoleto.BOLETO_LOJA, boletos);
+
+        List<BoletoItMarket> boletosBalcao
+                = pegaBoletosDe(TipoBoleto.BOLETO_BALCAO, boletos);
+
+        List<BoletoItMarket> promissorias
+                = pegaBoletosDe(TipoBoleto.PROMISSORIA, boletos);
+
+        List<BoletoItMarket> carnes
+                = pegaBoletosDe(TipoBoleto.CARNE, boletos);
 
         if (!boletosLoja.isEmpty()) {
             this.imprimirBoletosLoja(boletosLoja);
@@ -67,7 +80,7 @@ public class ImpressaoBoletoService {
 
 
     private void imprimirBoletosLoja(List<BoletoItMarket> boletosLoja) {
-        boletosLoja.forEach( boletoItMarket -> {
+        boletosLoja.forEach(boletoItMarket -> {
             try {
                 boletoReports.imprimirBoletoLoja(boletoItMarket);
                 this.atualizarBoletoItMarket(boletoItMarket, TipoStatusImpressao.IMPRESSAO_CONCLUIDA);
