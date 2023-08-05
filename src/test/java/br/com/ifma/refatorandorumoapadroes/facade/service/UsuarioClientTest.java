@@ -31,7 +31,7 @@ public class UsuarioClientTest {
     }
 
     @Test
-    public void deveBuscarTodosUsuariosMaiorDeIdade() {
+    public void deveBuscarTodosUsuarios() {
 
         UsuarioDTO[] usuariosApi = new UsuarioDTO[] {UsuarioDTO.builder().name("teste").age(18).build()};
 
@@ -46,7 +46,7 @@ public class UsuarioClientTest {
     }
 
     @Test(expected = RestClientException.class)
-    public void naoDeveBuscarTodosUsuariosMaiorDeIdadeParaErroDeComunicacaoComServidor() {
+    public void naoDeveBuscarTodosUsuariosParaErroDeComunicacaoComServidor() {
 
         when(restTemplate.exchange(
                 ArgumentMatchers.anyString(),
@@ -59,7 +59,7 @@ public class UsuarioClientTest {
     }
 
     @Test(expected = RestClientException.class)
-    public void naoDeveBuscarTodosUsuariosMaiorDeIdadeParaErroGenerico() {
+    public void naoDeveBuscarTodosUsuariosParaErroGenerico() {
 
         when(restTemplate.exchange(
                 ArgumentMatchers.anyString(),

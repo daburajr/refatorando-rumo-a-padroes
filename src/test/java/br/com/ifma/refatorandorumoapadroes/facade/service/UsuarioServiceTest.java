@@ -21,8 +21,9 @@ import java.util.List;
 import static org.mockito.Mockito.when;
 
 public class UsuarioServiceTest {
+
     @Mock
-    private RestTemplate restTemplate;
+    private UsuarioClient usuarioClient;
 
     @InjectMocks
     private UsuarioService usuarioService;
@@ -32,6 +33,25 @@ public class UsuarioServiceTest {
         MockitoAnnotations.openMocks(this);
     }
 
+    @Test
+    public void deveBuscarTodosUsuariosMaiorDeIdade() {
+
+        UsuarioDTO[] usuariosApi = new UsuarioDTO[] {
+                UsuarioDTO.builder()
+                        .name("test01")
+                        .age(18)
+                        .build(),
+                UsuarioDTO.builder()
+                        .name("test02")
+                        .age(10)
+                        .build(),
+        };
+
+        when(usuarioClient.buscaTodosUsuarios()).thenReturn(usuariosApi);
+
+        List<UsuarioDTO> result = usuarioService.buscaTodosUsuariosMaiorDeIdade();
+        Assert.assertEquals(List.of(new UsuarioDTO("test01", 18)), result);
+    }
 
 
 }
