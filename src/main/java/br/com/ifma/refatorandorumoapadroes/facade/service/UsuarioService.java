@@ -29,10 +29,11 @@ public class UsuarioService {
     private final RestTemplate restTemplate;
 
     public List<UsuarioDTO> buscaTodosUsuariosMaiorDeIdade() {
-        return buscaTodosUsuarios();
+        UsuarioDTO[] usuarioDTOS = buscaTodosUsuarios();
+        return this.verificaUsuariosMaioresDeIdade(usuarioDTOS);
     }
 
-    private List<UsuarioDTO> buscaTodosUsuarios() {
+    private UsuarioDTO[] buscaTodosUsuarios() {
         try {
 
             HttpHeaders httpHeaders = new HttpHeaders();
@@ -45,7 +46,7 @@ public class UsuarioService {
                     .exchange(URL, HttpMethod.GET, entity, UsuarioDTO[].class)
                     .getBody();
 
-            return this.verificaUsuariosMaioresDeIdade(usuariosApi);
+            return usuariosApi;
 
         } catch (HttpClientErrorException | HttpServerErrorException e) {
             log.error("Erro ao chamar API de Usuários. Mensagem: {}. Detalhe: {}.",
