@@ -29,6 +29,11 @@ public class UsuarioService {
 
     public List<UsuarioDTO> buscaTodosUsuariosMaiorDeIdade() {
 
+        return buscaTodosUsuarios();
+
+    }
+
+    private List<UsuarioDTO> buscaTodosUsuarios() {
         try {
 
             HttpHeaders httpHeaders = new HttpHeaders();
@@ -48,7 +53,6 @@ public class UsuarioService {
             log.error("Erro ao chamar API de Usuários. Mensagem: {}", e.getMessage());
             throw new RestClientException(e.getMessage());
         }
-
     }
 
     private List<UsuarioDTO> verificaUsuariosMaioresDeIdade(UsuarioDTO[] usuariosApi) {
