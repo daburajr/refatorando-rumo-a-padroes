@@ -8,7 +8,10 @@ import br.com.ifma.refatorandorumoapadroes.strategy.exception.PdvValidationExcep
 import br.com.ifma.refatorandorumoapadroes.strategy.mapper.BoletoImpressaoMapper;
 import br.com.ifma.refatorandorumoapadroes.strategy.model.BoletoItMarket;
 import br.com.ifma.refatorandorumoapadroes.strategy.model.CupomCapaDTO;
+import br.com.ifma.refatorandorumoapadroes.strategy.service.documento.BoletoBalcaoDocumento;
 import br.com.ifma.refatorandorumoapadroes.strategy.service.documento.BoletoLojaDocumento;
+import br.com.ifma.refatorandorumoapadroes.strategy.service.documento.CarneDocumento;
+import br.com.ifma.refatorandorumoapadroes.strategy.service.documento.PromissoriaDocumento;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,6 +32,9 @@ public class ImpressaoBoletoService {
     private final IBancoCupomClient cupomCapaService;
 
     private final BoletoLojaDocumento boletoLojaDocumento;
+    private final BoletoBalcaoDocumento boletoBalcaoDocumento;
+    private final CarneDocumento carneDocumento;
+    private final PromissoriaDocumento promissoriaDocumento;
 
     private static final Integer INCIDENCIA = 15;
 
@@ -63,15 +69,18 @@ public class ImpressaoBoletoService {
         }
 
         if (!boletosBalcao.isEmpty()) {
-            this.imprimirBoletosBalcao(boletosBalcao);
+//            this.imprimirBoletosBalcao(boletosBalcao);
+            boletoBalcaoDocumento.imprime(boletosBalcao);
         }
 
         if (!promissorias.isEmpty()) {
-            this.imprimirPromissorias(promissorias);
+//            this.imprimirPromissorias(promissorias);
+            promissoriaDocumento.imprime(promissorias);
         }
 
         if (!carnes.isEmpty()) {
-            this.imprimirCarnes(carnes);
+//            this.imprimirCarnes(carnes);
+            carneDocumento.imprime(carnes);
         }
 
     }
