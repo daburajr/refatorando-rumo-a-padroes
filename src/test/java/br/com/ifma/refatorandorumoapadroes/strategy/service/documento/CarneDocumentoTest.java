@@ -1,6 +1,5 @@
 package br.com.ifma.refatorandorumoapadroes.strategy.service.documento;
 
-import br.com.ifma.refatorandorumoapadroes.strategy.client.IBancoCupomClient;
 import br.com.ifma.refatorandorumoapadroes.strategy.client.IBoletoReports;
 import br.com.ifma.refatorandorumoapadroes.strategy.enumeration.TipoBoleto;
 import br.com.ifma.refatorandorumoapadroes.strategy.enumeration.TipoStatusImpressao;
@@ -19,23 +18,18 @@ import org.mockito.MockitoAnnotations;
 import java.util.Collections;
 import java.util.List;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 import static org.mockito.BDDMockito.willThrow;
 import static org.mockito.Mockito.*;
 
-public class BoletoLojaDocumentoTest {
+public class CarneDocumentoTest {
 
     @Mock
     private BoletoImpressaoMapper boletoImpressaoMapper;
-
     @Mock
     private IBoletoReports boletoReports;
-
-    @Mock
-    private IBancoCupomClient cupomCapaService;
-
     @InjectMocks
-    private BoletoLojaDocumento boletoLojaDocumento;
+    private CarneDocumento carneDocumento;
 
     @Before
     public void setUp() {
@@ -44,35 +38,35 @@ public class BoletoLojaDocumentoTest {
 
     @Test
     public void deveExecutaProcessamento()  {
-        boolean result = boletoLojaDocumento.executaProcessamento(TipoBoleto.BOLETO_LOJA);
+        boolean result = carneDocumento.executaProcessamento(TipoBoleto.CARNE);
         Assert.assertTrue(result);
     }
 
     @Test
-    public void deveImprimirBoletoLoja() {
+    public void deveImprimirBoletoCarne() {
 
         when(boletoImpressaoMapper.buscarBoletosPedentesDeImpressao())
-                .thenReturn(Collections.singletonList(BoletoBuilder.boletoLojaPendente()));
+                .thenReturn(Collections.singletonList(BoletoBuilder.carnePendente()));
 
-        boletoLojaDocumento.imprime(Collections.singletonList(BoletoBuilder.boletoLojaPendente()));
+        carneDocumento.imprime(Collections.singletonList(BoletoBuilder.carnePendente()));
 
-        verify(boletoReports, times(1)).imprimirBoletoLoja(BoletoBuilder.boletoLojaPendente());
+        verify(boletoReports, times(1)).imprimirCarne(BoletoBuilder.carnePendente());
         verify(boletoImpressaoMapper, times(1)).atualizarBoletoItMarket(Mockito.any());
 
     }
 
     @Test
-    public void deveRegistrarIncidenciaParaFalhaNaComunicaaoDoGmreportsParaBoletoLoja() throws IllegalAccessException {
+    public void deveRegistrarIncidenciaParaFalhaNaComunicaaoDoGmreportsParaCarne() throws IllegalAccessException {
 
-        List<BoletoItMarket> boletos = Collections.singletonList(BoletoBuilder.boletoLojaPendente());
+        List<BoletoItMarket> boletos = Collections.singletonList(BoletoBuilder.carnePendente());
 
         when(boletoImpressaoMapper.buscarBoletosPedentesDeImpressao())
                 .thenReturn(boletos);
 
-        willThrow(PdvValidationException.class).given(boletoReports).imprimirBoletoLoja(BoletoBuilder.boletoBalcaoPendente());
+        willThrow(PdvValidationException.class).given(boletoReports).imprimirCarne(BoletoBuilder.carnePendente());
 
         for (int count = 0; count < 15; count++) {
-            boletoLojaDocumento.imprime(boletos);
+            carneDocumento.imprime(boletos);
         }
 
         for (BoletoItMarket boletoItMarket : boletos) {
@@ -81,4 +75,5 @@ public class BoletoLojaDocumentoTest {
         }
 
     }
+
 }

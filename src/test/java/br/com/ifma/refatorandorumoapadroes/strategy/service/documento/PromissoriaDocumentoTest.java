@@ -1,6 +1,5 @@
 package br.com.ifma.refatorandorumoapadroes.strategy.service.documento;
 
-import br.com.ifma.refatorandorumoapadroes.strategy.client.IBancoCupomClient;
 import br.com.ifma.refatorandorumoapadroes.strategy.client.IBoletoReports;
 import br.com.ifma.refatorandorumoapadroes.strategy.enumeration.TipoBoleto;
 import br.com.ifma.refatorandorumoapadroes.strategy.enumeration.TipoStatusImpressao;
@@ -23,19 +22,14 @@ import static org.junit.Assert.*;
 import static org.mockito.BDDMockito.willThrow;
 import static org.mockito.Mockito.*;
 
-public class BoletoLojaDocumentoTest {
+public class PromissoriaDocumentoTest {
 
     @Mock
     private BoletoImpressaoMapper boletoImpressaoMapper;
-
     @Mock
     private IBoletoReports boletoReports;
-
-    @Mock
-    private IBancoCupomClient cupomCapaService;
-
     @InjectMocks
-    private BoletoLojaDocumento boletoLojaDocumento;
+    private PromissoriaDocumento promissoriaDocumento;
 
     @Before
     public void setUp() {
@@ -44,41 +38,47 @@ public class BoletoLojaDocumentoTest {
 
     @Test
     public void deveExecutaProcessamento()  {
-        boolean result = boletoLojaDocumento.executaProcessamento(TipoBoleto.BOLETO_LOJA);
+        boolean result = promissoriaDocumento.executaProcessamento(TipoBoleto.PROMISSORIA);
         Assert.assertTrue(result);
     }
 
     @Test
-    public void deveImprimirBoletoLoja() {
+    public void deveImprimirBoletoPromissoria() {
 
         when(boletoImpressaoMapper.buscarBoletosPedentesDeImpressao())
-                .thenReturn(Collections.singletonList(BoletoBuilder.boletoLojaPendente()));
+                .thenReturn(Collections.singletonList(BoletoBuilder.promissoriaPendente()));
 
-        boletoLojaDocumento.imprime(Collections.singletonList(BoletoBuilder.boletoLojaPendente()));
+        promissoriaDocumento.imprime(Collections.singletonList(BoletoBuilder.promissoriaPendente()));
 
-        verify(boletoReports, times(1)).imprimirBoletoLoja(BoletoBuilder.boletoLojaPendente());
+        verify(boletoReports, times(1)).imprimirPromissoria(BoletoBuilder.promissoriaPendente());
         verify(boletoImpressaoMapper, times(1)).atualizarBoletoItMarket(Mockito.any());
 
     }
 
     @Test
-    public void deveRegistrarIncidenciaParaFalhaNaComunicaaoDoGmreportsParaBoletoLoja() throws IllegalAccessException {
+    public void deveRegistrarIncidenciaParaFalhaNaComunicaaoDoGmreportsParaPromissoria() throws IllegalAccessException {
 
-        List<BoletoItMarket> boletos = Collections.singletonList(BoletoBuilder.boletoLojaPendente());
+        List<BoletoItMarket> boletos = Collections.singletonList(BoletoBuilder.promissoriaPendente());
 
         when(boletoImpressaoMapper.buscarBoletosPedentesDeImpressao())
                 .thenReturn(boletos);
 
-        willThrow(PdvValidationException.class).given(boletoReports).imprimirBoletoLoja(BoletoBuilder.boletoBalcaoPendente());
+        willThrow(PdvValidationException.class).given(boletoReports)
+                .imprimirPromissoria(BoletoBuilder.promissoriaPendente());
 
         for (int count = 0; count < 15; count++) {
-            boletoLojaDocumento.imprime(boletos);
+            promissoriaDocumento.imprime(boletos);
         }
 
         for (BoletoItMarket boletoItMarket : boletos) {
+
             assertEquals(15, boletoItMarket.getIncidencia());
-            assertEquals(TipoStatusImpressao.IMPRESSAO_COM_ERRO, TipoStatusImpressao.toEnum(boletoItMarket.getTipoStatusImpressao()));
+
+            assertEquals(TipoStatusImpressao.IMPRESSAO_COM_ERRO,
+                    TipoStatusImpressao.toEnum(boletoItMarket.getTipoStatusImpressao()));
+
         }
 
     }
+
 }
