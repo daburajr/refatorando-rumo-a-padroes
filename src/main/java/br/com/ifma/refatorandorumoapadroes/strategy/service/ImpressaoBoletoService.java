@@ -39,12 +39,5 @@ public class ImpressaoBoletoService {
 
     }
 
-    private List<BoletoItMarket> pegaBoletosDe(TipoBoleto tipoBoleto, List<BoletoItMarket> boletos) {
-        return boletos
-                .stream()
-                .filter(boletoItMarket -> boletoItMarket.getTipoBoleto().equals(tipoBoleto.getCodigo()))
-                .collect(Collectors.toList());
-    }
-
 
 }
