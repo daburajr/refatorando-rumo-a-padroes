@@ -62,25 +62,142 @@ public class ImpressaoBoletoServiceTest {
     }
 
     @Test
-    public void deveRegistrarIncidenciaParaCupomNuloDoBoletoBalcao() throws IllegalAccessException {
-
-        BoletoItMarket boletoBalcao = BoletoBuilder.boletoBalcaoPendente();
-        int numeroTentativas = 15;
+    public void deveImprimirBoletoLoja() {
 
         when(boletoImpressaoMapper.buscarBoletosPedentesDeImpressao())
-                .thenReturn(Collections.singletonList(boletoBalcao));
+                .thenReturn(Collections.singletonList(BoletoBuilder.boletoLojaPendente()));
+
+        impressaoBoletoService.imprimirBoletos();
+
+        verify(boletoReports, times(1)).imprimirBoletoLoja(BoletoBuilder.boletoLojaPendente());
+        verify(boletoImpressaoMapper, times(1)).atualizarBoletoItMarket(Mockito.any());
+
+    }
+
+    @Test
+    public void deveImprimirBoletoBalcao() {
+
+        when(boletoImpressaoMapper.buscarBoletosPedentesDeImpressao())
+                .thenReturn(Collections.singletonList(BoletoBuilder.boletoBalcaoPendente()));
 
         when(cupomCapaService.buscarCupomCapa(1L, 700, 3570L))
-                .thenReturn(null);
+                .thenReturn(CupomCapaBuilder.cupomCapaDTO());
+
+        impressaoBoletoService.imprimirBoletos();
+
+        verify(boletoReports, times(1)).imprimirBoletoBalcao(BoletoBuilder.boletoBalcaoPendente());
+        verify(boletoImpressaoMapper, times(1)).atualizarBoletoItMarket(Mockito.any());
+
+    }
+
+    @Test
+    public void deveImprimirBoletoCarne() {
+
+        when(boletoImpressaoMapper.buscarBoletosPedentesDeImpressao())
+                .thenReturn(Collections.singletonList(BoletoBuilder.carnePendente()));
+
+        impressaoBoletoService.imprimirBoletos();
+
+        verify(boletoReports, times(1)).imprimirCarne(BoletoBuilder.carnePendente());
+        verify(boletoImpressaoMapper, times(1)).atualizarBoletoItMarket(Mockito.any());
+
+    }
+
+    @Test
+    public void deveImprimirBoletoPromissoria() {
+
+        when(boletoImpressaoMapper.buscarBoletosPedentesDeImpressao())
+                .thenReturn(Collections.singletonList(BoletoBuilder.promissoriaPendente()));
+
+        impressaoBoletoService.imprimirBoletos();
+
+        verify(boletoReports, times(1)).imprimirPromissoria(BoletoBuilder.promissoriaPendente());
+        verify(boletoImpressaoMapper, times(1)).atualizarBoletoItMarket(Mockito.any());
+
+    }
+
+    @Test
+    public void deveRegistrarIncidenciaParaFalhaNaComunicaaoDoGmreportsParaBoletoLoja() throws IllegalAccessException {
+
+        List<BoletoItMarket> boletos = Collections.singletonList(BoletoBuilder.boletoLojaPendente());
+
+        when(boletoImpressaoMapper.buscarBoletosPedentesDeImpressao())
+                .thenReturn(boletos);
+
+        willThrow(PdvValidationException.class).given(boletoReports).imprimirBoletoLoja(BoletoBuilder.boletoBalcaoPendente());
 
         for (int count = 0; count < 15; count++) {
             impressaoBoletoService.imprimirBoletos();
         }
 
+        for (BoletoItMarket boletoItMarket : boletos) {
+            assertEquals(15, boletoItMarket.getIncidencia());
+            assertEquals(TipoStatusImpressao.IMPRESSAO_COM_ERRO, TipoStatusImpressao.toEnum(boletoItMarket.getTipoStatusImpressao()));
+        }
 
-        assertEquals(numeroTentativas, boletoBalcao.getIncidencia());
-        assertEquals(TipoStatusImpressao.IMPRESSAO_COM_ERRO, TipoStatusImpressao.toEnum(boletoBalcao.getTipoStatusImpressao()));
-        verify(boletoImpressaoMapper, times(1)).registrarError(any(), anyString());
+    }
+
+    @Test
+    public void deveRegistrarIncidenciaParaFalhaNaComunicaaoDoGmreportsParaBoletoBalcao() throws IllegalAccessException {
+
+        List<BoletoItMarket> boletos = Collections.singletonList(BoletoBuilder.boletoBalcaoPendente());
+
+        when(boletoImpressaoMapper.buscarBoletosPedentesDeImpressao())
+                .thenReturn(boletos);
+
+        willThrow(PdvValidationException.class).given(boletoReports).imprimirBoletoBalcao(BoletoBuilder.boletoBalcaoPendente());
+
+        for (int count = 0; count < 15; count++) {
+            impressaoBoletoService.imprimirBoletos();
+        }
+
+        for (BoletoItMarket boletoItMarket : boletos) {
+            assertEquals(15, boletoItMarket.getIncidencia());
+            assertEquals(TipoStatusImpressao.IMPRESSAO_COM_ERRO, TipoStatusImpressao.toEnum(boletoItMarket.getTipoStatusImpressao()));
+        }
+
+    }
+
+    @Test
+    public void deveRegistrarIncidenciaParaFalhaNaComunicaaoDoGmreportsParaCarne() throws IllegalAccessException {
+
+        List<BoletoItMarket> boletos = Collections.singletonList(BoletoBuilder.carnePendente());
+
+        when(boletoImpressaoMapper.buscarBoletosPedentesDeImpressao())
+                .thenReturn(boletos);
+
+        willThrow(PdvValidationException.class).given(boletoReports).imprimirCarne(BoletoBuilder.carnePendente());
+
+        for (int count = 0; count < 15; count++) {
+            impressaoBoletoService.imprimirBoletos();
+        }
+
+        for (BoletoItMarket boletoItMarket : boletos) {
+            assertEquals(15, boletoItMarket.getIncidencia());
+            assertEquals(TipoStatusImpressao.IMPRESSAO_COM_ERRO, TipoStatusImpressao.toEnum(boletoItMarket.getTipoStatusImpressao()));
+        }
+
+    }
+
+    @Test
+    public void deveRegistrarIncidenciaParaFalhaNaComunicaaoDoGmreportsParaPromissoria() throws IllegalAccessException {
+
+        List<BoletoItMarket> boletos = Collections.singletonList(BoletoBuilder.promissoriaPendente());
+
+        when(boletoImpressaoMapper.buscarBoletosPedentesDeImpressao())
+                .thenReturn(boletos);
+
+        willThrow(PdvValidationException.class).given(boletoReports).imprimirPromissoria(BoletoBuilder.promissoriaPendente());
+
+        for (int count = 0; count < 15; count++) {
+            impressaoBoletoService.imprimirBoletos();
+        }
+
+        for (BoletoItMarket boletoItMarket : boletos) {
+            assertEquals(15, boletoItMarket.getIncidencia());
+            assertEquals(TipoStatusImpressao.IMPRESSAO_COM_ERRO, TipoStatusImpressao.toEnum(boletoItMarket.getTipoStatusImpressao()));
+        }
+
     }
 
     @Test
@@ -110,6 +227,28 @@ public class ImpressaoBoletoServiceTest {
         }
 
 
+    }
+
+    @Test
+    public void deveRegistrarIncidenciaParaCupomNuloDoBoletoBalcao() throws IllegalAccessException {
+
+        BoletoItMarket boletoBalcao = BoletoBuilder.boletoBalcaoPendente();
+        int numeroTentativas = 15;
+
+        when(boletoImpressaoMapper.buscarBoletosPedentesDeImpressao())
+                .thenReturn(Collections.singletonList(boletoBalcao));
+
+        when(cupomCapaService.buscarCupomCapa(1L, 700, 3570L))
+                .thenReturn(null);
+
+        for (int count = 0; count < 15; count++) {
+            impressaoBoletoService.imprimirBoletos();
+        }
+
+
+        assertEquals(numeroTentativas, boletoBalcao.getIncidencia());
+        assertEquals(TipoStatusImpressao.IMPRESSAO_COM_ERRO, TipoStatusImpressao.toEnum(boletoBalcao.getTipoStatusImpressao()));
+        verify(boletoImpressaoMapper, times(1)).registrarError(any(), anyString());
     }
 
 

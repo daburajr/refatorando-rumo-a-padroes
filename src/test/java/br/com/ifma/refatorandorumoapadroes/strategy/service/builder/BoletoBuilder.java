@@ -44,7 +44,7 @@ public class BoletoBuilder {
                 .filialId(1L)
                 .pdv(700)
                 .cupom(3570L)
-                .finalizadora(5)
+                .finalizadora(10)
                 .valorBoleto(BigDecimal.valueOf(250))
                 .cpfOuCnpj("60607070787877")
                 .dataDocumento(LocalDateTime.now().toString())
