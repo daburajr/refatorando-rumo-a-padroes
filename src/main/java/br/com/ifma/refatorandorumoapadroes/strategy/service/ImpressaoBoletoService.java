@@ -8,6 +8,8 @@ import br.com.ifma.refatorandorumoapadroes.strategy.exception.PdvValidationExcep
 import br.com.ifma.refatorandorumoapadroes.strategy.mapper.BoletoImpressaoMapper;
 import br.com.ifma.refatorandorumoapadroes.strategy.model.BoletoItMarket;
 import br.com.ifma.refatorandorumoapadroes.strategy.model.CupomCapaDTO;
+import br.com.ifma.refatorandorumoapadroes.strategy.service.documento.BoletoLojaDocumento;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -16,24 +18,19 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
-@Service
+
 @Slf4j
+@Service
+@RequiredArgsConstructor
 public class ImpressaoBoletoService {
 
     private final BoletoImpressaoMapper boletoImpressaoMapper;
     private final IBoletoReports boletoReports;
     private final IBancoCupomClient cupomCapaService;
 
-    private static final Integer INCIDENCIA = 15;
+    private final BoletoLojaDocumento boletoLojaDocumento;
 
-    @Autowired
-    public ImpressaoBoletoService(BoletoImpressaoMapper boletoImpressaoMapper,
-                                  IBoletoReports boletoReports,
-                                  IBancoCupomClient cupomCapaService) {
-        this.boletoImpressaoMapper = boletoImpressaoMapper;
-        this.boletoReports = boletoReports;
-        this.cupomCapaService = cupomCapaService;
-    }
+    private static final Integer INCIDENCIA = 15;
 
 
     public void imprimirBoletos() {
@@ -61,7 +58,8 @@ public class ImpressaoBoletoService {
                 = pegaBoletosDe(TipoBoleto.CARNE, boletos);
 
         if (!boletosLoja.isEmpty()) {
-            this.imprimirBoletosLoja(boletosLoja);
+//            this.imprimirBoletosLoja(boletosLoja);
+            boletoLojaDocumento.imprime(boletosLoja);
         }
 
         if (!boletosBalcao.isEmpty()) {
