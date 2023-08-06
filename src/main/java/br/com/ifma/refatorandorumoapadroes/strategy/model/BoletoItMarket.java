@@ -1,5 +1,6 @@
 package br.com.ifma.refatorandorumoapadroes.strategy.model;
 
+import br.com.ifma.refatorandorumoapadroes.strategy.enumeration.TipoBoleto;
 import br.com.ifma.refatorandorumoapadroes.strategy.enumeration.TipoStatusImpressao;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -61,5 +62,13 @@ public class BoletoItMarket {
     public void reimprimir() {
         this.incidencia = 0;
         this.tipoStatusImpressao = TipoStatusImpressao.IMPRESSAO_PEDENTE.getCodigo();
+    }
+
+    public TipoBoleto pegaTipoDocumento() {
+        try {
+            return TipoBoleto.toEnum(tipoBoleto);
+        } catch (IllegalAccessException e) {
+            return null;
+        }
     }
 }

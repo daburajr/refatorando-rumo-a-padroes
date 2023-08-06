@@ -3,16 +3,16 @@ package br.com.ifma.refatorandorumoapadroes.strategy.service;
 import br.com.ifma.refatorandorumoapadroes.strategy.enumeration.TipoBoleto;
 import br.com.ifma.refatorandorumoapadroes.strategy.mapper.BoletoImpressaoMapper;
 import br.com.ifma.refatorandorumoapadroes.strategy.model.BoletoItMarket;
-import br.com.ifma.refatorandorumoapadroes.strategy.service.documento.BoletoBalcaoDocumento;
-import br.com.ifma.refatorandorumoapadroes.strategy.service.documento.BoletoLojaDocumento;
-import br.com.ifma.refatorandorumoapadroes.strategy.service.documento.CarneDocumento;
-import br.com.ifma.refatorandorumoapadroes.strategy.service.documento.PromissoriaDocumento;
+import br.com.ifma.refatorandorumoapadroes.strategy.service.documento.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
+
+import static java.util.stream.Collectors.groupingBy;
 
 
 @Slf4j
@@ -21,51 +21,21 @@ import java.util.stream.Collectors;
 public class ImpressaoBoletoService {
 
     private final BoletoImpressaoMapper boletoImpressaoMapper;
-
-    private final BoletoLojaDocumento boletoLojaDocumento;
-    private final BoletoBalcaoDocumento boletoBalcaoDocumento;
-    private final CarneDocumento carneDocumento;
-    private final PromissoriaDocumento promissoriaDocumento;
+    private final List<Documento> processaDocumentos;
 
     public void imprimirBoletos() {
 
-        List<BoletoItMarket> boletos
-                = boletoImpressaoMapper.buscarBoletosPedentesDeImpressao();
+        List<BoletoItMarket> documentosPendente = boletoImpressaoMapper
+                .buscarBoletosPedentesDeImpressao();
 
-        if (boletos.isEmpty()) return;
+        Map<TipoBoleto, List<BoletoItMarket>> boletosAgrupadosPorTipo = documentosPendente.stream()
+                .collect(groupingBy(BoletoItMarket::pegaTipoDocumento));
 
-        log.info("Inicio da impessão de boletos - Qtde: " + boletos.size() + " Ids: "
-                + boletos.stream()
-                .map(BoletoItMarket::getId)
-                .collect(Collectors.toList()));
+        boletosAgrupadosPorTipo.forEach((tipo, documentos) -> processaDocumentos.stream()
+                .filter(doc -> doc.executaProcessamento(tipo))
+                .findAny()
+                .ifPresent(doc -> doc.imprime(documentos)));
 
-        List<BoletoItMarket> boletosLoja
-                = pegaBoletosDe(TipoBoleto.BOLETO_LOJA, boletos);
-
-        List<BoletoItMarket> boletosBalcao
-                = pegaBoletosDe(TipoBoleto.BOLETO_BALCAO, boletos);
-
-        List<BoletoItMarket> promissorias
-                = pegaBoletosDe(TipoBoleto.PROMISSORIA, boletos);
-
-        List<BoletoItMarket> carnes
-                = pegaBoletosDe(TipoBoleto.CARNE, boletos);
-
-        if (!boletosLoja.isEmpty()) {
-            boletoLojaDocumento.imprime(boletosLoja);
-        }
-
-        if (!boletosBalcao.isEmpty()) {
-            boletoBalcaoDocumento.imprime(boletosBalcao);
-        }
-
-        if (!promissorias.isEmpty()) {
-            promissoriaDocumento.imprime(promissorias);
-        }
-
-        if (!carnes.isEmpty()) {
-            carneDocumento.imprime(carnes);
-        }
 
     }
 
