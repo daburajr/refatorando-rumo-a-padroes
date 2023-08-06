@@ -2,11 +2,11 @@ package br.com.ifma.refatorandorumoapadroes.strategy.service.documento;
 
 import br.com.ifma.refatorandorumoapadroes.strategy.client.IBancoCupomClient;
 import br.com.ifma.refatorandorumoapadroes.strategy.client.IBoletoReports;
-import br.com.ifma.refatorandorumoapadroes.strategy.enumeration.TipoBoleto;
+import br.com.ifma.refatorandorumoapadroes.strategy.enumeration.TipoDocumento;
 import br.com.ifma.refatorandorumoapadroes.strategy.enumeration.TipoStatusImpressao;
 import br.com.ifma.refatorandorumoapadroes.strategy.exception.PdvValidationException;
 import br.com.ifma.refatorandorumoapadroes.strategy.mapper.BoletoImpressaoMapper;
-import br.com.ifma.refatorandorumoapadroes.strategy.model.BoletoItMarket;
+import br.com.ifma.refatorandorumoapadroes.strategy.model.DocumentoItMarket;
 import br.com.ifma.refatorandorumoapadroes.strategy.model.CupomCapaDTO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -15,7 +15,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Objects;
 
-import static br.com.ifma.refatorandorumoapadroes.strategy.enumeration.TipoBoleto.BOLETO_BALCAO;
+import static br.com.ifma.refatorandorumoapadroes.strategy.enumeration.TipoDocumento.BOLETO_BALCAO;
 
 @Slf4j
 @Service
@@ -29,64 +29,64 @@ public class BoletoBalcaoDocumento implements Documento {
     private static final Integer INCIDENCIA = 15;
 
     @Override
-    public boolean executaProcessamento(TipoBoleto tipo) {
+    public boolean executaProcessamento(TipoDocumento tipo) {
         return BOLETO_BALCAO.equals(tipo);
     }
 
     @Override
-    public void imprime(List<BoletoItMarket> documentos) {
-        documentos.forEach(boletoItMarket -> {
+    public void imprime(List<DocumentoItMarket> documentos) {
+        documentos.forEach(documentoItMarket -> {
             try {
 
-                this.buscarInformacoesAdicionais(boletoItMarket);
-                boletoReports.imprimirBoletoBalcao(boletoItMarket);
+                this.buscarInformacoesAdicionais(documentoItMarket);
+                boletoReports.imprimirBoletoBalcao(documentoItMarket);
 
-                this.atualizarBoletoItMarket(boletoItMarket,
+                this.atualizarBoletoItMarket(documentoItMarket,
                         TipoStatusImpressao.IMPRESSAO_CONCLUIDA);
 
             } catch (Exception e) {
-                this.registrarIncidenciaEError(boletoItMarket, e.getMessage());
+                this.registrarIncidenciaEError(documentoItMarket, e.getMessage());
             }
         });
     }
 
-    private void registrarIncidenciaEError(BoletoItMarket boletoItMarket,
+    private void registrarIncidenciaEError(DocumentoItMarket documentoItMarket,
                                            String mensagemDeErro) {
 
-        boletoItMarket.adicionaIncidencia();
+        documentoItMarket.adicionaIncidencia();
 
-        if (boletoItMarket.getIncidencia() >= INCIDENCIA) {
+        if (documentoItMarket.getIncidencia() >= INCIDENCIA) {
 
-            this.atualizarBoletoItMarket(boletoItMarket,
+            this.atualizarBoletoItMarket(documentoItMarket,
                     TipoStatusImpressao.IMPRESSAO_COM_ERRO);
 
             boletoImpressaoMapper
-                    .registrarError(boletoItMarket, mensagemDeErro);
+                    .registrarError(documentoItMarket, mensagemDeErro);
         }
 
-        boletoImpressaoMapper.atualizarBoletoItMarket(boletoItMarket);
+        boletoImpressaoMapper.atualizarBoletoItMarket(documentoItMarket);
     }
 
-    private void atualizarBoletoItMarket(BoletoItMarket boletoItMarket,
+    private void atualizarBoletoItMarket(DocumentoItMarket documentoItMarket,
                                          TipoStatusImpressao statusImpressao) {
-        boletoItMarket.setTipoStatusImpressao(statusImpressao.getCodigo());
-        boletoImpressaoMapper.atualizarBoletoItMarket(boletoItMarket);
+        documentoItMarket.setTipoStatusImpressao(statusImpressao.getCodigo());
+        boletoImpressaoMapper.atualizarBoletoItMarket(documentoItMarket);
     }
 
-    private void buscarInformacoesAdicionais(BoletoItMarket boletoItMarket) {
+    private void buscarInformacoesAdicionais(DocumentoItMarket documentoItMarket) {
 
-        if (Objects.isNull(boletoItMarket.getIdPedido()) || Objects.isNull(boletoItMarket.getDataMovimento())) {
+        if (Objects.isNull(documentoItMarket.getIdPedido()) || Objects.isNull(documentoItMarket.getDataMovimento())) {
 
-            CupomCapaDTO cupomCapaDTO = cupomCapaService.buscarCupomCapa(boletoItMarket.getFilialId(),
-                    boletoItMarket.getPdv(), boletoItMarket.getCupom());
+            CupomCapaDTO cupomCapaDTO = cupomCapaService.buscarCupomCapa(documentoItMarket.getFilialId(),
+                    documentoItMarket.getPdv(), documentoItMarket.getCupom());
 
             final String recurso = "service=/boletoservice/ImpressaoBoletoService::imprimirBoletosBalcao::validarBoletoBalcao";
 
             if (Objects.isNull(cupomCapaDTO))
                 throw new PdvValidationException("Cupom pendente de integração ou não encontrado: " + recurso);
 
-            boletoItMarket.setIdPedido(cupomCapaDTO.getPedidoFaturado());
-            boletoItMarket.setDataMovimento(cupomCapaDTO.getDataMovimento().toLocalDate());
+            documentoItMarket.setIdPedido(cupomCapaDTO.getPedidoFaturado());
+            documentoItMarket.setDataMovimento(cupomCapaDTO.getDataMovimento().toLocalDate());
         }
     }
 

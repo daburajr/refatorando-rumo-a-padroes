@@ -1,6 +1,6 @@
 package br.com.ifma.refatorandorumoapadroes.strategy.service;
 
-import br.com.ifma.refatorandorumoapadroes.strategy.enumeration.TipoBoleto;
+import br.com.ifma.refatorandorumoapadroes.strategy.enumeration.TipoDocumento;
 import br.com.ifma.refatorandorumoapadroes.strategy.mapper.BoletoImpressaoMapper;
 import br.com.ifma.refatorandorumoapadroes.strategy.service.builder.BoletoBuilder;
 import br.com.ifma.refatorandorumoapadroes.strategy.service.documento.*;
@@ -56,10 +56,10 @@ public class ImpressaoBoletoServiceTest {
         when(boletoImpressaoMapper.buscarBoletosPedentesDeImpressao())
                 .thenReturn(BoletoBuilder.pegaBoletos());
 
-        when(carneDocumento.executaProcessamento(TipoBoleto.CARNE)).thenReturn(true);
-        when(boletoLojaDocumento.executaProcessamento(TipoBoleto.BOLETO_LOJA)).thenReturn(true);
-        when(promissoriaDocumento.executaProcessamento(TipoBoleto.PROMISSORIA)).thenReturn(false);
-        when(boletoBalcaoDocumento.executaProcessamento(TipoBoleto.BOLETO_BALCAO)).thenReturn(false);
+        when(carneDocumento.executaProcessamento(TipoDocumento.CARNE)).thenReturn(true);
+        when(boletoLojaDocumento.executaProcessamento(TipoDocumento.BOLETO_LOJA)).thenReturn(true);
+        when(promissoriaDocumento.executaProcessamento(TipoDocumento.PROMISSORIA)).thenReturn(false);
+        when(boletoBalcaoDocumento.executaProcessamento(TipoDocumento.BOLETO_BALCAO)).thenReturn(false);
 
         impressaoBoletoService.imprimirBoletos();
 

@@ -1,15 +1,15 @@
 package br.com.ifma.refatorandorumoapadroes.strategy.client;
 
-import br.com.ifma.refatorandorumoapadroes.strategy.model.BoletoItMarket;
+import br.com.ifma.refatorandorumoapadroes.strategy.model.DocumentoItMarket;
 import org.springframework.stereotype.Service;
 
 @Service
 public interface IBoletoReports {
-    void imprimirBoletoLoja(BoletoItMarket boletoItMarket);
+    void imprimirBoletoLoja(DocumentoItMarket documentoItMarket);
 
-    void imprimirBoletoBalcao(BoletoItMarket boletoItMarket);
+    void imprimirBoletoBalcao(DocumentoItMarket documentoItMarket);
 
-    void imprimirCarne(BoletoItMarket carne);
+    void imprimirCarne(DocumentoItMarket carne);
 
-    void imprimirPromissoria(BoletoItMarket promissoria);
+    void imprimirPromissoria(DocumentoItMarket promissoria);
 }

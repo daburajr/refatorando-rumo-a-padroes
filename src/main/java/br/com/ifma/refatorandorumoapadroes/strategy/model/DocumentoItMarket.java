@@ -1,6 +1,6 @@
 package br.com.ifma.refatorandorumoapadroes.strategy.model;
 
-import br.com.ifma.refatorandorumoapadroes.strategy.enumeration.TipoBoleto;
+import br.com.ifma.refatorandorumoapadroes.strategy.enumeration.TipoDocumento;
 import br.com.ifma.refatorandorumoapadroes.strategy.enumeration.TipoStatusImpressao;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -14,7 +14,8 @@ import java.time.LocalDate;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class BoletoItMarket {
+public class DocumentoItMarket {
+
     private Long id;
     private Long filialId;
     private Integer pdv;
@@ -44,7 +45,7 @@ public class BoletoItMarket {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        BoletoItMarket that = (BoletoItMarket) o;
+        DocumentoItMarket that = (DocumentoItMarket) o;
 
         if (!filialId.equals(that.filialId)) return false;
         if (!pdv.equals(that.pdv)) return false;
@@ -64,9 +65,9 @@ public class BoletoItMarket {
         this.tipoStatusImpressao = TipoStatusImpressao.IMPRESSAO_PEDENTE.getCodigo();
     }
 
-    public TipoBoleto pegaTipoDocumento() {
+    public TipoDocumento pegaTipoDocumento() {
         try {
-            return TipoBoleto.toEnum(tipoBoleto);
+            return TipoDocumento.toEnum(tipoBoleto);
         } catch (IllegalAccessException e) {
             return null;
         }

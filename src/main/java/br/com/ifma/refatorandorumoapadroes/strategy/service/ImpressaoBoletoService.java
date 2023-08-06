@@ -1,8 +1,8 @@
 package br.com.ifma.refatorandorumoapadroes.strategy.service;
 
-import br.com.ifma.refatorandorumoapadroes.strategy.enumeration.TipoBoleto;
+import br.com.ifma.refatorandorumoapadroes.strategy.enumeration.TipoDocumento;
 import br.com.ifma.refatorandorumoapadroes.strategy.mapper.BoletoImpressaoMapper;
-import br.com.ifma.refatorandorumoapadroes.strategy.model.BoletoItMarket;
+import br.com.ifma.refatorandorumoapadroes.strategy.model.DocumentoItMarket;
 import br.com.ifma.refatorandorumoapadroes.strategy.service.documento.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -10,7 +10,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 import static java.util.stream.Collectors.groupingBy;
 
@@ -25,11 +24,11 @@ public class ImpressaoBoletoService {
 
     public void imprimirBoletos() {
 
-        List<BoletoItMarket> documentosPendente = boletoImpressaoMapper
+        List<DocumentoItMarket> documentosPendente = boletoImpressaoMapper
                 .buscarBoletosPedentesDeImpressao();
 
-        Map<TipoBoleto, List<BoletoItMarket>> boletosAgrupadosPorTipo = documentosPendente.stream()
-                .collect(groupingBy(BoletoItMarket::pegaTipoDocumento));
+        Map<TipoDocumento, List<DocumentoItMarket>> boletosAgrupadosPorTipo = documentosPendente.stream()
+                .collect(groupingBy(DocumentoItMarket::pegaTipoDocumento));
 
         boletosAgrupadosPorTipo.forEach((tipo, documentos) -> processaDocumentos.stream()
                 .filter(doc -> doc.executaProcessamento(tipo))

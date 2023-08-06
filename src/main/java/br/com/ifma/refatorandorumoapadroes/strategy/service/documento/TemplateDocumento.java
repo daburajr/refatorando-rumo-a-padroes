@@ -2,14 +2,14 @@ package br.com.ifma.refatorandorumoapadroes.strategy.service.documento;
 
 import br.com.ifma.refatorandorumoapadroes.strategy.client.IBancoCupomClient;
 import br.com.ifma.refatorandorumoapadroes.strategy.client.IBoletoReports;
-import br.com.ifma.refatorandorumoapadroes.strategy.enumeration.TipoBoleto;
+import br.com.ifma.refatorandorumoapadroes.strategy.enumeration.TipoDocumento;
 import br.com.ifma.refatorandorumoapadroes.strategy.enumeration.TipoStatusImpressao;
 import br.com.ifma.refatorandorumoapadroes.strategy.mapper.BoletoImpressaoMapper;
-import br.com.ifma.refatorandorumoapadroes.strategy.model.BoletoItMarket;
+import br.com.ifma.refatorandorumoapadroes.strategy.model.DocumentoItMarket;
 
 import java.util.List;
 
-import static br.com.ifma.refatorandorumoapadroes.strategy.enumeration.TipoBoleto.BOLETO_LOJA;
+import static br.com.ifma.refatorandorumoapadroes.strategy.enumeration.TipoDocumento.BOLETO_LOJA;
 
 public abstract class TemplateDocumento implements Documento {
 
@@ -28,45 +28,45 @@ public abstract class TemplateDocumento implements Documento {
     }
 
     @Override
-    public boolean executaProcessamento(TipoBoleto tipo) {
+    public boolean executaProcessamento(TipoDocumento tipo) {
         return BOLETO_LOJA.equals(tipo);
     }
 
     @Override
-    public void imprime(List<BoletoItMarket> documentos) {
-        documentos.forEach(boletoItMarket -> {
+    public void imprime(List<DocumentoItMarket> documentos) {
+        documentos.forEach(documentoItMarket -> {
             try {
-                boletoReports.imprimirBoletoLoja(boletoItMarket);
-                this.atualizarBoletoItMarket(boletoItMarket,
+                boletoReports.imprimirBoletoLoja(documentoItMarket);
+                this.atualizarBoletoItMarket(documentoItMarket,
                         TipoStatusImpressao.IMPRESSAO_CONCLUIDA);
             } catch (Exception e) {
-                this.registrarIncidenciaEError(boletoItMarket,
+                this.registrarIncidenciaEError(documentoItMarket,
                         e.getMessage());
             }
         });
     }
 
-    private void registrarIncidenciaEError(BoletoItMarket boletoItMarket,
+    private void registrarIncidenciaEError(DocumentoItMarket documentoItMarket,
                                            String mensagemDeErro) {
 
-        boletoItMarket.adicionaIncidencia();
+        documentoItMarket.adicionaIncidencia();
 
-        if (boletoItMarket.getIncidencia() >= INCIDENCIA) {
+        if (documentoItMarket.getIncidencia() >= INCIDENCIA) {
 
-            this.atualizarBoletoItMarket(boletoItMarket,
+            this.atualizarBoletoItMarket(documentoItMarket,
                     TipoStatusImpressao.IMPRESSAO_COM_ERRO);
 
             boletoImpressaoMapper
-                    .registrarError(boletoItMarket, mensagemDeErro);
+                    .registrarError(documentoItMarket, mensagemDeErro);
         }
 
-        boletoImpressaoMapper.atualizarBoletoItMarket(boletoItMarket);
+        boletoImpressaoMapper.atualizarBoletoItMarket(documentoItMarket);
     }
 
-    private void atualizarBoletoItMarket(BoletoItMarket boletoItMarket,
+    private void atualizarBoletoItMarket(DocumentoItMarket documentoItMarket,
                                          TipoStatusImpressao statusImpressao) {
-        boletoItMarket.setTipoStatusImpressao(statusImpressao.getCodigo());
-        boletoImpressaoMapper.atualizarBoletoItMarket(boletoItMarket);
+        documentoItMarket.setTipoStatusImpressao(statusImpressao.getCodigo());
+        boletoImpressaoMapper.atualizarBoletoItMarket(documentoItMarket);
     }
 }
 

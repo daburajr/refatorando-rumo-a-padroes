@@ -1,6 +1,6 @@
 package br.com.ifma.refatorandorumoapadroes.strategy.mapper;
 
-import br.com.ifma.refatorandorumoapadroes.strategy.model.BoletoItMarket;
+import br.com.ifma.refatorandorumoapadroes.strategy.model.DocumentoItMarket;
 import org.apache.ibatis.annotations.Mapper;
 import org.springframework.stereotype.Repository;
 
@@ -9,9 +9,9 @@ import java.util.List;
 @Mapper
 @Repository
 public interface BoletoImpressaoMapper {
-    List<BoletoItMarket> buscarBoletosPedentesDeImpressao();
+    List<DocumentoItMarket> buscarBoletosPedentesDeImpressao();
 
-    void registrarError(BoletoItMarket boletoItMarket, String mensagemDeErro);
+    void registrarError(DocumentoItMarket documentoItMarket, String mensagemDeErro);
 
-    void atualizarBoletoItMarket(BoletoItMarket boletoItMarket);
+    void atualizarBoletoItMarket(DocumentoItMarket documentoItMarket);
 }
