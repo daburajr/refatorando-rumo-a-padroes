@@ -13,9 +13,9 @@ import static br.com.ifma.refatorandorumoapadroes.strategy.enumeration.TipoDocum
 
 public abstract class TemplateDocumento implements Documento {
 
-    private final BoletoImpressaoMapper boletoImpressaoMapper;
-    private final IBoletoReports boletoReports;
-    private final IBancoCupomClient cupomCapaService;
+    protected final BoletoImpressaoMapper boletoImpressaoMapper;
+    protected final IBoletoReports boletoReports;
+    protected final IBancoCupomClient cupomCapaService;
 
     private static final Integer INCIDENCIA = 15;
 
@@ -29,14 +29,14 @@ public abstract class TemplateDocumento implements Documento {
 
     @Override
     public boolean executaProcessamento(TipoDocumento tipo) {
-        return BOLETO_LOJA.equals(tipo);
+        return this.pegaTipoDocumento().equals(tipo);
     }
 
     @Override
     public void imprime(List<DocumentoItMarket> documentos) {
         documentos.forEach(documentoItMarket -> {
             try {
-                boletoReports.imprimirBoletoLoja(documentoItMarket);
+                this.executaOperacaoDeImpressao(documentoItMarket);
                 this.atualizarBoletoItMarket(documentoItMarket,
                         TipoStatusImpressao.IMPRESSAO_CONCLUIDA);
             } catch (Exception e) {
@@ -45,6 +45,10 @@ public abstract class TemplateDocumento implements Documento {
             }
         });
     }
+
+    protected abstract TipoDocumento pegaTipoDocumento();
+
+    protected abstract void executaOperacaoDeImpressao(DocumentoItMarket documentoItMarket);
 
     private void registrarIncidenciaEError(DocumentoItMarket documentoItMarket,
                                            String mensagemDeErro) {
