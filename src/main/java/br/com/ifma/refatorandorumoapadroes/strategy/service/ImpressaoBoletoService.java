@@ -1,24 +1,17 @@
 package br.com.ifma.refatorandorumoapadroes.strategy.service;
 
-import br.com.ifma.refatorandorumoapadroes.strategy.client.IBancoCupomClient;
-import br.com.ifma.refatorandorumoapadroes.strategy.client.IBoletoReports;
 import br.com.ifma.refatorandorumoapadroes.strategy.enumeration.TipoBoleto;
-import br.com.ifma.refatorandorumoapadroes.strategy.enumeration.TipoStatusImpressao;
-import br.com.ifma.refatorandorumoapadroes.strategy.exception.PdvValidationException;
 import br.com.ifma.refatorandorumoapadroes.strategy.mapper.BoletoImpressaoMapper;
 import br.com.ifma.refatorandorumoapadroes.strategy.model.BoletoItMarket;
-import br.com.ifma.refatorandorumoapadroes.strategy.model.CupomCapaDTO;
 import br.com.ifma.refatorandorumoapadroes.strategy.service.documento.BoletoBalcaoDocumento;
 import br.com.ifma.refatorandorumoapadroes.strategy.service.documento.BoletoLojaDocumento;
 import br.com.ifma.refatorandorumoapadroes.strategy.service.documento.CarneDocumento;
 import br.com.ifma.refatorandorumoapadroes.strategy.service.documento.PromissoriaDocumento;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Objects;
 import java.util.stream.Collectors;
 
 
@@ -28,16 +21,11 @@ import java.util.stream.Collectors;
 public class ImpressaoBoletoService {
 
     private final BoletoImpressaoMapper boletoImpressaoMapper;
-    private final IBoletoReports boletoReports;
-    private final IBancoCupomClient cupomCapaService;
 
     private final BoletoLojaDocumento boletoLojaDocumento;
     private final BoletoBalcaoDocumento boletoBalcaoDocumento;
     private final CarneDocumento carneDocumento;
     private final PromissoriaDocumento promissoriaDocumento;
-
-    private static final Integer INCIDENCIA = 15;
-
 
     public void imprimirBoletos() {
 
@@ -64,22 +52,18 @@ public class ImpressaoBoletoService {
                 = pegaBoletosDe(TipoBoleto.CARNE, boletos);
 
         if (!boletosLoja.isEmpty()) {
-//            this.imprimirBoletosLoja(boletosLoja);
             boletoLojaDocumento.imprime(boletosLoja);
         }
 
         if (!boletosBalcao.isEmpty()) {
-//            this.imprimirBoletosBalcao(boletosBalcao);
             boletoBalcaoDocumento.imprime(boletosBalcao);
         }
 
         if (!promissorias.isEmpty()) {
-//            this.imprimirPromissorias(promissorias);
             promissoriaDocumento.imprime(promissorias);
         }
 
         if (!carnes.isEmpty()) {
-//            this.imprimirCarnes(carnes);
             carneDocumento.imprime(carnes);
         }
 
@@ -91,9 +75,6 @@ public class ImpressaoBoletoService {
                 .filter(boletoItMarket -> boletoItMarket.getTipoBoleto().equals(tipoBoleto.getCodigo()))
                 .collect(Collectors.toList());
     }
-
-
-
 
 
 }

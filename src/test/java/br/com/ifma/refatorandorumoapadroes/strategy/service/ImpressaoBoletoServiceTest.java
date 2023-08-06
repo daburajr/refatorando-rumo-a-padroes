@@ -1,11 +1,7 @@
 package br.com.ifma.refatorandorumoapadroes.strategy.service;
 
 import br.com.ifma.refatorandorumoapadroes.strategy.client.IBancoCupomClient;
-import br.com.ifma.refatorandorumoapadroes.strategy.client.IBoletoReports;
-import br.com.ifma.refatorandorumoapadroes.strategy.enumeration.TipoStatusImpressao;
-import br.com.ifma.refatorandorumoapadroes.strategy.exception.PdvValidationException;
 import br.com.ifma.refatorandorumoapadroes.strategy.mapper.BoletoImpressaoMapper;
-import br.com.ifma.refatorandorumoapadroes.strategy.model.BoletoItMarket;
 import br.com.ifma.refatorandorumoapadroes.strategy.service.builder.BoletoBuilder;
 import br.com.ifma.refatorandorumoapadroes.strategy.service.builder.CupomCapaBuilder;
 import br.com.ifma.refatorandorumoapadroes.strategy.service.documento.BoletoBalcaoDocumento;
@@ -16,22 +12,16 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 
 import java.util.Collections;
-import java.util.List;
 
-import static org.junit.Assert.assertEquals;
-import static org.mockito.BDDMockito.willThrow;
 import static org.mockito.Mockito.*;
 
 public class ImpressaoBoletoServiceTest {
-    @Mock
-    private BoletoImpressaoMapper boletoImpressaoMapper;
 
     @Mock
-    private IBoletoReports boletoReports;
+    private BoletoImpressaoMapper boletoImpressaoMapper;
 
     @Mock
     private IBancoCupomClient cupomCapaService;
@@ -50,7 +40,6 @@ public class ImpressaoBoletoServiceTest {
 
     @InjectMocks
     private ImpressaoBoletoService impressaoBoletoService;
-
 
     @Before
     public void setUp() {
