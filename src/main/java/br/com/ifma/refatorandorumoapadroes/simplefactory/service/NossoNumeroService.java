@@ -26,7 +26,6 @@ public class NossoNumeroService {
     @Autowired
     private ContaMapper contaMapper;
 
-
     private static final long ID_BANCO_DO_BRASIL = 1;
     private static final long ID_BANCO_SANTANDER = 33;
     private static final long ID_BANCO_BRADESCO = 237;
@@ -74,10 +73,10 @@ public class NossoNumeroService {
             String digitoVerificadorNossoNumero = null;
 
             if (idBanco == ID_BANCO_BRADESCO) {
-                digitoVerificadorNossoNumero = calcularDigitoModulo11CnabComBase(
+                digitoVerificadorNossoNumero = NossoNumeroFabricaService.calcularDigitoModulo11CnabComBase(
                         carteiraConta + StringUtils.leftPad(Long.toString(nossoNumero), 11, '0'), 7);
             } else if (idBanco == ID_BANCO_SANTANDER) {
-                digitoVerificadorNossoNumero = gerarDigitoMod11Pesos2a9NossoNumeroSantander(StringUtils.leftPad(
+                digitoVerificadorNossoNumero = NossoNumeroFabricaService.gerarDigitoMod11Pesos2a9NossoNumeroSantander(StringUtils.leftPad(
                         nossoNumero.toString(), 12, '0'));
             } else if (idBanco == ID_BANCO_DO_BRASIL) {
 
@@ -89,10 +88,10 @@ public class NossoNumeroService {
 
                 nossoNumero = Long.parseLong("181817" + StringUtils.leftPad(nossoNumero.toString(), 5, '0'));
 
-                digitoVerificadorNossoNumero = gerarDigitoMod11Pesos2a9NossoNumeroSantander(StringUtils.leftPad(nossoNumero
+                digitoVerificadorNossoNumero = NossoNumeroFabricaService.gerarDigitoMod11Pesos2a9NossoNumeroSantander(StringUtils.leftPad(nossoNumero
                         .toString().toString(), 11, '0'));
             } else if (idBanco == ID_BANCO_SAFRA) {
-                digitoVerificadorNossoNumero = calcularDigitoModulo11CnabComBase(
+                digitoVerificadorNossoNumero = NossoNumeroFabricaService.calcularDigitoModulo11CnabComBase(
                         carteiraConta + StringUtils.leftPad(Long.toString(nossoNumero), 11, '0'), 7);
             }
 
@@ -108,86 +107,7 @@ public class NossoNumeroService {
         return informacoesNossoNumeros;
     }
 
-    private static String calcularDigitoModulo11CnabComBase(String numero, int base) {
-        String padrao = retornarPadrao(numero.length(), 2, base, 2, Ordem.DireitaEsquerda);
 
-        int soma = 0;
-        for (int i = 0; i < numero.length(); i++) {
-            int valor = Integer.parseInt(new Character(numero.charAt(i)).toString())
-                    * Integer.parseInt(new Character(padrao.charAt(i)).toString());
-            soma += valor;
-        }
-
-        int resto = soma % 11;
-        String retorno = "";
-
-        if (resto == 0) {
-            retorno = "0";
-        } else if (resto == 1) {
-            retorno = "P";
-        } else {
-            int valor = 11 - resto;
-            retorno = String.valueOf(valor);
-        }
-
-        return retorno;
-    }
-
-    private static String retornarPadrao(int qtd, int menorDigito, int maiorDigito, int primeiroNumero, Ordem ordem) {
-        String padrao = "";
-
-        if (ordem == Ordem.DireitaEsquerda) {
-            for (int i = 0; i < qtd; i++) {
-                padrao = String
-                        .valueOf(retornarValorIndice(i + primeiroNumero - menorDigito, menorDigito, maiorDigito))
-                        + padrao;
-            }
-        } else {
-            for (int i = 0; i < qtd; i++) {
-                padrao = String
-                        .valueOf(retornarValorIndice(i + primeiroNumero - menorDigito, menorDigito, maiorDigito))
-                        + padrao;
-            }
-        }
-
-        return padrao;
-    }
-
-    private static int retornarValorIndice(int indice, int menorDigito, int maiorDigito) {
-        int resto = indice % (maiorDigito - menorDigito + 1);
-        return resto + menorDigito;
-    }
-
-    private static String gerarDigitoMod11Pesos2a9NossoNumeroSantander(String sequenciaNumerica) {
-        int[] pesos = {
-                2, 3, 4, 5, 6, 7, 8, 9
-        };
-        List<Integer> digitos = new ArrayList<>();
-        for (int i = 0; i < sequenciaNumerica.length(); i++) {
-            digitos.add(sequenciaNumerica.charAt(i) - '0');
-        }
-        Collections.reverse(digitos);
-        int soma = 0;
-        for (int i = 0, indexPesos = 0; i < digitos.size(); i++, indexPesos = (indexPesos + 1) % pesos.length) {
-            int digito = digitos.get(i);
-            soma += digito * pesos[indexPesos];
-        }
-        int resto = soma % 11;
-        if (resto == 10) {
-            return Integer.toString(1);
-        }
-
-        if (resto == 1 || resto == 0) {
-            return Integer.toString(0);
-        }
-
-        return Integer.toString(11 - resto);
-    }
-
-    private static enum Ordem {
-        DireitaEsquerda,
-        EsquerdaDireita;
-    }
 
 
 
