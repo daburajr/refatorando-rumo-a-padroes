@@ -12,10 +12,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 @Slf4j
 @Service
@@ -32,11 +29,17 @@ public class NossoNumeroService {
     private static final long ID_BANCO_SAFRA = 422;
 
 
-    public List<InformacoesNossoNumero> criarNossoNumeroLoja(Long filialId, Integer pdv, Long cupom, Integer qtdeNossoNumero) {
+    public List<InformacoesNossoNumero> criarNossoNumeroLoja(Long filialId,
+                                                             Integer pdv,
+                                                             Long cupom,
+                                                             Integer qtdeNossoNumero) {
         return criarInformacoesNossoNumeros(filialId, pdv, cupom, qtdeNossoNumero);
     }
 
-    private List<InformacoesNossoNumero> criarInformacoesNossoNumeros(Long filialId, Integer pdv, Long cupom, Integer qtdeNossoNumero) {
+    private List<InformacoesNossoNumero> criarInformacoesNossoNumeros(Long filialId,
+                                                                      Integer pdv,
+                                                                      Long cupom,
+                                                                      Integer qtdeNossoNumero) {
         if (qtdeNossoNumero == null)
             throw new PdvValidationException("qtdeNosso número inválido!");
 
@@ -44,34 +47,13 @@ public class NossoNumeroService {
 
         for (int quantidade = 0; quantidade < qtdeNossoNumero; quantidade++) {
 
-            Long idConta = nossoNumeroMapper.recuperarIdContaFilial(filialId);
-
-            if (idConta == null || idConta <= 0) {
-                throw new PdvValidationException("Conta inválida.");
-            }
-
+            Long idConta = this.recuperaContaDaFilial(filialId);
             Conta conta = contaService.recuperarContaPorId(idConta);
             long idBanco = contaService.recuperarIdBancoPeloIdConta(idConta);
 
-//            Conta conta = contaMapper.recuperarContaPorId(idConta);
-//
-//            if (conta == null) {
-//                throw new PdvValidationException("Conta inválida.");
-//            }
-//
-//            Long idBanco = contaMapper.recuperarIdBancoPeloIdConta(idConta);
-//
-//            if (idBanco == null || idBanco <= 0) {
-//                throw new PdvValidationException("Banco inválido..");
-//            }
-
             Calendar data = Calendar.getInstance();
-            String carteiraConta = null;
-            carteiraConta = conta.getCarteira();
-            carteiraConta = carteiraConta == null ? "" : carteiraConta.trim();
-
-            Long nossoNumero = nossoNumeroMapper.gerarNossoNumeroProcedure(idConta, SolicitanteNossoNumero.FRENTE_DE_LOJA.getCodigo(),
-                    filialId, pdv, data.getTime(), cupom);
+            String carteiraConta = conta.getCarteira();
+            Long nossoNumero = this.geraNossoNumeroPara(filialId, pdv, cupom, data);
 
             String digitoVerificadorNossoNumero = null;
 
@@ -83,13 +65,7 @@ public class NossoNumeroService {
                         nossoNumero.toString(), 12, '0'));
             } else if (idBanco == ID_BANCO_DO_BRASIL) {
 
-                String codigoBeneficiario = contaService.recuperarCodigoBeneficiarioPelaConta(idConta);
-
-//                String codigoBeneficiario = contaMapper.recuperarCodigoBeneficiarioPelaConta(idConta);
-//
-//                if (codigoBeneficiario == null || codigoBeneficiario.trim().isEmpty()) {
-//                    throw new PdvValidationException("Código de beneficiário não cadastrado para o conta: " + idConta);
-//                }
+                contaService.recuperarCodigoBeneficiarioPelaConta(idConta);
 
                 nossoNumero = Long.parseLong("181817" + StringUtils.leftPad(nossoNumero.toString(), 5, '0'));
 
@@ -112,6 +88,23 @@ public class NossoNumeroService {
         return informacoesNossoNumeros;
     }
 
+    public Long recuperaContaDaFilial(Long filialId) {
+        return  Optional.ofNullable(nossoNumeroMapper.recuperarIdContaFilial(filialId))
+                .orElseThrow(() -> new PdvValidationException("Conta inválida."));
+    }
+
+    private Long geraNossoNumeroPara(Long filialId, Integer pdv, Long cupom, Calendar data) {
+
+        Long idConta = this.recuperaContaDaFilial(filialId);
+
+        return nossoNumeroMapper.gerarNossoNumeroProcedure(idConta,
+                        SolicitanteNossoNumero.FRENTE_DE_LOJA.getCodigo(),
+                        filialId,
+                        pdv,
+                        data.getTime(),
+                        cupom);
+
+    }
 
 
 
