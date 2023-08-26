@@ -71,17 +71,6 @@ public class NossoNumeroService {
             Long nossoNumero = nossoNumeroMapper.gerarNossoNumeroProcedure(idConta, SolicitanteNossoNumero.FRENTE_DE_LOJA.getCodigo(),
                     filialId, pdv, data.getTime(), cupom);
 
-            if (idBanco == ID_BANCO_DO_BRASIL) {
-
-                String codigoBeneficiario = contaMapper.recuperarCodigoBeneficiarioPelaConta(idConta);
-
-                if (codigoBeneficiario == null || codigoBeneficiario.trim().isEmpty()) {
-                    throw new PdvValidationException("Código de beneficiário não cadastrado para o conta: " + idConta);
-                }
-
-                nossoNumero = Long.parseLong("181817" + StringUtils.leftPad(nossoNumero.toString(), 5, '0'));
-            }
-
             String digitoVerificadorNossoNumero = null;
 
             if (idBanco == ID_BANCO_BRADESCO) {
@@ -91,6 +80,15 @@ public class NossoNumeroService {
                 digitoVerificadorNossoNumero = gerarDigitoMod11Pesos2a9NossoNumeroSantander(StringUtils.leftPad(
                         nossoNumero.toString(), 12, '0'));
             } else if (idBanco == ID_BANCO_DO_BRASIL) {
+
+                String codigoBeneficiario = contaMapper.recuperarCodigoBeneficiarioPelaConta(idConta);
+
+                if (codigoBeneficiario == null || codigoBeneficiario.trim().isEmpty()) {
+                    throw new PdvValidationException("Código de beneficiário não cadastrado para o conta: " + idConta);
+                }
+
+                nossoNumero = Long.parseLong("181817" + StringUtils.leftPad(nossoNumero.toString(), 5, '0'));
+
                 digitoVerificadorNossoNumero = gerarDigitoMod11Pesos2a9NossoNumeroSantander(StringUtils.leftPad(nossoNumero
                         .toString().toString(), 11, '0'));
             } else if (idBanco == ID_BANCO_SAFRA) {
