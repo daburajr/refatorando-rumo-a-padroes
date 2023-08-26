@@ -34,8 +34,10 @@ public class NossoNumeroService {
 
 
     public List<InformacoesNossoNumero> criarNossoNumeroLoja(Long filialId, Integer pdv, Long cupom, Integer qtdeNossoNumero) {
+        return criarInformacoesNossoNumeros(filialId, pdv, cupom, qtdeNossoNumero);
+    }
 
-
+    private List<InformacoesNossoNumero> criarInformacoesNossoNumeros(Long filialId, Integer pdv, Long cupom, Integer qtdeNossoNumero) {
         if (qtdeNossoNumero == null)
             throw new PdvValidationException("qtdeNosso número inválido!");
 
