@@ -6,6 +6,7 @@ import br.com.ifma.refatorandorumoapadroes.simplefactory.mapper.ContaMapper;
 import br.com.ifma.refatorandorumoapadroes.simplefactory.mapper.NossoNumeroMapper;
 import br.com.ifma.refatorandorumoapadroes.simplefactory.model.Conta;
 import br.com.ifma.refatorandorumoapadroes.simplefactory.model.InformacoesNossoNumero;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,13 +19,12 @@ import java.util.List;
 
 @Slf4j
 @Service
+@RequiredArgsConstructor
 public class NossoNumeroService {
 
-    @Autowired
-    private NossoNumeroMapper nossoNumeroMapper;
+    private final NossoNumeroMapper nossoNumeroMapper;
 
-    @Autowired
-    private ContaMapper contaMapper;
+    private final ContaMapper contaMapper;
 
     private static final long ID_BANCO_DO_BRASIL = 1;
     private static final long ID_BANCO_SANTANDER = 33;

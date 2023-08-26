@@ -52,11 +52,6 @@ public class NossoNumeroFabricaService {
         return padrao;
     }
 
-    private static int retornarValorIndice(int indice, int menorDigito, int maiorDigito) {
-        int resto = indice % (maiorDigito - menorDigito + 1);
-        return resto + menorDigito;
-    }
-
     public static String gerarDigitoMod11Pesos2a9NossoNumeroSantander(String sequenciaNumerica) {
         int[] pesos = {
                 2, 3, 4, 5, 6, 7, 8, 9
@@ -81,6 +76,11 @@ public class NossoNumeroFabricaService {
         }
 
         return Integer.toString(11 - resto);
+    }
+
+    private static int retornarValorIndice(int indice, int menorDigito, int maiorDigito) {
+        int resto = indice % (maiorDigito - menorDigito + 1);
+        return resto + menorDigito;
     }
 
     private static enum Ordem {
