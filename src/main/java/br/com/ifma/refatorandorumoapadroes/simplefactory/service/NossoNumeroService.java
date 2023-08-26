@@ -24,7 +24,7 @@ public class NossoNumeroService {
 
     private final NossoNumeroMapper nossoNumeroMapper;
 
-    private final ContaMapper contaMapper;
+    private final ContaService contaService;
 
     private static final long ID_BANCO_DO_BRASIL = 1;
     private static final long ID_BANCO_SANTANDER = 33;
@@ -50,17 +50,20 @@ public class NossoNumeroService {
                 throw new PdvValidationException("Conta inválida.");
             }
 
-            Conta conta = contaMapper.recuperarContaPorId(idConta);
+            Conta conta = contaService.recuperarContaPorId(idConta);
+            long idBanco = contaService.recuperarIdBancoPeloIdConta(idConta);
 
-            if (conta == null) {
-                throw new PdvValidationException("Conta inválida.");
-            }
-
-            Long idBanco = contaMapper.recuperarIdBancoPeloIdConta(idConta);
-
-            if (idBanco == null || idBanco <= 0) {
-                throw new PdvValidationException("Banco inválido..");
-            }
+//            Conta conta = contaMapper.recuperarContaPorId(idConta);
+//
+//            if (conta == null) {
+//                throw new PdvValidationException("Conta inválida.");
+//            }
+//
+//            Long idBanco = contaMapper.recuperarIdBancoPeloIdConta(idConta);
+//
+//            if (idBanco == null || idBanco <= 0) {
+//                throw new PdvValidationException("Banco inválido..");
+//            }
 
             Calendar data = Calendar.getInstance();
             String carteiraConta = null;
@@ -80,11 +83,13 @@ public class NossoNumeroService {
                         nossoNumero.toString(), 12, '0'));
             } else if (idBanco == ID_BANCO_DO_BRASIL) {
 
-                String codigoBeneficiario = contaMapper.recuperarCodigoBeneficiarioPelaConta(idConta);
+                String codigoBeneficiario = contaService.recuperarCodigoBeneficiarioPelaConta(idConta);
 
-                if (codigoBeneficiario == null || codigoBeneficiario.trim().isEmpty()) {
-                    throw new PdvValidationException("Código de beneficiário não cadastrado para o conta: " + idConta);
-                }
+//                String codigoBeneficiario = contaMapper.recuperarCodigoBeneficiarioPelaConta(idConta);
+//
+//                if (codigoBeneficiario == null || codigoBeneficiario.trim().isEmpty()) {
+//                    throw new PdvValidationException("Código de beneficiário não cadastrado para o conta: " + idConta);
+//                }
 
                 nossoNumero = Long.parseLong("181817" + StringUtils.leftPad(nossoNumero.toString(), 5, '0'));
 
