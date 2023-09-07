@@ -2,14 +2,12 @@ package br.com.ifma.refatorandorumoapadroes.simplefactory.service;
 
 import br.com.ifma.refatorandorumoapadroes.simplefactory.enumeration.SolicitanteNossoNumero;
 import br.com.ifma.refatorandorumoapadroes.simplefactory.exception.PdvValidationException;
-import br.com.ifma.refatorandorumoapadroes.simplefactory.mapper.ContaMapper;
 import br.com.ifma.refatorandorumoapadroes.simplefactory.mapper.NossoNumeroMapper;
 import br.com.ifma.refatorandorumoapadroes.simplefactory.model.Conta;
 import br.com.ifma.refatorandorumoapadroes.simplefactory.model.InformacoesNossoNumero;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -58,10 +56,10 @@ public class NossoNumeroService {
             String digitoVerificadorNossoNumero = null;
 
             if (idBanco == ID_BANCO_BRADESCO) {
-                digitoVerificadorNossoNumero = NossoNumeroFabricaService.calcularDigitoModulo11CnabComBase(
+                digitoVerificadorNossoNumero = CalculoDigitoVerificadorService.calcularDigitoModulo11CnabComBase(
                         carteiraConta + StringUtils.leftPad(Long.toString(nossoNumero), 11, '0'), 7);
             } else if (idBanco == ID_BANCO_SANTANDER) {
-                digitoVerificadorNossoNumero = NossoNumeroFabricaService.gerarDigitoMod11Pesos2a9NossoNumeroSantander(StringUtils.leftPad(
+                digitoVerificadorNossoNumero = CalculoDigitoVerificadorService.gerarDigitoMod11Pesos2a9NossoNumeroSantander(StringUtils.leftPad(
                         nossoNumero.toString(), 12, '0'));
             } else if (idBanco == ID_BANCO_DO_BRASIL) {
 
@@ -69,10 +67,10 @@ public class NossoNumeroService {
 
                 nossoNumero = Long.parseLong("181817" + StringUtils.leftPad(nossoNumero.toString(), 5, '0'));
 
-                digitoVerificadorNossoNumero = NossoNumeroFabricaService.gerarDigitoMod11Pesos2a9NossoNumeroSantander(StringUtils.leftPad(nossoNumero
+                digitoVerificadorNossoNumero = CalculoDigitoVerificadorService.gerarDigitoMod11Pesos2a9NossoNumeroSantander(StringUtils.leftPad(nossoNumero
                         .toString().toString(), 11, '0'));
             } else if (idBanco == ID_BANCO_SAFRA) {
-                digitoVerificadorNossoNumero = NossoNumeroFabricaService.calcularDigitoModulo11CnabComBase(
+                digitoVerificadorNossoNumero = CalculoDigitoVerificadorService.calcularDigitoModulo11CnabComBase(
                         carteiraConta + StringUtils.leftPad(Long.toString(nossoNumero), 11, '0'), 7);
             }
 

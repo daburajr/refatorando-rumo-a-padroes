@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class NossoNumeroFabricaService {
+public class CalculoDigitoVerificadorService {
 
 
     public static String calcularDigitoModulo11CnabComBase(String numero, int base) {
