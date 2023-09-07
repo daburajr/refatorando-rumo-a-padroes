@@ -1,11 +1,15 @@
 package br.com.ifma.refatorandorumoapadroes.simplefactory.service;
 
 import br.com.ifma.refatorandorumoapadroes.simplefactory.model.InformacoesNossoNumero;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.stereotype.Service;
 
+@Slf4j
+@Service
 public class NossoNumeroFabricaService {
 
-    public static InformacoesNossoNumero criaInformacaoParaBradesco(long nossoNumero, String carteiraConta, long contaId) {
+    public InformacoesNossoNumero criaInformacaoParaBradesco(long nossoNumero, String carteiraConta, long contaId) {
 
         String digitoVerificadorNossoNumero = pegaDigitoVerificadorNossoNumeroComCarteira(carteiraConta, nossoNumero);
 
@@ -18,7 +22,7 @@ public class NossoNumeroFabricaService {
         return informacaoNossoNumero;
     }
 
-    public static InformacoesNossoNumero criaInformacaoParaSantander(long nossoNumero, String carteiraConta, long contaId) {
+    public InformacoesNossoNumero criaInformacaoParaSantander(long nossoNumero, String carteiraConta, long contaId) {
 
         String digitoVerificadorNossoNumero = pegaDigitoVerificadorNossoNumero(nossoNumero, 12);
 
@@ -32,7 +36,7 @@ public class NossoNumeroFabricaService {
         return informacaoNossoNumero;
     }
 
-    public static InformacoesNossoNumero criaInformacaoParaBancoDoBrasil(Long nossoNumero, String carteiraConta, long contaId) {
+    public InformacoesNossoNumero criaInformacaoParaBancoDoBrasil(Long nossoNumero, String carteiraConta, long contaId) {
         nossoNumero = Long.parseLong("181817" + StringUtils.leftPad(nossoNumero.toString(), 5, '0'));
         String digitoVerificadorNossoNumero = pegaDigitoVerificadorNossoNumero(nossoNumero, 11);
 
@@ -46,7 +50,7 @@ public class NossoNumeroFabricaService {
 
     }
 
-    public static InformacoesNossoNumero criaInformacaoParaSafra(long nossoNumero, String carteiraConta, long contaId) {
+    public InformacoesNossoNumero criaInformacaoParaSafra(long nossoNumero, String carteiraConta, long contaId) {
 
         String digitoVerificadorNossoNumero = pegaDigitoVerificadorNossoNumeroComCarteira(carteiraConta, nossoNumero);
 
@@ -59,12 +63,12 @@ public class NossoNumeroFabricaService {
         return informacaoNossoNumero;
     }
 
-    private static String pegaDigitoVerificadorNossoNumeroComCarteira(String carteiraConta, Long nossoNumero) {
+    private String pegaDigitoVerificadorNossoNumeroComCarteira(String carteiraConta, Long nossoNumero) {
         return CalculoDigitoVerificadorService.calcularDigitoModulo11CnabComBase(
                 carteiraConta + StringUtils.leftPad(Long.toString(nossoNumero), 11, '0'), 7);
     }
 
-    private static String pegaDigitoVerificadorNossoNumero(Long nossoNumero, int tamanho) {
+    private String pegaDigitoVerificadorNossoNumero(Long nossoNumero, int tamanho) {
         return CalculoDigitoVerificadorService.gerarDigitoMod11Pesos2a9NossoNumeroSantander(StringUtils.leftPad(
                 nossoNumero.toString(), tamanho, '0'));
     }

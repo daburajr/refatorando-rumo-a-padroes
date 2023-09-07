@@ -24,6 +24,10 @@ public class NossoNumeroServiceTest {
     private NossoNumeroMapper nossoNumeroMapper;
     @Mock
     private ContaService contaService;
+
+    @Mock
+    private NossoNumeroFabricaService nossoNumeroFabricaService;
+
     @InjectMocks
     private NossoNumeroService nossoNumeroService;
 
@@ -39,6 +43,9 @@ public class NossoNumeroServiceTest {
 
         List<InformacoesNossoNumero> expected = Collections
                 .singletonList(InformacaoNossoNumeroBuilder.criaInformacaoNossoNumeroBB());
+
+        when(nossoNumeroFabricaService.criaInformacaoParaBancoDoBrasil(anyLong(), anyString(), anyLong()))
+                .thenReturn(InformacaoNossoNumeroBuilder.criaInformacaoNossoNumeroBB());
 
         when(nossoNumeroMapper.recuperarIdContaFilial(1L)).thenReturn(conta.getId());
         when(contaService.recuperarContaPorId(conta.getId())).thenReturn(conta);
@@ -62,6 +69,9 @@ public class NossoNumeroServiceTest {
 
         List<InformacoesNossoNumero> expected = Collections
                 .singletonList(InformacaoNossoNumeroBuilder.criaInformacoesNossoNumeroSantander());
+
+        when(nossoNumeroFabricaService.criaInformacaoParaSantander(anyLong(), anyString(), anyLong()))
+                .thenReturn(InformacaoNossoNumeroBuilder.criaInformacoesNossoNumeroSantander());
 
         when(nossoNumeroMapper.recuperarIdContaFilial(1L)).thenReturn(conta.getId());
         when(contaService.recuperarContaPorId(conta.getId())).thenReturn(conta);
@@ -87,6 +97,8 @@ public class NossoNumeroServiceTest {
         List<InformacoesNossoNumero> expected = Collections
                 .singletonList(InformacaoNossoNumeroBuilder.criaInformacoesNossoNumeroBradesco());
 
+        when(nossoNumeroFabricaService.criaInformacaoParaBradesco(anyLong(), anyString(), anyLong()))
+                .thenReturn(InformacaoNossoNumeroBuilder.criaInformacoesNossoNumeroBradesco());
         when(nossoNumeroMapper.recuperarIdContaFilial(1L)).thenReturn(conta.getId());
         when(contaService.recuperarContaPorId(conta.getId())).thenReturn(conta);
         when(contaService.recuperarIdBancoPeloIdConta(conta.getId())).thenReturn(237L);
@@ -111,6 +123,8 @@ public class NossoNumeroServiceTest {
         List<InformacoesNossoNumero> expected = Collections
                 .singletonList(InformacaoNossoNumeroBuilder.criaInformacoesNossoNumeroSafra());
 
+        when(nossoNumeroFabricaService.criaInformacaoParaSafra(anyLong(), anyString(), anyLong()))
+                .thenReturn(InformacaoNossoNumeroBuilder.criaInformacoesNossoNumeroSafra());
         when(nossoNumeroMapper.recuperarIdContaFilial(1L)).thenReturn(conta.getId());
         when(contaService.recuperarContaPorId(conta.getId())).thenReturn(conta);
         when(contaService.recuperarIdBancoPeloIdConta(conta.getId())).thenReturn(422L);

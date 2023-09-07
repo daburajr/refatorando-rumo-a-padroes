@@ -22,6 +22,8 @@ public class NossoNumeroService {
 
     private final ContaService contaService;
 
+    private final NossoNumeroFabricaService nossoNumeroFabricaService;
+
     private static final long ID_BANCO_DO_BRASIL = 1;
     private static final long ID_BANCO_SANTANDER = 33;
     private static final long ID_BANCO_BRADESCO = 237;
@@ -58,14 +60,14 @@ public class NossoNumeroService {
         Long nossoNumero = this.geraNossoNumeroPara(filialId, pdv, cupom);
 
         if (idBanco == ID_BANCO_BRADESCO) {
-            return NossoNumeroFabricaService.criaInformacaoParaBradesco(nossoNumero, carteiraConta, idConta);
+            return nossoNumeroFabricaService.criaInformacaoParaBradesco(nossoNumero, carteiraConta, idConta);
         } else if (idBanco == ID_BANCO_SANTANDER) {
-            return NossoNumeroFabricaService.criaInformacaoParaSantander(nossoNumero, carteiraConta, idConta);
+            return nossoNumeroFabricaService.criaInformacaoParaSantander(nossoNumero, carteiraConta, idConta);
         } else if (idBanco == ID_BANCO_DO_BRASIL) {
             contaService.recuperarCodigoBeneficiarioPelaConta(idConta);
-            return NossoNumeroFabricaService.criaInformacaoParaBancoDoBrasil(nossoNumero, carteiraConta, idConta);
+            return nossoNumeroFabricaService.criaInformacaoParaBancoDoBrasil(nossoNumero, carteiraConta, idConta);
         } else if (idBanco == ID_BANCO_SAFRA) {
-            return NossoNumeroFabricaService.criaInformacaoParaSafra(nossoNumero, carteiraConta, idConta);
+            return nossoNumeroFabricaService.criaInformacaoParaSafra(nossoNumero, carteiraConta, idConta);
         } else {
             throw new PdvValidationException("Nenhuma Instituiçao Financeira Encontrada.");
         }
