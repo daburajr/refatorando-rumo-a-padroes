@@ -7,10 +7,11 @@ import br.com.ifma.refatorandorumoapadroes.simplefactory.model.Conta;
 import br.com.ifma.refatorandorumoapadroes.simplefactory.model.InformacoesNossoNumero;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Slf4j
 @Service
@@ -31,47 +32,40 @@ public class NossoNumeroService {
                                                              Integer pdv,
                                                              Long cupom,
                                                              Integer qtdeNossoNumero) {
-        return criarInformacoesNossoNumeros(filialId, pdv, cupom, qtdeNossoNumero);
-    }
 
-    private List<InformacoesNossoNumero> criarInformacoesNossoNumeros(Long filialId,
-                                                                      Integer pdv,
-                                                                      Long cupom,
-                                                                      Integer qtdeNossoNumero) {
-        if (qtdeNossoNumero == null)
+        if (Objects.isNull(qtdeNossoNumero)) {
             throw new PdvValidationException("qtdeNosso número inválido!");
-
-        List<InformacoesNossoNumero> informacoesNossoNumeros = new ArrayList<>();
-
-        for (int quantidade = 0; quantidade < qtdeNossoNumero; quantidade++) {
-
-            Long idConta = this.recuperaContaDaFilial(filialId);
-            Conta conta = contaService.recuperarContaPorId(idConta);
-            long idBanco = contaService.recuperarIdBancoPeloIdConta(idConta);
-
-            String carteiraConta = conta.getCarteira();
-            Long nossoNumero = this.geraNossoNumeroPara(filialId, pdv, cupom);
-
-            InformacoesNossoNumero informacaoNossoNumero = null;
-
-            if (idBanco == ID_BANCO_BRADESCO) {
-                informacaoNossoNumero = NossoNumeroFabricaService.criaInformacaoParaBradesco(nossoNumero, carteiraConta, idConta);
-            } else if (idBanco == ID_BANCO_SANTANDER) {
-                informacaoNossoNumero = NossoNumeroFabricaService.criaInformacaoParaSantander(nossoNumero, carteiraConta, idConta);
-            } else if (idBanco == ID_BANCO_DO_BRASIL) {
-                contaService.recuperarCodigoBeneficiarioPelaConta(idConta);
-                informacaoNossoNumero = NossoNumeroFabricaService.criaInformacaoParaBancoDoBrasil(nossoNumero, carteiraConta, idConta);
-            } else if (idBanco == ID_BANCO_SAFRA) {
-                informacaoNossoNumero = NossoNumeroFabricaService.criaInformacaoParaSafra(nossoNumero, carteiraConta, idConta);
-            }
-
-            informacoesNossoNumeros.add(informacaoNossoNumero);
         }
 
-        return informacoesNossoNumeros;
+        return Stream.iterate(1, i -> i + 1)
+                .limit(qtdeNossoNumero)
+                .map(f -> criarInformacoesNossoNumero(filialId, pdv, cupom))
+                .collect(Collectors.toList());
     }
 
+    private InformacoesNossoNumero criarInformacoesNossoNumero(long filialId, int pdv, long cupom) {
 
+        Long idConta = this.recuperaContaDaFilial(filialId);
+        Conta conta = contaService.recuperarContaPorId(idConta);
+        long idBanco = contaService.recuperarIdBancoPeloIdConta(idConta);
+
+        String carteiraConta = conta.getCarteira();
+        Long nossoNumero = this.geraNossoNumeroPara(filialId, pdv, cupom);
+
+        if (idBanco == ID_BANCO_BRADESCO) {
+            return NossoNumeroFabricaService.criaInformacaoParaBradesco(nossoNumero, carteiraConta, idConta);
+        } else if (idBanco == ID_BANCO_SANTANDER) {
+            return NossoNumeroFabricaService.criaInformacaoParaSantander(nossoNumero, carteiraConta, idConta);
+        } else if (idBanco == ID_BANCO_DO_BRASIL) {
+            contaService.recuperarCodigoBeneficiarioPelaConta(idConta);
+            return NossoNumeroFabricaService.criaInformacaoParaBancoDoBrasil(nossoNumero, carteiraConta, idConta);
+        } else if (idBanco == ID_BANCO_SAFRA) {
+            return NossoNumeroFabricaService.criaInformacaoParaSafra(nossoNumero, carteiraConta, idConta);
+        } else {
+            throw new PdvValidationException("Nenhuma Instituiçao Financeira Encontrada.");
+        }
+
+    }
 
     public Long recuperaContaDaFilial(Long filialId) {
         return  Optional.ofNullable(nossoNumeroMapper.recuperarIdContaFilial(filialId))
@@ -87,8 +81,6 @@ public class NossoNumeroService {
         return nossoNumeroMapper.gerarNossoNumeroProcedure(idConta, solicitante, filialId, pdv, data, cupom);
 
     }
-
-
 
 
 }
