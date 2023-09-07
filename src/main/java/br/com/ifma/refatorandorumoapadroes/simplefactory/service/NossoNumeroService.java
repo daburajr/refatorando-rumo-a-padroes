@@ -43,6 +43,11 @@ public class NossoNumeroService {
                 .collect(Collectors.toList());
     }
 
+    public Long recuperaContaDaFilial(Long filialId) {
+        return  Optional.ofNullable(nossoNumeroMapper.recuperarIdContaFilial(filialId))
+                .orElseThrow(() -> new PdvValidationException("Conta inválida."));
+    }
+
     private InformacoesNossoNumero criarInformacoesNossoNumero(long filialId, int pdv, long cupom) {
 
         Long idConta = this.recuperaContaDaFilial(filialId);
@@ -67,11 +72,6 @@ public class NossoNumeroService {
 
     }
 
-    public Long recuperaContaDaFilial(Long filialId) {
-        return  Optional.ofNullable(nossoNumeroMapper.recuperarIdContaFilial(filialId))
-                .orElseThrow(() -> new PdvValidationException("Conta inválida."));
-    }
-
     private Long geraNossoNumeroPara(Long filialId, Integer pdv, Long cupom) {
 
         Long idConta = this.recuperaContaDaFilial(filialId);
@@ -81,6 +81,5 @@ public class NossoNumeroService {
         return nossoNumeroMapper.gerarNossoNumeroProcedure(idConta, solicitante, filialId, pdv, data, cupom);
 
     }
-
 
 }

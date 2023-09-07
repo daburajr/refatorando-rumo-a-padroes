@@ -1,7 +1,6 @@
 package br.com.ifma.refatorandorumoapadroes.simplefactory.service;
 
 import br.com.ifma.refatorandorumoapadroes.simplefactory.exception.PdvValidationException;
-import br.com.ifma.refatorandorumoapadroes.simplefactory.mapper.ContaMapper;
 import br.com.ifma.refatorandorumoapadroes.simplefactory.mapper.NossoNumeroMapper;
 import br.com.ifma.refatorandorumoapadroes.simplefactory.model.Conta;
 import br.com.ifma.refatorandorumoapadroes.simplefactory.model.InformacoesNossoNumero;

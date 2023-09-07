@@ -47,6 +47,7 @@ public class NossoNumeroFabricaService {
     }
 
     public static InformacoesNossoNumero criaInformacaoParaSafra(long nossoNumero, String carteiraConta, long contaId) {
+
         String digitoVerificadorNossoNumero = pegaDigitoVerificadorNossoNumeroComCarteira(carteiraConta, nossoNumero);
 
         InformacoesNossoNumero informacaoNossoNumero = new InformacoesNossoNumero();
