@@ -49,9 +49,8 @@ public class NossoNumeroService {
             Conta conta = contaService.recuperarContaPorId(idConta);
             long idBanco = contaService.recuperarIdBancoPeloIdConta(idConta);
 
-            Calendar data = Calendar.getInstance();
             String carteiraConta = conta.getCarteira();
-            Long nossoNumero = this.geraNossoNumeroPara(filialId, pdv, cupom, data);
+            Long nossoNumero = this.geraNossoNumeroPara(filialId, pdv, cupom);
 
             String digitoVerificadorNossoNumero = null;
 
@@ -94,16 +93,13 @@ public class NossoNumeroService {
                 .orElseThrow(() -> new PdvValidationException("Conta inválida."));
     }
 
-    private Long geraNossoNumeroPara(Long filialId, Integer pdv, Long cupom, Calendar data) {
+    private Long geraNossoNumeroPara(Long filialId, Integer pdv, Long cupom) {
 
         Long idConta = this.recuperaContaDaFilial(filialId);
+        Date data = Calendar.getInstance().getTime();
+        int solicitante = SolicitanteNossoNumero.FRENTE_DE_LOJA.getCodigo();
 
-        return nossoNumeroMapper.gerarNossoNumeroProcedure(idConta,
-                        SolicitanteNossoNumero.FRENTE_DE_LOJA.getCodigo(),
-                        filialId,
-                        pdv,
-                        data.getTime(),
-                        cupom);
+        return nossoNumeroMapper.gerarNossoNumeroProcedure(idConta, solicitante, filialId, pdv, data, cupom);
 
     }
 
