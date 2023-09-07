@@ -83,7 +83,7 @@ public class NossoNumeroFabricaService {
         return resto + menorDigito;
     }
 
-    private static enum Ordem {
+    static enum Ordem {
         DireitaEsquerda,
         EsquerdaDireita;
     }
