@@ -59,8 +59,7 @@ public class NossoNumeroService {
                 digitoVerificadorNossoNumero = CalculoDigitoVerificadorService.calcularDigitoModulo11CnabComBase(
                         carteiraConta + StringUtils.leftPad(Long.toString(nossoNumero), 11, '0'), 7);
             } else if (idBanco == ID_BANCO_SANTANDER) {
-                digitoVerificadorNossoNumero = CalculoDigitoVerificadorService.gerarDigitoMod11Pesos2a9NossoNumeroSantander(StringUtils.leftPad(
-                        nossoNumero.toString(), 12, '0'));
+                digitoVerificadorNossoNumero = pegaDigitoVerificadorNossoNumero(nossoNumero, 12, '0');
             } else if (idBanco == ID_BANCO_DO_BRASIL) {
 
                 contaService.recuperarCodigoBeneficiarioPelaConta(idConta);
@@ -84,6 +83,11 @@ public class NossoNumeroService {
         }
 
         return informacoesNossoNumeros;
+    }
+
+    private static String pegaDigitoVerificadorNossoNumero(Long nossoNumero, int tamanho, char caracterPreenchimento) {
+        return CalculoDigitoVerificadorService.gerarDigitoMod11Pesos2a9NossoNumeroSantander(StringUtils.leftPad(
+                nossoNumero.toString(), tamanho, caracterPreenchimento));
     }
 
     public Long recuperaContaDaFilial(Long filialId) {
