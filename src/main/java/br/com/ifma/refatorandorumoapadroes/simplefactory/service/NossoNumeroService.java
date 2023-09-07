@@ -55,45 +55,15 @@ public class NossoNumeroService {
             InformacoesNossoNumero informacaoNossoNumero = null;
 
             if (idBanco == ID_BANCO_BRADESCO) {
-                String digitoVerificadorNossoNumero = pegaDigitoVerificadorNossoNumeroComCarteira(carteiraConta, nossoNumero);
-
-                informacaoNossoNumero = new InformacoesNossoNumero();
-                informacaoNossoNumero.setNossoNumero(nossoNumero);
-                informacaoNossoNumero.setDigitoVerificadorNossoNumero(digitoVerificadorNossoNumero);
-                informacaoNossoNumero.setCarteira(carteiraConta);
-                informacaoNossoNumero.setIdConta(idConta);
-
+                informacaoNossoNumero = NossoNumeroFabricaService.criaInformacaoParaBradesco(nossoNumero, carteiraConta, idConta);
             } else if (idBanco == ID_BANCO_SANTANDER) {
-                String digitoVerificadorNossoNumero = pegaDigitoVerificadorNossoNumero(nossoNumero, 12);
-
-                informacaoNossoNumero = new InformacoesNossoNumero();
-                informacaoNossoNumero.setNossoNumero(nossoNumero);
-                informacaoNossoNumero.setDigitoVerificadorNossoNumero(digitoVerificadorNossoNumero);
-                informacaoNossoNumero.setCarteira(carteiraConta);
-                informacaoNossoNumero.setIdConta(idConta);
-
+                informacaoNossoNumero = NossoNumeroFabricaService.criaInformacaoParaSantander(nossoNumero, carteiraConta, idConta);
             } else if (idBanco == ID_BANCO_DO_BRASIL) {
                 contaService.recuperarCodigoBeneficiarioPelaConta(idConta);
-                nossoNumero = Long.parseLong("181817" + StringUtils.leftPad(nossoNumero.toString(), 5, '0'));
-                String digitoVerificadorNossoNumero = pegaDigitoVerificadorNossoNumero(nossoNumero, 11);
-
-                informacaoNossoNumero = new InformacoesNossoNumero();
-                informacaoNossoNumero.setNossoNumero(nossoNumero);
-                informacaoNossoNumero.setDigitoVerificadorNossoNumero(digitoVerificadorNossoNumero);
-                informacaoNossoNumero.setCarteira(carteiraConta);
-                informacaoNossoNumero.setIdConta(idConta);
-
+                informacaoNossoNumero = NossoNumeroFabricaService.criaInformacaoParaBancoDoBrasil(nossoNumero, carteiraConta, idConta);
             } else if (idBanco == ID_BANCO_SAFRA) {
-                String digitoVerificadorNossoNumero = pegaDigitoVerificadorNossoNumeroComCarteira(carteiraConta, nossoNumero);
-
-                informacaoNossoNumero = new InformacoesNossoNumero();
-                informacaoNossoNumero.setNossoNumero(nossoNumero);
-                informacaoNossoNumero.setDigitoVerificadorNossoNumero(digitoVerificadorNossoNumero);
-                informacaoNossoNumero.setCarteira(carteiraConta);
-                informacaoNossoNumero.setIdConta(idConta);
+                informacaoNossoNumero = NossoNumeroFabricaService.criaInformacaoParaSafra(nossoNumero, carteiraConta, idConta);
             }
-
-
 
             informacoesNossoNumeros.add(informacaoNossoNumero);
         }
@@ -101,15 +71,7 @@ public class NossoNumeroService {
         return informacoesNossoNumeros;
     }
 
-    private static String pegaDigitoVerificadorNossoNumeroComCarteira(String carteiraConta, Long nossoNumero) {
-        return CalculoDigitoVerificadorService.calcularDigitoModulo11CnabComBase(
-                carteiraConta + StringUtils.leftPad(Long.toString(nossoNumero), 11, '0'), 7);
-    }
 
-    private static String pegaDigitoVerificadorNossoNumero(Long nossoNumero, int tamanho) {
-        return CalculoDigitoVerificadorService.gerarDigitoMod11Pesos2a9NossoNumeroSantander(StringUtils.leftPad(
-                nossoNumero.toString(), tamanho, '0'));
-    }
 
     public Long recuperaContaDaFilial(Long filialId) {
         return  Optional.ofNullable(nossoNumeroMapper.recuperarIdContaFilial(filialId))
