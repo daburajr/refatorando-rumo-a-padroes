@@ -1,13 +1,19 @@
 package br.com.ifma.refatorandorumoapadroes.templatemethod.service;
 
 import br.com.ifma.refatorandorumoapadroes.templatemethod.mapper.BoletoNossoNumeroItMarketMapper;
+import br.com.ifma.refatorandorumoapadroes.templatemethod.model.BoletoNossoNumeroItMarket;
 import org.springframework.stereotype.Service;
 
 @Service
 public class ControleNossoNumeroItMarketService extends TemplateControleService {
 
-    public ControleNossoNumeroItMarketService(BoletoNossoNumeroItMarketMapper boletoNossoNumeroItMarketMapper) {
-        super(boletoNossoNumeroItMarketMapper);
+    private final BoletoNossoNumeroItMarketMapper boletoNossoNumeroItMarketMapper;
 
+    public ControleNossoNumeroItMarketService(BoletoNossoNumeroItMarketMapper boletoNossoNumeroItMarketMapper) {
+        this.boletoNossoNumeroItMarketMapper = boletoNossoNumeroItMarketMapper;
+    }
+
+    protected void salvaDocumento(BoletoNossoNumeroItMarket boletoItMarket) {
+        boletoNossoNumeroItMarketMapper.inserirBoletoNossoNuemroItMarket(boletoItMarket);
     }
 }
