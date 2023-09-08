@@ -1,8 +1,7 @@
 package br.com.ifma.refatorandorumoapadroes.templatemethod.service;
 
 import br.com.ifma.refatorandorumoapadroes.templatemethod.mapper.BoletoNossoNumeroVMixMapper;
-import br.com.ifma.refatorandorumoapadroes.templatemethod.model.BoletoNossoNumeroItMarket;
-import br.com.ifma.refatorandorumoapadroes.templatemethod.model.BoletoNossoNumeroVMix;
+import br.com.ifma.refatorandorumoapadroes.templatemethod.model.BoletoNossoNumero;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -29,7 +28,7 @@ public class ControleNossoNumeroVmixServiceTest {
     @Test
     public void testGerarControleNossoNumero() {
 
-        BoletoNossoNumeroItMarket boletoNossoNumeroItMarket = BoletoNossoNumeroItMarket.builder()
+        BoletoNossoNumero boletoNossoNumeroItMarket = BoletoNossoNumero.builder()
                 .id(1L)
                 .nossoNumero(1235L)
                 .status(1)
@@ -38,7 +37,7 @@ public class ControleNossoNumeroVmixServiceTest {
                 .data(new GregorianCalendar(2023, Calendar.FEBRUARY, 20, 0, 32).getTime())
                 .build();
 
-        BoletoNossoNumeroVMix result = controleNossoNumeroVmixService.gerarControleNossoNumero(boletoNossoNumeroItMarket);
+        BoletoNossoNumero result = controleNossoNumeroVmixService.gerarControleNossoNumero(boletoNossoNumeroItMarket);
 
         verify(boletoNossoNumeroVMixMapper, times(1)).inserirBoletoNossoNumeroVMix(any());
 
