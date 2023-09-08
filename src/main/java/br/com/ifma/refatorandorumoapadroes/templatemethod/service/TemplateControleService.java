@@ -10,6 +10,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.Calendar;
+import java.util.Objects;
 
 @Slf4j
 @Service
@@ -18,7 +19,7 @@ public abstract class TemplateControleService {
 
     public BoletoNossoNumero gerarControleNossoNumero(BoletoNossoNumero boletoItMarket) {
 
-        if(boletoItMarket == null) {
+        if (Objects.isNull(boletoItMarket)) {
             throw new PdvValidationException("Boleto ItMarket não gerado.");
         }
 
@@ -38,22 +39,16 @@ public abstract class TemplateControleService {
 
     public BoletoNossoNumero gerarControleNossoNumero(Long filialId, Integer pdv, Long nossoNumero) {
 
-        Calendar data = Calendar.getInstance();
-        BoletoNossoNumeroItMarket boletoItMarket = BoletoNossoNumeroItMarket.builder()
+        BoletoNossoNumero boletoNossoNumero = BoletoNossoNumeroItMarket.builder()
                 .idFilial(filialId)
                 .pdv(pdv)
-                .data(data.getTime())
+                .data(Calendar.getInstance().getTime())
                 .nossoNumero(nossoNumero)
                 .status(StatusBoletoNossoNumero.INSERIDO.idStatus)
                 .build();
 
-        if(boletoItMarket == null) {
-            throw new PdvValidationException("Não foi possível criar boleto ItMarket.");
-        }
-
-        this.salvaNossoNumero(boletoItMarket);
-
-        return boletoItMarket;
+        this.salvaNossoNumero(boletoNossoNumero);
+        return boletoNossoNumero;
     }
 
     protected abstract void salvaNossoNumero(BoletoNossoNumero boletoNossoNumero);
