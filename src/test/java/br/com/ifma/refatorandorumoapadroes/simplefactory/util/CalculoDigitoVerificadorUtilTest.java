@@ -51,22 +51,4 @@ public class CalculoDigitoVerificadorUtilTest {
         Assert.assertEquals("2765432765432", padrao);
     }
 
-    @Test
-    public void gerarDigitoMod11Pesos2a9NossoNumeroBancoDoBrasil() {
-
-        String digito = CalculoDigitoVerificadorUtil
-                .gerarDigitoMod11Pesos2a9NossoNumero("18181700015");
-
-        Assert.assertEquals("4", digito);
-    }
-
-    @Test
-    public void gerarDigitoMod11Pesos2a9NossoNumeroSantader() {
-
-        String digito = CalculoDigitoVerificadorUtil
-                .gerarDigitoMod11Pesos2a9NossoNumero("000000000015");
-
-        Assert.assertEquals("9", digito);
-    }
-
 }

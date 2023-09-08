@@ -28,9 +28,6 @@ public class CalculoDigitoVerificadorUtil {
 
         return retorno;
     }
-    public static String gerarDigitoMod11Pesos2a9NossoNumero(String sequenciaNumerica) {
-        return GeraDigitoMod11Util.geraDigito(sequenciaNumerica);
-    }
 
     public static String retornarPadrao(int qtd, int menorDigito, int maiorDigito, int primeiroNumero) {
 
