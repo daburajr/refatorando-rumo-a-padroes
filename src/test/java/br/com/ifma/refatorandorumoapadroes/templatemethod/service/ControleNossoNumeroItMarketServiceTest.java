@@ -27,7 +27,7 @@ public class ControleNossoNumeroItMarketServiceTest {
     @Test
     public void deveGerarControleNossoNumero() {
 
-        BoletoNossoNumeroItMarket result = controleNossoNumeroItMarketService.gerarControleNossoNumero(1L, 600, 1235L);
+        BoletoNossoNumeroItMarket result = (BoletoNossoNumeroItMarket) controleNossoNumeroItMarketService.gerarControleNossoNumero(1L, 600, 1235L);
 
         verify(boletoNossoNumeroItMarketMapper, times(1)).inserirBoletoNossoNuemroItMarket(any());
 

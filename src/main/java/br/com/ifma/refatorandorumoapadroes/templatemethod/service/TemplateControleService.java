@@ -16,7 +16,7 @@ import java.util.Calendar;
 public abstract class TemplateControleService {
 
 
-    public BoletoNossoNumeroVMix gerarControleNossoNumero(BoletoNossoNumeroItMarket boletoItMarket) {
+    public BoletoNossoNumero gerarControleNossoNumero(BoletoNossoNumero boletoItMarket) {
 
         if(boletoItMarket == null) {
             throw new PdvValidationException("Boleto ItMarket não gerado.");
@@ -36,7 +36,7 @@ public abstract class TemplateControleService {
         return boletoVMix;
     }
 
-    public BoletoNossoNumeroItMarket gerarControleNossoNumero(Long filialId, Integer pdv, Long nossoNumero) {
+    public BoletoNossoNumero gerarControleNossoNumero(Long filialId, Integer pdv, Long nossoNumero) {
 
         Calendar data = Calendar.getInstance();
         BoletoNossoNumeroItMarket boletoItMarket = BoletoNossoNumeroItMarket.builder()

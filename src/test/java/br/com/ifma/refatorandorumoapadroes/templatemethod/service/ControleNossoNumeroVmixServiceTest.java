@@ -38,7 +38,7 @@ public class ControleNossoNumeroVmixServiceTest {
                 .data(new GregorianCalendar(2023, Calendar.FEBRUARY, 20, 0, 32).getTime())
                 .build();
 
-        BoletoNossoNumeroVMix result = controleNossoNumeroVmixService.gerarControleNossoNumero(boletoNossoNumeroItMarket);
+        BoletoNossoNumeroVMix result = (BoletoNossoNumeroVMix) controleNossoNumeroVmixService.gerarControleNossoNumero(boletoNossoNumeroItMarket);
 
         verify(boletoNossoNumeroVMixMapper, times(1)).inserirBoletoNossoNumeroVMix(any());
 
