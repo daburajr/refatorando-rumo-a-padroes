@@ -98,7 +98,7 @@ public class NossoNumeroServiceTest {
         List<InformacoesNossoNumero> expected = Collections
                 .singletonList(InformacaoNossoNumeroBuilder.criaInformacoesNossoNumeroBradesco());
 
-        when(nossoNumeroFabricaService.criaInformacaoParaBradesco(anyLong(), anyString(), anyLong()))
+        when(nossoNumeroFabricaService.criaInformacaoParaSafraOuBradesco(anyLong(), anyString(), anyLong()))
                 .thenReturn(InformacaoNossoNumeroBuilder.criaInformacoesNossoNumeroBradesco());
         when(nossoNumeroMapper.recuperarIdContaFilial(1L)).thenReturn(conta.getId());
         when(contaService.recuperarContaPorId(conta.getId())).thenReturn(conta);
@@ -124,7 +124,7 @@ public class NossoNumeroServiceTest {
         List<InformacoesNossoNumero> expected = Collections
                 .singletonList(InformacaoNossoNumeroBuilder.criaInformacoesNossoNumeroSafra());
 
-        when(nossoNumeroFabricaService.criaInformacaoParaSafra(anyLong(), anyString(), anyLong()))
+        when(nossoNumeroFabricaService.criaInformacaoParaSafraOuBradesco(anyLong(), anyString(), anyLong()))
                 .thenReturn(InformacaoNossoNumeroBuilder.criaInformacoesNossoNumeroSafra());
         when(nossoNumeroMapper.recuperarIdContaFilial(1L)).thenReturn(conta.getId());
         when(contaService.recuperarContaPorId(conta.getId())).thenReturn(conta);

@@ -9,58 +9,33 @@ import org.springframework.stereotype.Service;
 @Service
 public class NossoNumeroFabricaService {
 
-    public InformacoesNossoNumero criaInformacaoParaBradesco(long nossoNumero, String carteiraConta, long contaId) {
-
-        String digitoVerificadorNossoNumero = pegaDigitoVerificadorNossoNumeroComCarteira(carteiraConta, nossoNumero);
-
-        InformacoesNossoNumero informacaoNossoNumero = new InformacoesNossoNumero();
-        informacaoNossoNumero.setNossoNumero(nossoNumero);
-        informacaoNossoNumero.setDigitoVerificadorNossoNumero(digitoVerificadorNossoNumero);
-        informacaoNossoNumero.setCarteira(carteiraConta);
-        informacaoNossoNumero.setIdConta(contaId);
-
-        return informacaoNossoNumero;
-    }
 
     public InformacoesNossoNumero criaInformacaoParaSantander(long nossoNumero, String carteiraConta, long contaId) {
-
-        String digitoVerificadorNossoNumero = pegaDigitoVerificadorNossoNumero(nossoNumero, 12);
-
-        InformacoesNossoNumero informacaoNossoNumero = new InformacoesNossoNumero();
-        informacaoNossoNumero.setNossoNumero(nossoNumero);
-        informacaoNossoNumero.setDigitoVerificadorNossoNumero(digitoVerificadorNossoNumero);
-        informacaoNossoNumero.setCarteira(carteiraConta);
-        informacaoNossoNumero.setIdConta(contaId);
-
-
-        return informacaoNossoNumero;
+        String digitoVerificador = pegaDigitoVerificadorNossoNumero(nossoNumero, 12);
+        return getInformacoesNossoNumero(digitoVerificador, nossoNumero, carteiraConta, contaId);
     }
 
     public InformacoesNossoNumero criaInformacaoParaBancoDoBrasil(Long nossoNumero, String carteiraConta, long contaId) {
         nossoNumero = Long.parseLong("181817" + StringUtils.leftPad(nossoNumero.toString(), 5, '0'));
-        String digitoVerificadorNossoNumero = pegaDigitoVerificadorNossoNumero(nossoNumero, 11);
-
-        InformacoesNossoNumero informacaoNossoNumero = new InformacoesNossoNumero();
-        informacaoNossoNumero.setNossoNumero(nossoNumero);
-        informacaoNossoNumero.setDigitoVerificadorNossoNumero(digitoVerificadorNossoNumero);
-        informacaoNossoNumero.setCarteira(carteiraConta);
-        informacaoNossoNumero.setIdConta(contaId);
-
-        return informacaoNossoNumero;
+        String digitoVerificador = pegaDigitoVerificadorNossoNumero(nossoNumero, 11);
+        return getInformacoesNossoNumero(digitoVerificador, nossoNumero, carteiraConta, contaId);
 
     }
 
-    public InformacoesNossoNumero criaInformacaoParaSafra(long nossoNumero, String carteiraConta, long contaId) {
+    public InformacoesNossoNumero criaInformacaoParaSafraOuBradesco(long nossoNumero, String carteiraConta, long contaId) {
+        String digitoVerificador = pegaDigitoVerificadorNossoNumeroComCarteira(carteiraConta, nossoNumero);
+        return getInformacoesNossoNumero(digitoVerificador, nossoNumero, carteiraConta, contaId);
+    }
 
-        String digitoVerificadorNossoNumero = pegaDigitoVerificadorNossoNumeroComCarteira(carteiraConta, nossoNumero);
+    private InformacoesNossoNumero getInformacoesNossoNumero(String digitoVerificadorNossoNumero, long nossoNumero,
+                                                             String carteiraConta, long contaId) {
 
-        InformacoesNossoNumero informacaoNossoNumero = new InformacoesNossoNumero();
-        informacaoNossoNumero.setNossoNumero(nossoNumero);
-        informacaoNossoNumero.setDigitoVerificadorNossoNumero(digitoVerificadorNossoNumero);
-        informacaoNossoNumero.setCarteira(carteiraConta);
-        informacaoNossoNumero.setIdConta(contaId);
-
-        return informacaoNossoNumero;
+        return InformacoesNossoNumero.builder()
+                .nossoNumero(nossoNumero)
+                .digitoVerificadorNossoNumero(digitoVerificadorNossoNumero)
+                .carteira(carteiraConta)
+                .idConta(contaId)
+                .build();
     }
 
     private String pegaDigitoVerificadorNossoNumeroComCarteira(String carteiraConta, Long nossoNumero) {
