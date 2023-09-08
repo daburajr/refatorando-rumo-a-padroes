@@ -15,22 +15,15 @@ import java.util.stream.Collectors;
 public class UsuarioService {
 
     private final UsuarioClient usuarioClient;
-
     private static final int MAIOR_DE_IDADE = 18;
 
     public List<UsuarioDTO> buscaTodosUsuariosMaiorDeIdade() {
-
         UsuarioDTO[] usuarioDTOS = usuarioClient.buscaTodosUsuarios();
-
         return this.verificaUsuariosMaioresDeIdade(usuarioDTOS);
-
     }
 
-
     private List<UsuarioDTO> verificaUsuariosMaioresDeIdade(UsuarioDTO[] usuariosApi) {
-
         List<UsuarioDTO> usuarios = Arrays.asList(usuariosApi);
-
         return usuarios.stream()
                 .filter(usuarioDTO -> usuarioDTO.getAge() >= MAIOR_DE_IDADE)
                 .collect(Collectors.toList());

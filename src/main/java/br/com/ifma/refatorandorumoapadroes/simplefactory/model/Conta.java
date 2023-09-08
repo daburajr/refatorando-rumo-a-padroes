@@ -6,25 +6,28 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
-import java.util.Optional;
+import java.util.Objects;
 
 @Data
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
 public class Conta {
 
-    Long id;
-    Long nossoNumero;
-    String digitoVerificadorNossoNumero;
-    String carteira;
-    String digitoVerificadorConta;
+    private Long id;
+
+    private Long nossoNumero;
+
+    private String digitoVerificadorNossoNumero;
+
+    private String carteira;
+
+    private String digitoVerificadorConta;
+
     private BigDecimal saldo;
 
     public String getCarteira() {
-        return Optional.of(this.carteira)
-                .orElse("")
-                .trim();
+        return Objects.isNull(carteira) ? "" : carteira.trim();
     }
 
 }

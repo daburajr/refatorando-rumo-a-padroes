@@ -43,21 +43,20 @@ public class CarneDocumentoTest {
     }
 
     @Test
-    public void deveExecutarAImpressao() {
-
-        List<DocumentoItMarket> boletos = Collections.singletonList(BoletoBuilder.carnePendente());
+    public void deveImprimirBoletoCarne() {
 
         when(boletoImpressaoMapper.buscarBoletosPedentesDeImpressao())
-                .thenReturn(boletos);
+                .thenReturn(Collections.singletonList(BoletoBuilder.carnePendente()));
 
-        carneDocumento.imprime(boletos);
+        carneDocumento.imprime(Collections.singletonList(BoletoBuilder.carnePendente()));
 
         verify(boletoReports, times(1)).imprimirCarne(BoletoBuilder.carnePendente());
         verify(boletoImpressaoMapper, times(1)).atualizarBoletoItMarket(Mockito.any());
+
     }
 
     @Test
-    public void deveRegistrarIncidenciaParaFalhaNaComunicaaoDoGmreports() throws IllegalAccessException {
+    public void deveRegistrarIncidenciaParaFalhaNaComunicaaoDoGmreportsParaCarne() throws IllegalAccessException {
 
         List<DocumentoItMarket> boletos = Collections.singletonList(BoletoBuilder.carnePendente());
 
@@ -70,11 +69,11 @@ public class CarneDocumentoTest {
             carneDocumento.imprime(boletos);
         }
 
-        for (DocumentoItMarket boletoItMarket : boletos) {
-            assertEquals(15, boletoItMarket.getIncidencia());
-            assertEquals(TipoStatusImpressao.IMPRESSAO_COM_ERRO, TipoStatusImpressao.toEnum(boletoItMarket.getTipoStatusImpressao()));
+        for (DocumentoItMarket documentoItMarket : boletos) {
+            assertEquals(15, documentoItMarket.getIncidencia());
+            assertEquals(TipoStatusImpressao.IMPRESSAO_COM_ERRO, TipoStatusImpressao.toEnum(documentoItMarket.getTipoStatusImpressao()));
         }
 
     }
-}
 
+}
