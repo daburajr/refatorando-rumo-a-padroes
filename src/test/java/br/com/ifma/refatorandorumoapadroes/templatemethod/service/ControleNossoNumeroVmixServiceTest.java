@@ -1,6 +1,7 @@
 package br.com.ifma.refatorandorumoapadroes.templatemethod.service;
 
 import br.com.ifma.refatorandorumoapadroes.templatemethod.mapper.BoletoNossoNumeroVMixMapper;
+import br.com.ifma.refatorandorumoapadroes.templatemethod.model.BoletoNossoNumero;
 import br.com.ifma.refatorandorumoapadroes.templatemethod.model.BoletoNossoNumeroItMarket;
 import br.com.ifma.refatorandorumoapadroes.templatemethod.model.BoletoNossoNumeroVMix;
 import org.junit.Assert;
@@ -38,7 +39,7 @@ public class ControleNossoNumeroVmixServiceTest {
                 .data(new GregorianCalendar(2023, Calendar.FEBRUARY, 20, 0, 32).getTime())
                 .build();
 
-        BoletoNossoNumeroVMix result = (BoletoNossoNumeroVMix) controleNossoNumeroVmixService.gerarControleNossoNumero(boletoNossoNumeroItMarket);
+        BoletoNossoNumero result = controleNossoNumeroVmixService.gerarControleNossoNumero(boletoNossoNumeroItMarket);
 
         verify(boletoNossoNumeroVMixMapper, times(1)).inserirBoletoNossoNumeroVMix(any());
 

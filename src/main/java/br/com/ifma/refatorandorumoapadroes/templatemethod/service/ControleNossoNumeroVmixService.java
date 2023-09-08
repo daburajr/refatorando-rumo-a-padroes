@@ -16,6 +16,6 @@ public class ControleNossoNumeroVmixService extends TemplateControleService {
     @Override
     protected void salvaNossoNumero(BoletoNossoNumero boletoNossoNumero) {
         boletoNossoNumeroVMixMapper
-                .inserirBoletoNossoNumeroVMix((BoletoNossoNumeroVMix) boletoNossoNumero);
+                .inserirBoletoNossoNumeroVMix(boletoNossoNumero);
     }
 }

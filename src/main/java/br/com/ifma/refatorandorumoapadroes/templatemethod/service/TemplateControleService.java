@@ -23,18 +23,8 @@ public abstract class TemplateControleService {
             throw new PdvValidationException("Boleto ItMarket não gerado.");
         }
 
-        BoletoNossoNumeroVMix boletoVMix = BoletoNossoNumeroVMix
-                .builder()
-                .idFilial(boletoItMarket.getIdFilial())
-                .pdv(boletoItMarket.getPdv())
-                .data(boletoItMarket.getData())
-                .nossoNumero(boletoItMarket.getNossoNumero())
-                .status(boletoItMarket.getStatus())
-                .build();
-
-        this.salvaNossoNumero(boletoVMix);
-
-        return boletoVMix;
+        return this.gerarControleNossoNumero(boletoItMarket.getIdFilial(),
+                boletoItMarket.getPdv(), boletoItMarket.getNossoNumero());
     }
 
     public BoletoNossoNumero gerarControleNossoNumero(Long filialId, Integer pdv, Long nossoNumero) {
