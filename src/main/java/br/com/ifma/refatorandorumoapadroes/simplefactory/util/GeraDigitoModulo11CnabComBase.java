@@ -1,6 +1,6 @@
 package br.com.ifma.refatorandorumoapadroes.simplefactory.util;
 
-public class CalculoDigitoVerificadorUtil {
+public class GeraDigitoModulo11CnabComBase {
 
 
     public static String calcularDigitoModulo11CnabComBase(String numero, int base) {

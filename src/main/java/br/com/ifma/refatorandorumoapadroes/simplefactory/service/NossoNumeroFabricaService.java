@@ -1,7 +1,7 @@
 package br.com.ifma.refatorandorumoapadroes.simplefactory.service;
 
 import br.com.ifma.refatorandorumoapadroes.simplefactory.model.InformacoesNossoNumero;
-import br.com.ifma.refatorandorumoapadroes.simplefactory.util.CalculoDigitoVerificadorUtil;
+import br.com.ifma.refatorandorumoapadroes.simplefactory.util.GeraDigitoModulo11CnabComBase;
 import br.com.ifma.refatorandorumoapadroes.simplefactory.util.GeraDigitoMod11Util;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -41,7 +41,7 @@ public class NossoNumeroFabricaService {
     }
 
     private String pegaDigitoVerificadorNossoNumeroComCarteira(String carteiraConta, Long nossoNumero) {
-        return CalculoDigitoVerificadorUtil.calcularDigitoModulo11CnabComBase(
+        return GeraDigitoModulo11CnabComBase.calcularDigitoModulo11CnabComBase(
                 carteiraConta + StringUtils.leftPad(Long.toString(nossoNumero), 11, '0'), 7);
     }
 

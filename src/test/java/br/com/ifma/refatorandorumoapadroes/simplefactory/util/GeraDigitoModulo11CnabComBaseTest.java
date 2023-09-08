@@ -5,7 +5,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.MockitoAnnotations;
 
-public class CalculoDigitoVerificadorUtilTest {
+public class GeraDigitoModulo11CnabComBaseTest {
 
 
     @Before
@@ -16,7 +16,7 @@ public class CalculoDigitoVerificadorUtilTest {
     @Test
     public void calcularDigitoModulo11CnabComBaseParaBradesco() {
 
-        String digito = CalculoDigitoVerificadorUtil
+        String digito = GeraDigitoModulo11CnabComBase
                 .calcularDigitoModulo11CnabComBase("1100000000015", 7);
 
         Assert.assertEquals("0", digito);
@@ -26,7 +26,7 @@ public class CalculoDigitoVerificadorUtilTest {
     @Test
     public void retornarPadraoParaBradesco() {
 
-        String padrao = CalculoDigitoVerificadorUtil
+        String padrao = GeraDigitoModulo11CnabComBase
                 .retornarPadrao(13, 2, 7, 2);
 
         Assert.assertEquals("2765432765432", padrao);
@@ -35,7 +35,7 @@ public class CalculoDigitoVerificadorUtilTest {
     @Test
     public void calcularDigitoModulo11CnabComBaseParaSafra() {
 
-        String digito = CalculoDigitoVerificadorUtil
+        String digito = GeraDigitoModulo11CnabComBase
                 .calcularDigitoModulo11CnabComBase("1200000000015", 7);
 
         Assert.assertEquals("4", digito);
@@ -45,7 +45,7 @@ public class CalculoDigitoVerificadorUtilTest {
     @Test
     public void retornarPadraoParaSafra() {
 
-        String padrao = CalculoDigitoVerificadorUtil
+        String padrao = GeraDigitoModulo11CnabComBase
                 .retornarPadrao(13, 2, 7, 2);
 
         Assert.assertEquals("2765432765432", padrao);
