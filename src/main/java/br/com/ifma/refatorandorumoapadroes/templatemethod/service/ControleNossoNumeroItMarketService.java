@@ -14,6 +14,6 @@ public class ControleNossoNumeroItMarketService extends TemplateControleService 
 
     protected void salvaNossoNumero(BoletoNossoNumero boletoNossoNumero) {
         boletoNossoNumeroItMarketMapper
-                .inserirBoletoNossoNuemroItMarket((BoletoNossoNumeroItMarket) boletoNossoNumero);
+                .inserirBoletoNossoNuemroItMarket(boletoNossoNumero);
     }
 }

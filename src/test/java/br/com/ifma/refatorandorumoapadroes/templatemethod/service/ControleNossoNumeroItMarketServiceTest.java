@@ -1,6 +1,7 @@
 package br.com.ifma.refatorandorumoapadroes.templatemethod.service;
 
 import br.com.ifma.refatorandorumoapadroes.templatemethod.mapper.BoletoNossoNumeroItMarketMapper;
+import br.com.ifma.refatorandorumoapadroes.templatemethod.model.BoletoNossoNumero;
 import br.com.ifma.refatorandorumoapadroes.templatemethod.model.BoletoNossoNumeroItMarket;
 import org.junit.Assert;
 import org.junit.Before;
@@ -27,7 +28,7 @@ public class ControleNossoNumeroItMarketServiceTest {
     @Test
     public void deveGerarControleNossoNumero() {
 
-        BoletoNossoNumeroItMarket result = (BoletoNossoNumeroItMarket) controleNossoNumeroItMarketService.gerarControleNossoNumero(1L, 600, 1235L);
+        BoletoNossoNumero result = controleNossoNumeroItMarketService.gerarControleNossoNumero(1L, 600, 1235L);
 
         verify(boletoNossoNumeroItMarketMapper, times(1)).inserirBoletoNossoNuemroItMarket(any());
 

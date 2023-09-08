@@ -39,7 +39,7 @@ public abstract class TemplateControleService {
 
     public BoletoNossoNumero gerarControleNossoNumero(Long filialId, Integer pdv, Long nossoNumero) {
 
-        BoletoNossoNumero boletoNossoNumero = BoletoNossoNumeroItMarket.builder()
+        BoletoNossoNumero boletoNossoNumero = BoletoNossoNumero.builder()
                 .idFilial(filialId)
                 .pdv(pdv)
                 .data(Calendar.getInstance().getTime())
