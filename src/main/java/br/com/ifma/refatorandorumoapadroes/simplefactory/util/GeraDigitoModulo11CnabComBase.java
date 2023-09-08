@@ -1,12 +1,8 @@
 package br.com.ifma.refatorandorumoapadroes.simplefactory.util;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+public class GeraDigitoModulo11CnabComBase {
 
-public class CalculoDigitoUtil {
-
-    private CalculoDigitoUtil() {}
+    private GeraDigitoModulo11CnabComBase() {}
 
     public static String calcularDigitoModulo11CnabComBase(String numero, int base) {
 
@@ -33,33 +29,8 @@ public class CalculoDigitoUtil {
 
         return retorno;
     }
-    public static String gerarDigitoMod11Pesos2a9NossoNumero(String sequenciaNumerica) {
-        int[] pesos = {
-                2, 3, 4, 5, 6, 7, 8, 9
-        };
-        List<Integer> digitos = new ArrayList<>();
-        for (int i = 0; i < sequenciaNumerica.length(); i++) {
-            digitos.add(sequenciaNumerica.charAt(i) - '0');
-        }
-        Collections.reverse(digitos);
-        int soma = 0;
-        for (int i = 0, indexPesos = 0; i < digitos.size(); i++, indexPesos = (indexPesos + 1) % pesos.length) {
-            int digito = digitos.get(i);
-            soma += digito * pesos[indexPesos];
-        }
-        int resto = soma % 11;
-        if (resto == 10) {
-            return Integer.toString(1);
-        }
 
-        if (resto == 1 || resto == 0) {
-            return Integer.toString(0);
-        }
-
-        return Integer.toString(11 - resto);
-    }
-
-    private static String retornarPadrao(int qtd, int menorDigito, int maiorDigito, int primeiroNumero) {
+    public static String retornarPadrao(int qtd, int menorDigito, int maiorDigito, int primeiroNumero) {
 
         StringBuilder padrao = new StringBuilder();
 
@@ -74,5 +45,4 @@ public class CalculoDigitoUtil {
         int resto = indice % (maiorDigito - menorDigito + 1);
         return resto + menorDigito;
     }
-
 }

@@ -59,15 +59,13 @@ public class NossoNumeroService {
         String carteiraConta = conta.getCarteira();
         Long nossoNumero = this.geraNossoNumeroPara(filialId, pdv, cupom);
 
-        if (idBanco == ID_BANCO_BRADESCO) {
-            return nossoNumeroFabricaService.criaInformacaoParaBradesco(nossoNumero, carteiraConta, idConta);
+        if ((idBanco == ID_BANCO_BRADESCO) || (idBanco == ID_BANCO_SAFRA)) {
+            return nossoNumeroFabricaService.criaInformacaoParaSafraOuBradesco(nossoNumero, carteiraConta, idConta);
         } else if (idBanco == ID_BANCO_SANTANDER) {
             return nossoNumeroFabricaService.criaInformacaoParaSantander(nossoNumero, carteiraConta, idConta);
         } else if (idBanco == ID_BANCO_DO_BRASIL) {
             contaService.recuperarCodigoBeneficiarioPelaConta(idConta);
             return nossoNumeroFabricaService.criaInformacaoParaBancoDoBrasil(nossoNumero, carteiraConta, idConta);
-        } else if (idBanco == ID_BANCO_SAFRA) {
-            return nossoNumeroFabricaService.criaInformacaoParaSafra(nossoNumero, carteiraConta, idConta);
         } else {
             throw new PdvValidationException("Nenhuma Instituiçao Financeira Encontrada.");
         }

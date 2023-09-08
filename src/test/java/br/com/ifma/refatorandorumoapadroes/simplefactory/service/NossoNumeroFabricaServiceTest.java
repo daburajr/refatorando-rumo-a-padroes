@@ -24,7 +24,7 @@ public class NossoNumeroFabricaServiceTest {
     public void criaInformacaoParaBradesco() {
 
         InformacoesNossoNumero informacoesNossoNumero = nossoNumeroFabricaService
-                .criaInformacaoParaBradesco(15L, "11", 237);
+                .criaInformacaoParaSafraOuBradesco(15L, "11", 237);
 
         assertEquals(informacoesNossoNumero, InformacaoNossoNumeroBuilder.criaInformacoesNossoNumeroBradesco());
 
@@ -52,7 +52,7 @@ public class NossoNumeroFabricaServiceTest {
     public void criaInformacaoParaSafra() {
 
         InformacoesNossoNumero informacoesNossoNumero = nossoNumeroFabricaService
-                .criaInformacaoParaSafra(15L, "12", 422);
+                .criaInformacaoParaSafraOuBradesco(15L, "12", 422);
 
         assertEquals(informacoesNossoNumero, InformacaoNossoNumeroBuilder.criaInformacoesNossoNumeroSafra());
 
