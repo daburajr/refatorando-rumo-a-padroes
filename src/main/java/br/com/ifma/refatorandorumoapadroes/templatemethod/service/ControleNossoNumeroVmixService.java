@@ -3,7 +3,6 @@ package br.com.ifma.refatorandorumoapadroes.templatemethod.service;
 
 import br.com.ifma.refatorandorumoapadroes.templatemethod.mapper.BoletoNossoNumeroVMixMapper;
 import br.com.ifma.refatorandorumoapadroes.templatemethod.model.BoletoNossoNumero;
-import br.com.ifma.refatorandorumoapadroes.templatemethod.model.BoletoNossoNumeroVMix;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

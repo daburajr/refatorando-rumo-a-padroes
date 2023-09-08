@@ -2,7 +2,6 @@ package br.com.ifma.refatorandorumoapadroes.templatemethod.service;
 
 import br.com.ifma.refatorandorumoapadroes.templatemethod.mapper.BoletoNossoNumeroItMarketMapper;
 import br.com.ifma.refatorandorumoapadroes.templatemethod.model.BoletoNossoNumero;
-import br.com.ifma.refatorandorumoapadroes.templatemethod.model.BoletoNossoNumeroItMarket;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

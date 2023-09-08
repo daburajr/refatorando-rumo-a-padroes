@@ -2,7 +2,6 @@ package br.com.ifma.refatorandorumoapadroes.templatemethod.service;
 
 import br.com.ifma.refatorandorumoapadroes.templatemethod.mapper.BoletoNossoNumeroItMarketMapper;
 import br.com.ifma.refatorandorumoapadroes.templatemethod.model.BoletoNossoNumero;
-import br.com.ifma.refatorandorumoapadroes.templatemethod.model.BoletoNossoNumeroItMarket;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;

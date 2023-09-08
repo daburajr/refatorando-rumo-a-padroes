@@ -2,8 +2,6 @@ package br.com.ifma.refatorandorumoapadroes.templatemethod.service;
 
 import br.com.ifma.refatorandorumoapadroes.templatemethod.mapper.BoletoNossoNumeroVMixMapper;
 import br.com.ifma.refatorandorumoapadroes.templatemethod.model.BoletoNossoNumero;
-import br.com.ifma.refatorandorumoapadroes.templatemethod.model.BoletoNossoNumeroItMarket;
-import br.com.ifma.refatorandorumoapadroes.templatemethod.model.BoletoNossoNumeroVMix;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -30,7 +28,7 @@ public class ControleNossoNumeroVmixServiceTest {
     @Test
     public void testGerarControleNossoNumero() {
 
-        BoletoNossoNumeroItMarket boletoNossoNumeroItMarket = BoletoNossoNumeroItMarket.builder()
+        BoletoNossoNumero boletoNossoNumeroItMarket = BoletoNossoNumero.builder()
                 .id(1L)
                 .nossoNumero(1235L)
                 .status(1)

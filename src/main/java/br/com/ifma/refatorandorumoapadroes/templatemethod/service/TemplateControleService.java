@@ -4,8 +4,6 @@ package br.com.ifma.refatorandorumoapadroes.templatemethod.service;
 import br.com.ifma.refatorandorumoapadroes.templatemethod.enumeration.StatusBoletoNossoNumero;
 import br.com.ifma.refatorandorumoapadroes.templatemethod.exception.PdvValidationException;
 import br.com.ifma.refatorandorumoapadroes.templatemethod.model.BoletoNossoNumero;
-import br.com.ifma.refatorandorumoapadroes.templatemethod.model.BoletoNossoNumeroItMarket;
-import br.com.ifma.refatorandorumoapadroes.templatemethod.model.BoletoNossoNumeroVMix;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
