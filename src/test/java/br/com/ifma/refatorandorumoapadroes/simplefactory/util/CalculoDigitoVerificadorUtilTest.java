@@ -1,4 +1,4 @@
-package br.com.ifma.refatorandorumoapadroes.simplefactory.service;
+package br.com.ifma.refatorandorumoapadroes.simplefactory.util;
 
 import br.com.ifma.refatorandorumoapadroes.simplefactory.util.CalculoDigitoVerificadorUtil;
 import org.junit.Assert;
