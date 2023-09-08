@@ -19,7 +19,8 @@ import static org.springframework.http.MediaType.APPLICATION_JSON;
 @RequiredArgsConstructor
 public class UsuarioClient {
 
-    private static final String URL = "https://www.redesocialdecidades.org.br/users";
+    private static final String URL
+            = "https://www.redesocialdecidades.org.br/users";
 
     private final RestTemplate restTemplate;
 
@@ -32,16 +33,21 @@ public class UsuarioClient {
             HttpEntity<String> entity = new HttpEntity<>(httpHeaders);
 
             log.debug("Chamando API de Usuários -->");
-            return restTemplate.exchange(URL, HttpMethod.GET, entity, UsuarioDTO[].class).getBody();
+            UsuarioDTO[] usuariosApi = restTemplate
+                    .exchange(URL, HttpMethod.GET, entity, UsuarioDTO[].class)
+                    .getBody();
+
+            return usuariosApi;
 
         } catch (HttpClientErrorException | HttpServerErrorException e) {
-            log.error("Erro ao chamar API de Usuários. Mensagem: {}. Detalhe: {}.", e.getMessage(), e.getResponseBodyAsString());
+            log.error("Erro ao chamar API de Usuários. Mensagem: {}. Detalhe: {}.",
+                    e.getMessage(), e.getResponseBodyAsString());
             throw e;
         } catch (Exception e) {
-            log.error("Erro ao chamar API de Usuários. Mensagem: {}", e.getMessage());
+            log.error("Erro ao chamar API de Usuários. Mensagem: {}",
+                    e.getMessage());
             throw new RestClientException(e.getMessage());
         }
     }
-
 
 }

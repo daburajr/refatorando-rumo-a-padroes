@@ -43,7 +43,7 @@ public class BoletoBuilder {
                 .filialId(1L)
                 .pdv(700)
                 .cupom(3570L)
-                .finalizadora(5)
+                .finalizadora(10)
                 .valorBoleto(BigDecimal.valueOf(250))
                 .cpfOuCnpj("60607070787877")
                 .dataDocumento(LocalDateTime.now().toString())
@@ -108,6 +108,12 @@ public class BoletoBuilder {
     public static List<DocumentoItMarket> pegaBoletos() {
         return Arrays.asList(promissoriaPendente(), carnePendente(), boletoBalcaoPendente(), boletoLojaPendente());
     }
+
+    public static List<DocumentoItMarket> pegaBoletosSemBoletosLoja() {
+        return Arrays.asList(promissoriaPendente(), carnePendente(), boletoBalcaoPendente());
+    }
+
+
 
 
 

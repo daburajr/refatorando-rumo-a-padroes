@@ -12,48 +12,43 @@ import org.springframework.stereotype.Service;
 
 import java.util.Objects;
 
+import static br.com.ifma.refatorandorumoapadroes.strategy.enumeration.TipoDocumento.BOLETO_BALCAO;
+
 @Slf4j
 @Service
 public class BoletoBalcaoDocumento extends TemplateDocumento {
 
-    private static final TipoDocumento TIPO_DOCUMENTO = TipoDocumento.BOLETO_BALCAO;
-    private final IBoletoReports boletoReports;
-
-    private final IBancoCupomClient cupomCapaService;
-
-    public BoletoBalcaoDocumento(BoletoImpressaoMapper boletoImpressaoMapper,
-                                 IBoletoReports boletoReports,
-                                 IBancoCupomClient cupomCapaService) {
-        super(boletoImpressaoMapper);
-        this.boletoReports = boletoReports;
-        this.cupomCapaService = cupomCapaService;
+    protected BoletoBalcaoDocumento(BoletoImpressaoMapper boletoImpressaoMapper,
+                                    IBoletoReports boletoReports,
+                                    IBancoCupomClient cupomCapaService) {
+        super(boletoImpressaoMapper, boletoReports, cupomCapaService);
     }
 
     @Override
     protected TipoDocumento pegaTipoDocumento() {
-        return TIPO_DOCUMENTO;
+        return BOLETO_BALCAO;
     }
 
     @Override
-    protected void executaOperacaoDeImpressao(DocumentoItMarket boletoItMarket) {
-        this.buscarInformacoesAdicionais(boletoItMarket);
-        boletoReports.imprimirBoletoBalcao(boletoItMarket);
+    protected void executaOperacaoDeImpressao(DocumentoItMarket documentoItMarket) {
+        this.buscarInformacoesAdicionais(documentoItMarket);
+        boletoReports.imprimirBoletoBalcao(documentoItMarket);
     }
 
-    private void buscarInformacoesAdicionais(DocumentoItMarket boletoItMarket) {
+    private void buscarInformacoesAdicionais(DocumentoItMarket documentoItMarket) {
 
-        if (Objects.isNull(boletoItMarket.getIdPedido()) || Objects.isNull(boletoItMarket.getDataMovimento())) {
+        if (Objects.isNull(documentoItMarket.getIdPedido()) || Objects.isNull(documentoItMarket.getDataMovimento())) {
 
-            CupomCapaDTO cupomCapaDTO = cupomCapaService.buscarCupomCapa(boletoItMarket.getFilialId(),
-                    boletoItMarket.getPdv(), boletoItMarket.getCupom());
+            CupomCapaDTO cupomCapaDTO = cupomCapaService.buscarCupomCapa(documentoItMarket.getFilialId(),
+                    documentoItMarket.getPdv(), documentoItMarket.getCupom());
 
             final String recurso = "service=/boletoservice/ImpressaoBoletoService::imprimirBoletosBalcao::validarBoletoBalcao";
 
             if (Objects.isNull(cupomCapaDTO))
                 throw new PdvValidationException("Cupom pendente de integração ou não encontrado: " + recurso);
 
-            boletoItMarket.setIdPedido(cupomCapaDTO.getPedidoFaturado());
-            boletoItMarket.setDataMovimento(cupomCapaDTO.getDataMovimento().toLocalDate());
+            documentoItMarket.setIdPedido(cupomCapaDTO.getPedidoFaturado());
+            documentoItMarket.setDataMovimento(cupomCapaDTO.getDataMovimento().toLocalDate());
         }
     }
 }

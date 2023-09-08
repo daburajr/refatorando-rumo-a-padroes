@@ -13,19 +13,19 @@ import java.util.Map;
 
 import static java.util.stream.Collectors.groupingBy;
 
+
 @Slf4j
 @Service
 @RequiredArgsConstructor
 public class ImpressaoDocumentoService {
 
     private final BoletoImpressaoMapper boletoImpressaoMapper;
-
     private final List<Documento> processaDocumentos;
 
+    public void imprimirBoletos() {
 
-    public void imprimirDocumentos() {
-
-        List<DocumentoItMarket> documentosPendente = boletoImpressaoMapper.buscarBoletosPedentesDeImpressao();
+        List<DocumentoItMarket> documentosPendente = boletoImpressaoMapper
+                .buscarBoletosPedentesDeImpressao();
 
         Map<TipoDocumento, List<DocumentoItMarket>> boletosAgrupadosPorTipo = documentosPendente.stream()
                 .collect(groupingBy(DocumentoItMarket::pegaTipoDocumento));
@@ -34,6 +34,7 @@ public class ImpressaoDocumentoService {
                 .filter(doc -> doc.executaProcessamento(tipo))
                 .findAny()
                 .ifPresent(doc -> doc.imprime(documentos)));
+
 
     }
 

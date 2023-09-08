@@ -1,5 +1,7 @@
 package br.com.ifma.refatorandorumoapadroes.strategy.service.documento;
 
+
+import br.com.ifma.refatorandorumoapadroes.strategy.client.IBancoCupomClient;
 import br.com.ifma.refatorandorumoapadroes.strategy.client.IBoletoReports;
 import br.com.ifma.refatorandorumoapadroes.strategy.enumeration.TipoDocumento;
 import br.com.ifma.refatorandorumoapadroes.strategy.mapper.BoletoImpressaoMapper;
@@ -7,26 +9,25 @@ import br.com.ifma.refatorandorumoapadroes.strategy.model.DocumentoItMarket;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import static br.com.ifma.refatorandorumoapadroes.strategy.enumeration.TipoDocumento.CARNE;
+
 @Slf4j
 @Service
 public class CarneDocumento extends TemplateDocumento {
 
-    private static final TipoDocumento TIPO_DOCUMENTO = TipoDocumento.CARNE;
-    private final IBoletoReports boletoReports;
-
-    public CarneDocumento(BoletoImpressaoMapper boletoImpressaoMapper,
-                          IBoletoReports boletoReports) {
-        super(boletoImpressaoMapper);
-        this.boletoReports = boletoReports;
+    protected CarneDocumento(BoletoImpressaoMapper boletoImpressaoMapper,
+                             IBoletoReports boletoReports,
+                             IBancoCupomClient cupomCapaService) {
+        super(boletoImpressaoMapper, boletoReports, cupomCapaService);
     }
 
     @Override
     protected TipoDocumento pegaTipoDocumento() {
-        return TIPO_DOCUMENTO;
+        return CARNE;
     }
 
     @Override
-    protected void executaOperacaoDeImpressao(DocumentoItMarket boletoItMarket) {
-        boletoReports.imprimirCarne(boletoItMarket);
+    protected void executaOperacaoDeImpressao(DocumentoItMarket documentoItMarket) {
+        boletoReports.imprimirCarne(documentoItMarket);
     }
 }

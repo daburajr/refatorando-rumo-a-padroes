@@ -8,8 +8,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
-import java.util.Optional;
-
 @Slf4j
 @Service
 @RequiredArgsConstructor
@@ -17,36 +15,41 @@ public class ContaService {
 
     private final ContaMapper contaMapper;
 
+    public Conta recuperarContaPorId(Long contaId) {
 
-    public Conta recuperarContaPorId(long contaId) {
-        return Optional.of(contaMapper.recuperarContaPorId(contaId))
-                .orElseThrow(() -> new PdvValidationException("Conta inválida."));
+        Conta conta = contaMapper
+                .recuperarContaPorId(contaId);
+
+        if (conta == null) {
+            throw new PdvValidationException("Conta inválida.");
+        }
+
+        return conta;
     }
 
-    public long recuperarIdBancoPeloIdConta(long contaId) {
+    public long recuperarIdBancoPeloIdConta(Long contaId) {
 
-        long bancoId = Optional.of(contaMapper.recuperarIdBancoPeloIdConta(contaId))
-                .orElseThrow(() -> new PdvValidationException("Banco nao encontrado."));
+        Long bancoId = contaMapper
+                .recuperarIdBancoPeloIdConta(contaId);
 
-        if (bancoId <= 0) {
-            throw new PdvValidationException("Conta com banco invalido.");
+        if (bancoId == null || bancoId <= 0) {
+            throw new PdvValidationException("Banco inválido..");
         }
 
         return bancoId;
     }
 
-    public void validaCodigoDoBeneficiario(long contaId) {
+    public String recuperarCodigoBeneficiarioPelaConta(Long contaId) {
 
-        String mensagemDeErro = "Código de beneficiário não cadastrado para o conta: " + contaId;
+        String codigoBeneficiario = contaMapper
+                .recuperarCodigoBeneficiarioPelaConta(contaId);
 
-        String codigoBeneficiario = Optional.of(contaMapper.recuperarCodigoBeneficiarioPelaConta(contaId))
-                .orElseThrow(() -> new PdvValidationException(mensagemDeErro));
-
-        if (codigoBeneficiario.trim().isEmpty()) {
-            throw new PdvValidationException(mensagemDeErro);
+        if (codigoBeneficiario == null || codigoBeneficiario.trim().isEmpty()) {
+            throw new PdvValidationException(
+                    "Código de beneficiário não cadastrado para o conta: " + contaId);
         }
 
+        return codigoBeneficiario;
     }
-
 
 }

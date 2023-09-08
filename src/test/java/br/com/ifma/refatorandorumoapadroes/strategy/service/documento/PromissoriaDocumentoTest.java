@@ -18,7 +18,7 @@ import org.mockito.MockitoAnnotations;
 import java.util.Collections;
 import java.util.List;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.*;
 import static org.mockito.BDDMockito.willThrow;
 import static org.mockito.Mockito.*;
 
@@ -43,38 +43,42 @@ public class PromissoriaDocumentoTest {
     }
 
     @Test
-    public void deveExecutarAImpressao() {
-
-        List<DocumentoItMarket> boletos = Collections.singletonList(BoletoBuilder.promissoriaPendente());
+    public void deveImprimirBoletoPromissoria() {
 
         when(boletoImpressaoMapper.buscarBoletosPedentesDeImpressao())
-                .thenReturn(boletos);
+                .thenReturn(Collections.singletonList(BoletoBuilder.promissoriaPendente()));
 
-        promissoriaDocumento.imprime(boletos);
+        promissoriaDocumento.imprime(Collections.singletonList(BoletoBuilder.promissoriaPendente()));
 
         verify(boletoReports, times(1)).imprimirPromissoria(BoletoBuilder.promissoriaPendente());
         verify(boletoImpressaoMapper, times(1)).atualizarBoletoItMarket(Mockito.any());
+
     }
 
     @Test
-    public void deveRegistrarIncidenciaParaFalhaNaComunicaaoDoGmreports() throws IllegalAccessException {
+    public void deveRegistrarIncidenciaParaFalhaNaComunicaaoDoGmreportsParaPromissoria() throws IllegalAccessException {
 
         List<DocumentoItMarket> boletos = Collections.singletonList(BoletoBuilder.promissoriaPendente());
 
         when(boletoImpressaoMapper.buscarBoletosPedentesDeImpressao())
                 .thenReturn(boletos);
 
-        willThrow(PdvValidationException.class).given(boletoReports).imprimirPromissoria(BoletoBuilder.promissoriaPendente());
+        willThrow(PdvValidationException.class).given(boletoReports)
+                .imprimirPromissoria(BoletoBuilder.promissoriaPendente());
 
         for (int count = 0; count < 15; count++) {
             promissoriaDocumento.imprime(boletos);
         }
 
-        for (DocumentoItMarket boletoItMarket : boletos) {
-            assertEquals(15, boletoItMarket.getIncidencia());
-            assertEquals(TipoStatusImpressao.IMPRESSAO_COM_ERRO, TipoStatusImpressao.toEnum(boletoItMarket.getTipoStatusImpressao()));
+        for (DocumentoItMarket documentoItMarket : boletos) {
+
+            assertEquals(15, documentoItMarket.getIncidencia());
+
+            assertEquals(TipoStatusImpressao.IMPRESSAO_COM_ERRO,
+                    TipoStatusImpressao.toEnum(documentoItMarket.getTipoStatusImpressao()));
+
         }
 
     }
-}
 
+}

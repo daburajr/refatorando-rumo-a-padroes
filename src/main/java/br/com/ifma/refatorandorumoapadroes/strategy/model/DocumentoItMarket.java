@@ -15,6 +15,7 @@ import java.time.LocalDate;
 @NoArgsConstructor
 @AllArgsConstructor
 public class DocumentoItMarket {
+
     private Long id;
     private Long filialId;
     private Integer pdv;
@@ -37,14 +38,6 @@ public class DocumentoItMarket {
 
     public void adicionaIncidencia() {
         this.setIncidencia(++this.incidencia);
-    }
-
-    public TipoDocumento pegaTipoDocumento() {
-        try {
-            return TipoDocumento.toEnum(tipoBoleto);
-        } catch (IllegalAccessException e) {
-            return null;
-        }
     }
 
     @Override
@@ -70,5 +63,13 @@ public class DocumentoItMarket {
     public void reimprimir() {
         this.incidencia = 0;
         this.tipoStatusImpressao = TipoStatusImpressao.IMPRESSAO_PEDENTE.getCodigo();
+    }
+
+    public TipoDocumento pegaTipoDocumento() {
+        try {
+            return TipoDocumento.toEnum(tipoBoleto);
+        } catch (IllegalAccessException e) {
+            return null;
+        }
     }
 }

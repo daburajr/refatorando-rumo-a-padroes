@@ -1,59 +1,74 @@
 package br.com.ifma.refatorandorumoapadroes.strategy.service.documento;
 
+import br.com.ifma.refatorandorumoapadroes.strategy.client.IBancoCupomClient;
 import br.com.ifma.refatorandorumoapadroes.strategy.client.IBoletoReports;
 import br.com.ifma.refatorandorumoapadroes.strategy.enumeration.TipoDocumento;
 import br.com.ifma.refatorandorumoapadroes.strategy.enumeration.TipoStatusImpressao;
 import br.com.ifma.refatorandorumoapadroes.strategy.mapper.BoletoImpressaoMapper;
 import br.com.ifma.refatorandorumoapadroes.strategy.model.DocumentoItMarket;
-import lombok.RequiredArgsConstructor;
 
 import java.util.List;
 
-@RequiredArgsConstructor
 public abstract class TemplateDocumento implements Documento {
+
+    protected final BoletoImpressaoMapper boletoImpressaoMapper;
+    protected final IBoletoReports boletoReports;
+    protected final IBancoCupomClient cupomCapaService;
 
     private static final Integer INCIDENCIA = 15;
 
-    protected final BoletoImpressaoMapper boletoImpressaoMapper;
-
+    protected TemplateDocumento(BoletoImpressaoMapper boletoImpressaoMapper,
+                                IBoletoReports boletoReports,
+                                IBancoCupomClient cupomCapaService) {
+        this.boletoImpressaoMapper = boletoImpressaoMapper;
+        this.boletoReports = boletoReports;
+        this.cupomCapaService = cupomCapaService;
+    }
 
     @Override
     public boolean executaProcessamento(TipoDocumento tipo) {
-        return tipo.equals(this.pegaTipoDocumento());
+        return this.pegaTipoDocumento().equals(tipo);
     }
 
     @Override
     public void imprime(List<DocumentoItMarket> documentos) {
-        documentos.forEach( boletoItMarket -> {
+        documentos.forEach(documentoItMarket -> {
             try {
-                this.executaOperacaoDeImpressao(boletoItMarket);
-                this.atualizarBoletoItMarket(boletoItMarket, TipoStatusImpressao.IMPRESSAO_CONCLUIDA);
+                this.executaOperacaoDeImpressao(documentoItMarket);
+                this.atualizarBoletoItMarket(documentoItMarket,
+                        TipoStatusImpressao.IMPRESSAO_CONCLUIDA);
             } catch (Exception e) {
-                this.registrarIncidenciaEError(boletoItMarket, e.getMessage());
+                this.registrarIncidenciaEError(documentoItMarket,
+                        e.getMessage());
             }
         });
     }
 
-
     protected abstract TipoDocumento pegaTipoDocumento();
 
-    protected abstract void executaOperacaoDeImpressao(DocumentoItMarket boletoItMarket);
+    protected abstract void executaOperacaoDeImpressao(DocumentoItMarket documentoItMarket);
 
-    private void atualizarBoletoItMarket(DocumentoItMarket boletoItMarket, TipoStatusImpressao statusImpressao) {
-        boletoItMarket.setTipoStatusImpressao(statusImpressao.getCodigo());
-        boletoImpressaoMapper.atualizarBoletoItMarket(boletoItMarket);
-    }
+    private void registrarIncidenciaEError(DocumentoItMarket documentoItMarket,
+                                           String mensagemDeErro) {
 
-    private void registrarIncidenciaEError(DocumentoItMarket boletoItMarket, String mensagemDeErro) {
+        documentoItMarket.adicionaIncidencia();
 
-        boletoItMarket.adicionaIncidencia();
+        if (documentoItMarket.getIncidencia() >= INCIDENCIA) {
 
-        if (boletoItMarket.getIncidencia() >= INCIDENCIA) {
-            this.atualizarBoletoItMarket(boletoItMarket, TipoStatusImpressao.IMPRESSAO_COM_ERRO);
-            boletoImpressaoMapper.registrarError(boletoItMarket, mensagemDeErro);
+            this.atualizarBoletoItMarket(documentoItMarket,
+                    TipoStatusImpressao.IMPRESSAO_COM_ERRO);
+
+            boletoImpressaoMapper
+                    .registrarError(documentoItMarket, mensagemDeErro);
         }
 
-        boletoImpressaoMapper.atualizarBoletoItMarket(boletoItMarket);
+        boletoImpressaoMapper.atualizarBoletoItMarket(documentoItMarket);
     }
 
+    private void atualizarBoletoItMarket(DocumentoItMarket documentoItMarket,
+                                         TipoStatusImpressao statusImpressao) {
+        documentoItMarket.setTipoStatusImpressao(statusImpressao.getCodigo());
+        boletoImpressaoMapper.atualizarBoletoItMarket(documentoItMarket);
+    }
 }
+
