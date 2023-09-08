@@ -11,6 +11,8 @@ import org.springframework.stereotype.Service;
 @Service
 public class NossoNumeroFabricaService {
 
+    private static final String PARTE_INICIAL_NOSSO_NUMERO_BB = "181817";
+
 
     public InformacoesNossoNumero criaInformacaoParaSantander(long nossoNumero, String carteiraConta, long contaId) {
         String digitoVerificador = pegaDigitoVerificadorNossoNumero(nossoNumero, 12);
@@ -18,7 +20,7 @@ public class NossoNumeroFabricaService {
     }
 
     public InformacoesNossoNumero criaInformacaoParaBancoDoBrasil(Long nossoNumero, String carteiraConta, long contaId) {
-        nossoNumero = Long.parseLong("181817" + StringUtils.leftPad(nossoNumero.toString(), 5, '0'));
+        nossoNumero = Long.parseLong(PARTE_INICIAL_NOSSO_NUMERO_BB + StringUtils.leftPad(nossoNumero.toString(), 5, '0'));
         String digitoVerificador = pegaDigitoVerificadorNossoNumero(nossoNumero, 11);
         return getInformacoesNossoNumero(digitoVerificador, nossoNumero, carteiraConta, contaId);
 
