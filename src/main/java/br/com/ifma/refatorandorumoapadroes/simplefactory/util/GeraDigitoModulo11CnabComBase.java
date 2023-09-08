@@ -2,6 +2,7 @@ package br.com.ifma.refatorandorumoapadroes.simplefactory.util;
 
 public class GeraDigitoModulo11CnabComBase {
 
+    private GeraDigitoModulo11CnabComBase() {}
 
     public static String calcularDigitoModulo11CnabComBase(String numero, int base) {
 

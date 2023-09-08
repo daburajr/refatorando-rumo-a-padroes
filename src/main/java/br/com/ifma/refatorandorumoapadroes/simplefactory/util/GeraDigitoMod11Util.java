@@ -7,6 +7,7 @@ import java.util.stream.Collectors;
 public class GeraDigitoMod11Util {
 
     private static final int MOD = 11;
+    private static final int CHARACTER_ZERO = 48;
 
     private GeraDigitoMod11Util() {}
 
@@ -51,7 +52,7 @@ public class GeraDigitoMod11Util {
     private static List<Integer> pegaDigitosReversos(String sequenciaNumerica) {
 
         List<Integer> digitos = sequenciaNumerica.chars()
-                .mapToObj(p -> p - '0')
+                .mapToObj(p -> p - CHARACTER_ZERO)
                 .collect(Collectors.toList());
 
         Collections.reverse(digitos);
