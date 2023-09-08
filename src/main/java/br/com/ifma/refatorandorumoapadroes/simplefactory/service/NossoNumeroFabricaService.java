@@ -1,6 +1,7 @@
 package br.com.ifma.refatorandorumoapadroes.simplefactory.service;
 
 import br.com.ifma.refatorandorumoapadroes.simplefactory.model.InformacoesNossoNumero;
+import br.com.ifma.refatorandorumoapadroes.simplefactory.util.CalculoDigitoVerificadorUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
@@ -39,12 +40,12 @@ public class NossoNumeroFabricaService {
     }
 
     private String pegaDigitoVerificadorNossoNumeroComCarteira(String carteiraConta, Long nossoNumero) {
-        return CalculoDigitoVerificadorService.calcularDigitoModulo11CnabComBase(
+        return CalculoDigitoVerificadorUtil.calcularDigitoModulo11CnabComBase(
                 carteiraConta + StringUtils.leftPad(Long.toString(nossoNumero), 11, '0'), 7);
     }
 
     private String pegaDigitoVerificadorNossoNumero(Long nossoNumero, int tamanho) {
-        return CalculoDigitoVerificadorService.gerarDigitoMod11Pesos2a9NossoNumeroSantander(StringUtils.leftPad(
+        return CalculoDigitoVerificadorUtil.gerarDigitoMod11Pesos2a9NossoNumero(StringUtils.leftPad(
                 nossoNumero.toString(), tamanho, '0'));
     }
 

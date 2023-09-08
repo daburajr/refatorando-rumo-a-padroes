@@ -1,11 +1,12 @@
 package br.com.ifma.refatorandorumoapadroes.simplefactory.service;
 
+import br.com.ifma.refatorandorumoapadroes.simplefactory.util.CalculoDigitoVerificadorUtil;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.MockitoAnnotations;
 
-public class CalculoDigitoVerificadorServiceTest {
+public class CalculoDigitoVerificadorUtilTest {
 
 
     @Before
@@ -16,7 +17,7 @@ public class CalculoDigitoVerificadorServiceTest {
     @Test
     public void calcularDigitoModulo11CnabComBaseParaBradesco() {
 
-        String digito = CalculoDigitoVerificadorService
+        String digito = CalculoDigitoVerificadorUtil
                 .calcularDigitoModulo11CnabComBase("1100000000015", 7);
 
         Assert.assertEquals("0", digito);
@@ -26,8 +27,8 @@ public class CalculoDigitoVerificadorServiceTest {
     @Test
     public void retornarPadraoParaBradesco() {
 
-        String padrao = CalculoDigitoVerificadorService
-                .retornarPadrao(13, 2, 7, 2, CalculoDigitoVerificadorService.Ordem.DireitaEsquerda);
+        String padrao = CalculoDigitoVerificadorUtil
+                .retornarPadrao(13, 2, 7, 2);
 
         Assert.assertEquals("2765432765432", padrao);
     }
@@ -35,7 +36,7 @@ public class CalculoDigitoVerificadorServiceTest {
     @Test
     public void calcularDigitoModulo11CnabComBaseParaSafra() {
 
-        String digito = CalculoDigitoVerificadorService
+        String digito = CalculoDigitoVerificadorUtil
                 .calcularDigitoModulo11CnabComBase("1200000000015", 7);
 
         Assert.assertEquals("4", digito);
@@ -45,8 +46,8 @@ public class CalculoDigitoVerificadorServiceTest {
     @Test
     public void retornarPadraoParaSafra() {
 
-        String padrao = CalculoDigitoVerificadorService
-                .retornarPadrao(13, 2, 7, 2, CalculoDigitoVerificadorService.Ordem.DireitaEsquerda);
+        String padrao = CalculoDigitoVerificadorUtil
+                .retornarPadrao(13, 2, 7, 2);
 
         Assert.assertEquals("2765432765432", padrao);
     }
@@ -54,8 +55,8 @@ public class CalculoDigitoVerificadorServiceTest {
     @Test
     public void gerarDigitoMod11Pesos2a9NossoNumeroBancoDoBrasil() {
 
-        String digito = CalculoDigitoVerificadorService
-                .gerarDigitoMod11Pesos2a9NossoNumeroSantander("18181700015");
+        String digito = CalculoDigitoVerificadorUtil
+                .gerarDigitoMod11Pesos2a9NossoNumero("18181700015");
 
         Assert.assertEquals("4", digito);
     }
@@ -63,8 +64,8 @@ public class CalculoDigitoVerificadorServiceTest {
     @Test
     public void gerarDigitoMod11Pesos2a9NossoNumeroSantader() {
 
-        String digito = CalculoDigitoVerificadorService
-                .gerarDigitoMod11Pesos2a9NossoNumeroSantander("000000000015");
+        String digito = CalculoDigitoVerificadorUtil
+                .gerarDigitoMod11Pesos2a9NossoNumero("000000000015");
 
         Assert.assertEquals("9", digito);
     }

@@ -4,9 +4,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class CalculoDigitoUtil {
+public class CalculoDigitoVerificadorUtil {
 
-    private CalculoDigitoUtil() {}
 
     public static String calcularDigitoModulo11CnabComBase(String numero, int base) {
 
@@ -59,7 +58,7 @@ public class CalculoDigitoUtil {
         return Integer.toString(11 - resto);
     }
 
-    private static String retornarPadrao(int qtd, int menorDigito, int maiorDigito, int primeiroNumero) {
+    public static String retornarPadrao(int qtd, int menorDigito, int maiorDigito, int primeiroNumero) {
 
         StringBuilder padrao = new StringBuilder();
 
@@ -74,5 +73,4 @@ public class CalculoDigitoUtil {
         int resto = indice % (maiorDigito - menorDigito + 1);
         return resto + menorDigito;
     }
-
 }
