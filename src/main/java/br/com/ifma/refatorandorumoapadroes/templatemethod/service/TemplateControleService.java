@@ -5,6 +5,7 @@ import br.com.ifma.refatorandorumoapadroes.templatemethod.enumeration.StatusBole
 import br.com.ifma.refatorandorumoapadroes.templatemethod.exception.PdvValidationException;
 import br.com.ifma.refatorandorumoapadroes.templatemethod.model.BoletoNossoNumero;
 import br.com.ifma.refatorandorumoapadroes.templatemethod.model.BoletoNossoNumeroItMarket;
+import br.com.ifma.refatorandorumoapadroes.templatemethod.model.BoletoNossoNumeroVMix;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
@@ -14,6 +15,26 @@ import java.util.Calendar;
 @Service
 public abstract class TemplateControleService {
 
+
+    public BoletoNossoNumeroVMix gerarControleNossoNumero(BoletoNossoNumeroItMarket boletoItMarket) {
+
+        if(boletoItMarket == null) {
+            throw new PdvValidationException("Boleto ItMarket não gerado.");
+        }
+
+        BoletoNossoNumeroVMix boletoVMix = BoletoNossoNumeroVMix
+                .builder()
+                .idFilial(boletoItMarket.getIdFilial())
+                .pdv(boletoItMarket.getPdv())
+                .data(boletoItMarket.getData())
+                .nossoNumero(boletoItMarket.getNossoNumero())
+                .status(boletoItMarket.getStatus())
+                .build();
+
+        this.salvaNossoNumero(boletoVMix);
+
+        return boletoVMix;
+    }
 
     public BoletoNossoNumeroItMarket gerarControleNossoNumero(Long filialId, Integer pdv, Long nossoNumero) {
 
@@ -30,11 +51,11 @@ public abstract class TemplateControleService {
             throw new PdvValidationException("Não foi possível criar boleto ItMarket.");
         }
 
-        this.salvaDocumento(boletoItMarket);
+        this.salvaNossoNumero(boletoItMarket);
 
         return boletoItMarket;
     }
 
-    protected abstract void salvaDocumento(BoletoNossoNumero boletoItMarket);
+    protected abstract void salvaNossoNumero(BoletoNossoNumero boletoNossoNumero);
 
 }
