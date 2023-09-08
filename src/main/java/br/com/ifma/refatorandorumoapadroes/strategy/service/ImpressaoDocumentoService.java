@@ -17,7 +17,7 @@ import static java.util.stream.Collectors.groupingBy;
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class ImpressaoBoletoService {
+public class ImpressaoDocumentoService {
 
     private final BoletoImpressaoMapper boletoImpressaoMapper;
     private final List<Documento> processaDocumentos;

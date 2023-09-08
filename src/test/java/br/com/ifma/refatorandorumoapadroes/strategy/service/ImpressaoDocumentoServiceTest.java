@@ -16,7 +16,7 @@ import java.util.List;
 
 import static org.mockito.Mockito.*;
 
-public class ImpressaoBoletoServiceTest {
+public class ImpressaoDocumentoServiceTest {
 
     @Mock
     private BoletoImpressaoMapper boletoImpressaoMapper;
@@ -37,7 +37,7 @@ public class ImpressaoBoletoServiceTest {
     private List<Documento> processaDocumentos = new ArrayList<>();
 
     @InjectMocks
-    private ImpressaoBoletoService impressaoBoletoService;
+    private ImpressaoDocumentoService impressaoDocumentoService;
 
     @Before
     public void setUp() {
@@ -61,7 +61,7 @@ public class ImpressaoBoletoServiceTest {
         when(promissoriaDocumento.executaProcessamento(TipoDocumento.PROMISSORIA)).thenReturn(false);
         when(boletoBalcaoDocumento.executaProcessamento(TipoDocumento.BOLETO_BALCAO)).thenReturn(false);
 
-        impressaoBoletoService.imprimirBoletos();
+        impressaoDocumentoService.imprimirBoletos();
 
         verify(boletoLojaDocumento, times(1)).imprime(any());
         verify(carneDocumento, times(1)).imprime(any());
