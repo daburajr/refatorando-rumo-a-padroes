@@ -1,6 +1,5 @@
 package br.com.ifma.refatorandorumoapadroes.simplefactory.util;
 
-import br.com.ifma.refatorandorumoapadroes.simplefactory.util.CalculoDigitoVerificadorUtil;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
